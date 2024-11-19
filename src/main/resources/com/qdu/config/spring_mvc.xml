@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+    "> 
+
+<!--    页面层面-->
+
+
+    <!--1. 开启包扫描，扫描控制器所在包 -->
+    <context:component-scan base-package="com.qdu.controller" />
+
+    <!--2. 启用注解驱动的控制器编程模型，也就是启用Web MVC配置 -->
+    <mvc:annotation-driven />
+
+    <!--3. 配置视图解析器 -->
+
+    
+    <!-- 4. 处理静态资源 -->
+    <mvc:resources mapping="/static/**" location="/static/" />
+    
+</beans>

@@ -1,0 +1,29 @@
+2.关于评论的功能	----     被评论者可能是旅游活动、旅行日记，所以给两者设定不同的id，（其实好像无所谓，毕竟在不同表里写）
+3.对于彻底删除用户，需要考虑以下几点：不留外键，但是删用户的时候要删除通知信息，别的不删，notification
+4.关于用户的评论回复问题
+
+5.关于用户文件上传问题，用户编辑页面编辑完，点击提交之后，将整个页面用wangEditor编辑器编辑完,将整个页面存储在对应表的content字段中
+
+关联知识：https://www.wangeditor.com/v5/content.html#%E8%8E%B7%E5%8F%96%E5%86%85%E5%AE%B9
+获取 HTML 和 Text
+使用 editor.getHtml() 获取 HTML 内容，可参考 demo。使用 editor.getText() 获取纯文本内容。
+
+推荐使用 HTML 格式存储数据。
+
+#获取 JSON
+使用 editor.children 获取 JSON 内容。
+
+JSON 格式可以转换为 HTML 和 Text 格式，支持浏览器和 nodejs 。 如果是在 nodejs 中，需要安装 yarn add jsdom global-jsdom ，并且引入 require('global-jsdom/register')。
+
+const editor = createEditor({ content }) // `content` 即为 JSON 内容
+const html = editor.getHtml()
+const text = editor.getText()
+
+
+
+实现：
+用户上传文件：
+1.用户点击上传文件按钮，弹出文件选择框，选择文件。
+2.将选择的文件内容读取到前端，用wangEditor编辑器编辑完，将整个页面 或者  模拟框  存储在对应表的content字段中。
+3.将编辑完的页面内容提交到后端。
+4.后端将文件内容保存到数据库
