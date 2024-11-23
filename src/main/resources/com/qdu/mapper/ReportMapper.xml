@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.ReportMapper">
+  <resultMap id="BaseResultMap" type="com.qdu.entity.Report">
+    <id column="reportId" jdbcType="VARCHAR" property="reportid" />
+    <result column="reporterId" jdbcType="VARCHAR" property="reporterid" />
+    <result column="reportedId" jdbcType="VARCHAR" property="reportedid" />
+    <result column="reportedType" jdbcType="CHAR" property="reportedtype" />
+    <result column="category" jdbcType="CHAR" property="category" />
+    <result column="createdAt" jdbcType="TIMESTAMP" property="createdat" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="handlerId" jdbcType="VARCHAR" property="handlerid" />
+    <result column="handledAt" jdbcType="DATE" property="handledat" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Report">
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    reportId, reporterId, reportedId, reportedType, category, createdAt, status, handlerId, 
+    handledAt
+  </sql>
+  <sql id="Blob_Column_List">
+    description
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.ReportExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from report
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.qdu.entity.ReportExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from report
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from report
+    where reportId = #{reportid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from report
+    where reportId = #{reportid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.ReportExample">
+    delete from report
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.Report">
+    insert into report (reportId, reporterId, reportedId, 
+      reportedType, category, createdAt, 
+      status, handlerId, handledAt, 
+      description)
+    values (#{reportid,jdbcType=VARCHAR}, #{reporterid,jdbcType=VARCHAR}, #{reportedid,jdbcType=VARCHAR}, 
+      #{reportedtype,jdbcType=CHAR}, #{category,jdbcType=CHAR}, #{createdat,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{handlerid,jdbcType=VARCHAR}, #{handledat,jdbcType=DATE}, 
+      #{description,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.Report">
+    insert into report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="reportid != null">
+        reportId,
+      </if>
+      <if test="reporterid != null">
+        reporterId,
+      </if>
+      <if test="reportedid != null">
+        reportedId,
+      </if>
+      <if test="reportedtype != null">
+        reportedType,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="createdat != null">
+        createdAt,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="handlerid != null">
+        handlerId,
+      </if>
+      <if test="handledat != null">
+        handledAt,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="reportid != null">
+        #{reportid,jdbcType=VARCHAR},
+      </if>
+      <if test="reporterid != null">
+        #{reporterid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportedid != null">
+        #{reportedid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportedtype != null">
+        #{reportedtype,jdbcType=CHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=CHAR},
+      </if>
+      <if test="createdat != null">
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="handlerid != null">
+        #{handlerid,jdbcType=VARCHAR},
+      </if>
+      <if test="handledat != null">
+        #{handledat,jdbcType=DATE},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.ReportExample" resultType="java.lang.Long">
+    select count(*) from report
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update report
+    <set>
+      <if test="record.reportid != null">
+        reportId = #{record.reportid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reporterid != null">
+        reporterId = #{record.reporterid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reportedid != null">
+        reportedId = #{record.reportedid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reportedtype != null">
+        reportedType = #{record.reportedtype,jdbcType=CHAR},
+      </if>
+      <if test="record.category != null">
+        category = #{record.category,jdbcType=CHAR},
+      </if>
+      <if test="record.createdat != null">
+        createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.handlerid != null">
+        handlerId = #{record.handlerid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handledat != null">
+        handledAt = #{record.handledat,jdbcType=DATE},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update report
+    set reportId = #{record.reportid,jdbcType=VARCHAR},
+      reporterId = #{record.reporterid,jdbcType=VARCHAR},
+      reportedId = #{record.reportedid,jdbcType=VARCHAR},
+      reportedType = #{record.reportedtype,jdbcType=CHAR},
+      category = #{record.category,jdbcType=CHAR},
+      createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      handlerId = #{record.handlerid,jdbcType=VARCHAR},
+      handledAt = #{record.handledat,jdbcType=DATE},
+      description = #{record.description,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update report
+    set reportId = #{record.reportid,jdbcType=VARCHAR},
+      reporterId = #{record.reporterid,jdbcType=VARCHAR},
+      reportedId = #{record.reportedid,jdbcType=VARCHAR},
+      reportedType = #{record.reportedtype,jdbcType=CHAR},
+      category = #{record.category,jdbcType=CHAR},
+      createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      handlerId = #{record.handlerid,jdbcType=VARCHAR},
+      handledAt = #{record.handledat,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Report">
+    update report
+    <set>
+      <if test="reporterid != null">
+        reporterId = #{reporterid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportedid != null">
+        reportedId = #{reportedid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportedtype != null">
+        reportedType = #{reportedtype,jdbcType=CHAR},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=CHAR},
+      </if>
+      <if test="createdat != null">
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="handlerid != null">
+        handlerId = #{handlerid,jdbcType=VARCHAR},
+      </if>
+      <if test="handledat != null">
+        handledAt = #{handledat,jdbcType=DATE},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where reportId = #{reportid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Report">
+    update report
+    set reporterId = #{reporterid,jdbcType=VARCHAR},
+      reportedId = #{reportedid,jdbcType=VARCHAR},
+      reportedType = #{reportedtype,jdbcType=CHAR},
+      category = #{category,jdbcType=CHAR},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      handlerId = #{handlerid,jdbcType=VARCHAR},
+      handledAt = #{handledat,jdbcType=DATE},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where reportId = #{reportid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Report">
+    update report
+    set reporterId = #{reporterid,jdbcType=VARCHAR},
+      reportedId = #{reportedid,jdbcType=VARCHAR},
+      reportedType = #{reportedtype,jdbcType=CHAR},
+      category = #{category,jdbcType=CHAR},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      handlerId = #{handlerid,jdbcType=VARCHAR},
+      handledAt = #{handledat,jdbcType=DATE}
+    where reportId = #{reportid,jdbcType=VARCHAR}
+  </update>
+</mapper>

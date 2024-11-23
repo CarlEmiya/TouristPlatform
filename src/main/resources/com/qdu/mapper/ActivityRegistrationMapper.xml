@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.ActivityRegistrationMapper">
+  <resultMap id="BaseResultMap" type="com.qdu.entity.ActivityRegistration">
+    <id column="registrationId" jdbcType="VARCHAR" property="registrationid" />
+    <result column="activityId" jdbcType="VARCHAR" property="activityid" />
+    <result column="userId" jdbcType="VARCHAR" property="userid" />
+    <result column="registrationTime" jdbcType="TIMESTAMP" property="registrationtime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    registrationId, activityId, userId, registrationTime, status
+  </sql>
+  <select id="selectByExample" parameterType="com.qdu.entity.ActivityRegistrationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from activity_registration
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from activity_registration
+    where registrationId = #{registrationid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from activity_registration
+    where registrationId = #{registrationid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.ActivityRegistrationExample">
+    delete from activity_registration
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.ActivityRegistration">
+    insert into activity_registration (registrationId, activityId, userId, 
+      registrationTime, status)
+    values (#{registrationid,jdbcType=VARCHAR}, #{activityid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, 
+      #{registrationtime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.ActivityRegistration">
+    insert into activity_registration
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="registrationid != null">
+        registrationId,
+      </if>
+      <if test="activityid != null">
+        activityId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="registrationtime != null">
+        registrationTime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="registrationid != null">
+        #{registrationid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityid != null">
+        #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationtime != null">
+        #{registrationtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.ActivityRegistrationExample" resultType="java.lang.Long">
+    select count(*) from activity_registration
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update activity_registration
+    <set>
+      <if test="record.registrationid != null">
+        registrationId = #{record.registrationid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityid != null">
+        activityId = #{record.activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userid != null">
+        userId = #{record.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationtime != null">
+        registrationTime = #{record.registrationtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update activity_registration
+    set registrationId = #{record.registrationid,jdbcType=VARCHAR},
+      activityId = #{record.activityid,jdbcType=VARCHAR},
+      userId = #{record.userid,jdbcType=VARCHAR},
+      registrationTime = #{record.registrationtime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.ActivityRegistration">
+    update activity_registration
+    <set>
+      <if test="activityid != null">
+        activityId = #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationtime != null">
+        registrationTime = #{registrationtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where registrationId = #{registrationid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.ActivityRegistration">
+    update activity_registration
+    set activityId = #{activityid,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR},
+      registrationTime = #{registrationtime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where registrationId = #{registrationid,jdbcType=VARCHAR}
+  </update>
+</mapper>
