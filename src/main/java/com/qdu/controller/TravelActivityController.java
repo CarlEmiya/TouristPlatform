@@ -1,69 +1,121 @@
 package com.qdu.controller;
 
-import com.qdu.entity.Comment;
-import com.qdu.service.CommentService;
+import com.qdu.entity.TravelActivity;
+import com.qdu.entity.TravelActivityExample;
+import com.qdu.service.TravelActivityService;
+import com.qdu.service.impl.TravelActivityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/Comments")
+@RestController
+@RequestMapping("/travelActivity")
 public class TravelActivityController {
 
     @Autowired
-    private  CommentService CommentService;
+    private TravelActivityServiceImpl travelActivityService;
 
-	//1. 根据班级查询学生列表：
-    @GetMapping("/findComments")
-	public String getCommentListByClass(@RequestParam("batchName") String batchName, Model model) {
-        List<Comment> CommentList = CommentService.getCommentListByBatchName(batchName);
-        model.addAttribute("CommentList", CommentList);
-        return "Comment_list";
-    }
-	//2. 点击Comment_list.jsp页面上的“+添加新学生”超链接，跳转到add_Comment.jsp页面
-	@GetMapping("/to_add_Comment")
-	public String toAddCommentPage() {
-        return "add_Comment";
-    }
-	//3. 点击add_Comment.jsp页面上的“添加按钮”，提交表单数据，调用CommentService的addComment()方法添加新学生，添加后跳转到首页重新查询
-	@PostMapping("/add_Comment")
-    public String addComment(Comment Comment) {
-        CommentService.addComment(Comment);
-        return "index";
-    }
-	//4. 在Comment_list.jsp页面点击“返回首页”超链接可以返回index.jsp页面
-    @ResponseBody
-	public String toIndexPage() {
-        return "index";
-    }
-	//5. 在Comment_list.jsp页面点击某个学生后面的“编辑”超链接可以跳转到edit_Comment.jsp页面编辑该学生的信息，
-    //   要求跳转到该页面后，在页面的文本框中显示学生信息方便修改，而不是显示空白
-	@GetMapping("/to_edit_Comment/{id}")
-	public String editComment(@PathVariable String id, Model model) {
-        Comment Comment = CommentService.getCommentById(id);
-        model.addAttribute("Comment", Comment);
-        return "edit_Comment";
-    }
-	//6. 在edit_Comment.jsp页面点击“修改”按钮，提交学生信息，调用CommentService的updateComment()方法更新学生信息，并跳转到首页重新查询
-    @PostMapping("/edit_Comment")
-    public String updateComment(Comment Comment) {
-        CommentService.updateComment(Comment);
-        return "index";
-    }
-	//7. 在Comment_list.jsp页面点击某个学生后面的“删除”超链接实现删除当前学生，调用CommentService的deleteComment()方法删除学生，并且页面上删除对应行
-
-    @ResponseBody
-    @PostMapping("/delete")
-    public int deleteComment(String srollno) {
-        return 1;
+    // 添加旅游活动
+    @PostMapping("/add")
+    public ResponseEntity<Integer> addActivity(@RequestBody TravelActivity activity) {
+        activity.setDeletionperiod(365); // 设置默认删除周期为365天
+        int result = travelActivityService.addActivity(activity);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String test() {
-        return "test aaaaa";
+    // 根据条件查询活动
+    @PostMapping("/search")
+    public ResponseEntity<List<TravelActivity>> searchActivities(@RequestBody TravelActivityExample activity) {
+        List<TravelActivity> activities = travelActivityService.searchActivities(activity);
+        return new ResponseEntity<>(activities, HttpStatus.OK);
+    }
+
+    // 更新指定活动的状态
+    @PutMapping("/updateStatus")
+    public ResponseEntity<Integer> updateActivityStatus(
+            @RequestParam("activityId") String activityId,
+            @RequestParam("newStatus") int newStatus) {
+        int result = travelActivityService.updateActivityStatus(activityId, newStatus);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 取消活动，并记录取消原因
+    @PutMapping("/cancel")
+    public ResponseEntity<Integer> CancelActivity(
+            @RequestParam("activityId") String activityId,
+            @RequestParam("newStatus") int newStatus,
+            @RequestParam("cancelReason") String cancelReason) {
+        int result = travelActivityService.CancelActivity(activityId, newStatus, cancelReason);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 更新活动的所有信息
+    @PutMapping("/update")
+    public ResponseEntity<Integer> updateActivity(@RequestBody TravelActivity activity) {
+        int result = travelActivityService.updateActivity(activity);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 标记活动为“预删除”，设置删除周期和删除时间
+    @PutMapping("/delete")
+    public ResponseEntity<Integer> deleteActivity(
+            @RequestBody TravelActivity activity,
+            @RequestParam("deletePeriod") int deletePeriod) {
+        int result = travelActivityService.deleteActivity(activity, deletePeriod);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 撤销活动删除状态，恢复为正常状态
+    @PutMapping("/withdrawDelete")
+    public ResponseEntity<Integer> withdrawActivity(@RequestBody TravelActivity activity) {
+        int result = travelActivityService.withdrawActivity(activity);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 获取指定ID的活动详细信息
+    @GetMapping("/getActivity")
+    public ResponseEntity<TravelActivity> getActivity(
+            @RequestParam("activityId") String activityId) {
+        TravelActivity activity = travelActivityService.getActivityByActivityId(activityId);
+        if (activity!= null) {
+            return new ResponseEntity<>(activity, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // 根据条件查询活动（与searchActivities功能相同）
+    @PostMapping("/searchByCondition")
+    public ResponseEntity<List<TravelActivity>> searchActivitiesByCondition(
+            @RequestBody TravelActivityExample activity) {
+        List<TravelActivity> activities = travelActivityService.searchActivitiesByCondition(activity);
+        return new ResponseEntity<>(activities, HttpStatus.OK);
+    }
+
+    // 根据时间间隔筛选活动（例如最近一个月或三个月）
+    @GetMapping("/searchByTime")
+    public ResponseEntity<List<TravelActivity>> searchActivitiesByTime(
+            @RequestParam("timeInterval") int timeInterval) {
+        List<TravelActivity> activities = travelActivityService.searchActivitiesByTime(timeInterval);
+        return new ResponseEntity<>(activities, HttpStatus.OK);
+    }
+
+    // 根据用户ID和时间间隔筛选活动
+    @GetMapping("/searchByTimeAndUserId")
+    public ResponseEntity<List<TravelActivity>> searchActivitiesByTimeAndUserId(
+            @RequestParam("userId") String userId,
+            @RequestParam("timeInterval") int timeInterval) {
+        List<TravelActivity> activities = travelActivityService.searchActivitiesByTimeAndUserId(userId, timeInterval);
+        return new ResponseEntity<>(activities, HttpStatus.OK);
+    }
+
+    // 隐藏活动
+    @PutMapping("/hide")
+    public ResponseEntity<Integer> hideActivity(@RequestParam("activityId") String activityId) {
+        int result = travelActivityService.hideActivity(activityId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

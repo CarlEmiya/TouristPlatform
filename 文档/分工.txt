@@ -12,6 +12,7 @@
 
 
 --------------------------------------------------------------
+src
 main
 java
 qdu
@@ -34,12 +35,12 @@ Notification
 NotificationExample
 Report
 ReportExample
-travelActivity
-travelActivityExample
-travelDiary
-travelDiaryExample
-user
-userExample
+TravelActivity
+TravelActivityExample
+TravelDiary
+TravelDiaryExample
+User
+UserExample
 handler
 ListTypeHandler
 mapper
@@ -48,12 +49,11 @@ CommentMapper
 LikeMapper
 NotificationMapper
 ReportMapper
-travelActivityMapper
-travelDiaryMapper
-userMapper
+TravelActivityMapper
+TravelDiaryMapper
+UserMapper
 service
 impl
-CommentServiceImpl
 ActivityRegistrationService
 CommentService
 NotificationService
@@ -72,17 +72,8 @@ qdu
 config
 dbconfig.properties
 mybatis-config.xml
-spring-config.xml
-spring_mvc.xml
 mapper
-ActivityRegistrationMapper.xml
-CommentMapper.xml
-LikeMapper.xml
-NotificationMapper.xml
-ReportMapper.xml
-travelActivityMapper.xml
-travelDiaryMapper.xml
-userMapper.xml
+properties
 generator-configuration.xml
 log4j2.xml
 webapp

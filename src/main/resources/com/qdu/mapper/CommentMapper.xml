@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.qdu.entity.Comment">
+    <id column="commentId" jdbcType="VARCHAR" property="commentId" />
+    <result column="associatedId" jdbcType="VARCHAR" property="associatedId" />
+    <result column="userId" jdbcType="VARCHAR" property="userId" />
+    <result column="createdAt" jdbcType="DATE" property="createdAt" />
+    <result column="deletedAt" jdbcType="DATE" property="deletedAt" />
+    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionPeriod" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="rate" jdbcType="DOUBLE" property="rate" />
+    <result column="agree" jdbcType="INTEGER" property="agree" />
+    <result column="AssociatedType" jdbcType="VARCHAR" property="associatedType" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Comment">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    commentId, associatedId, userId, createdAt, deletedAt, deletionPeriod, status, rate, 
+    agree, AssociatedType
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.CommentExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.qdu.entity.CommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="findById" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    where commentId = #{commentId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from comment
+    where commentId = #{commentId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.CommentExample">
+    delete from comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.Comment">
+    insert into comment (commentId, associatedId, userId, 
+      createdAt, deletedAt, deletionPeriod, 
+      status, rate, agree, 
+      AssociatedType, content)
+    values (#{commentId,jdbcType=VARCHAR}, #{associatedId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=DATE}, #{deletedAt,jdbcType=DATE}, #{deletionPeriod,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER}, 
+      #{associatedType,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.Comment">
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        commentId,
+      </if>
+      <if test="associatedId != null">
+        associatedId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="createdAt != null">
+        createdAt,
+      </if>
+      <if test="deletedAt != null">
+        deletedAt,
+      </if>
+      <if test="deletionPeriod != null">
+        deletionPeriod,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+      <if test="agree != null">
+        agree,
+      </if>
+      <if test="associatedType != null">
+        AssociatedType,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        #{commentId,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedId != null">
+        #{associatedId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=DATE},
+      </if>
+      <if test="deletedAt != null">
+        #{deletedAt,jdbcType=DATE},
+      </if>
+      <if test="deletionPeriod != null">
+        #{deletionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="agree != null">
+        #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="associatedType != null">
+        #{associatedType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.CommentExample" resultType="java.lang.Long">
+    select count(*) from comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update comment
+    <set>
+      <if test="record.commentId != null">
+        commentId = #{record.commentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.associatedId != null">
+        associatedId = #{record.associatedId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        userId = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdAt != null">
+        createdAt = #{record.createdAt,jdbcType=DATE},
+      </if>
+      <if test="record.deletedAt != null">
+        deletedAt = #{record.deletedAt,jdbcType=DATE},
+      </if>
+      <if test="record.deletionPeriod != null">
+        deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.rate != null">
+        rate = #{record.rate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.agree != null">
+        agree = #{record.agree,jdbcType=INTEGER},
+      </if>
+      <if test="record.associatedType != null">
+        AssociatedType = #{record.associatedType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update comment
+    set commentId = #{record.commentId,jdbcType=VARCHAR},
+      associatedId = #{record.associatedId,jdbcType=VARCHAR},
+      userId = #{record.userId,jdbcType=VARCHAR},
+      createdAt = #{record.createdAt,jdbcType=DATE},
+      deletedAt = #{record.deletedAt,jdbcType=DATE},
+      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      rate = #{record.rate,jdbcType=DOUBLE},
+      agree = #{record.agree,jdbcType=INTEGER},
+      AssociatedType = #{record.associatedType,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update comment
+    set commentId = #{record.commentId,jdbcType=VARCHAR},
+      associatedId = #{record.associatedId,jdbcType=VARCHAR},
+      userId = #{record.userId,jdbcType=VARCHAR},
+      createdAt = #{record.createdAt,jdbcType=DATE},
+      deletedAt = #{record.deletedAt,jdbcType=DATE},
+      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      rate = #{record.rate,jdbcType=DOUBLE},
+      agree = #{record.agree,jdbcType=INTEGER},
+      AssociatedType = #{record.associatedType,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Comment">
+    update comment
+    <set>
+      <if test="associatedId != null">
+        associatedId = #{associatedId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        userId = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        createdAt = #{createdAt,jdbcType=DATE},
+      </if>
+      <if test="deletedAt != null">
+        deletedAt = #{deletedAt,jdbcType=DATE},
+      </if>
+      <if test="deletionPeriod != null">
+        deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="agree != null">
+        agree = #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="associatedType != null">
+        AssociatedType = #{associatedType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where commentId = #{commentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Comment">
+    update comment
+    set associatedId = #{associatedId,jdbcType=VARCHAR},
+      userId = #{userId,jdbcType=VARCHAR},
+      createdAt = #{createdAt,jdbcType=DATE},
+      deletedAt = #{deletedAt,jdbcType=DATE},
+      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=DOUBLE},
+      agree = #{agree,jdbcType=INTEGER},
+      AssociatedType = #{associatedType,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where commentId = #{commentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Comment">
+    update comment
+    set associatedId = #{associatedId,jdbcType=VARCHAR},
+      userId = #{userId,jdbcType=VARCHAR},
+      createdAt = #{createdAt,jdbcType=DATE},
+      deletedAt = #{deletedAt,jdbcType=DATE},
+      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=DOUBLE},
+      agree = #{agree,jdbcType=INTEGER},
+      AssociatedType = #{associatedType,jdbcType=VARCHAR}
+    where commentId = #{commentId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.LikeMapper">
+  <resultMap id="BaseResultMap" type="com.qdu.entity.Like">
+    <id column="likeId" jdbcType="VARCHAR" property="likeid" />
+    <result column="userId" jdbcType="VARCHAR" property="userid" />
+    <result column="entityId" jdbcType="VARCHAR" property="entityid" />
+    <result column="entityType" jdbcType="CHAR" property="entitytype" />
+    <result column="createdAt" jdbcType="TIMESTAMP" property="createdat" />
+    <result column="status" jdbcType="BIT" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    likeId, userId, entityId, entityType, createdAt, status
+  </sql>
+  <select id="selectByExample" parameterType="com.qdu.entity.LikeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from like
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from like
+    where likeId = #{likeid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from like
+    where likeId = #{likeid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.LikeExample">
+    delete from like
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.Like">
+    insert into like (likeId, userId, entityId, 
+      entityType, createdAt, status
+      )
+    values (#{likeid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{entityid,jdbcType=VARCHAR}, 
+      #{entitytype,jdbcType=CHAR}, #{createdat,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.Like">
+    insert into like
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="likeid != null">
+        likeId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="entityid != null">
+        entityId,
+      </if>
+      <if test="entitytype != null">
+        entityType,
+      </if>
+      <if test="createdat != null">
+        createdAt,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="likeid != null">
+        #{likeid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="entityid != null">
+        #{entityid,jdbcType=VARCHAR},
+      </if>
+      <if test="entitytype != null">
+        #{entitytype,jdbcType=CHAR},
+      </if>
+      <if test="createdat != null">
+        #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.LikeExample" resultType="java.lang.Long">
+    select count(*) from like
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update like
+    <set>
+      <if test="record.likeid != null">
+        likeId = #{record.likeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userid != null">
+        userId = #{record.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entityid != null">
+        entityId = #{record.entityid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entitytype != null">
+        entityType = #{record.entitytype,jdbcType=CHAR},
+      </if>
+      <if test="record.createdat != null">
+        createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update like
+    set likeId = #{record.likeid,jdbcType=VARCHAR},
+      userId = #{record.userid,jdbcType=VARCHAR},
+      entityId = #{record.entityid,jdbcType=VARCHAR},
+      entityType = #{record.entitytype,jdbcType=CHAR},
+      createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Like">
+    update like
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="entityid != null">
+        entityId = #{entityid,jdbcType=VARCHAR},
+      </if>
+      <if test="entitytype != null">
+        entityType = #{entitytype,jdbcType=CHAR},
+      </if>
+      <if test="createdat != null">
+        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where likeId = #{likeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Like">
+    update like
+    set userId = #{userid,jdbcType=VARCHAR},
+      entityId = #{entityid,jdbcType=VARCHAR},
+      entityType = #{entitytype,jdbcType=CHAR},
+      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=BIT}
+    where likeId = #{likeid,jdbcType=VARCHAR}
+  </update>
+</mapper>

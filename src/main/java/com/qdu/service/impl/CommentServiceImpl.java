@@ -15,11 +15,18 @@ public class CommentServiceImpl implements CommentService {
 //    @Autowired
     private CommentMapper commentMapper;
 
+    /**
+     * 这有个AssociatedType,准备在前端传过来
+     *
+     * @param comment
+     * @return
+     */
     @Override
     public int addComment(Comment comment) {
         comment.setCreatedAt(new Date());
         comment.setStatus(1); // 设置为正常状态
         comment.setAgree(0);
+
         commentMapper.insert(comment);
         try {
             return 1;

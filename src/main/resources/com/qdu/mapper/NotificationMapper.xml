@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.NotificationMapper">
+  <resultMap id="BaseResultMap" type="com.qdu.entity.Notification">
+    <id column="notificationId" jdbcType="VARCHAR" property="notificationid" />
+    <result column="senderId" jdbcType="VARCHAR" property="senderid" />
+    <result column="receiverId" jdbcType="VARCHAR" property="receiverid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createdTime" jdbcType="TIMESTAMP" property="createdtime" />
+    <result column="deletedAt" jdbcType="DATE" property="deletedat" />
+    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionperiod" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Notification">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    notificationId, senderId, receiverId, status, createdTime, deletedAt, deletionPeriod
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.NotificationExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.qdu.entity.NotificationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from notification
+    where notificationId = #{notificationid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from notification
+    where notificationId = #{notificationid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.NotificationExample">
+    delete from notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.Notification">
+    insert into notification (notificationId, senderId, receiverId, 
+      status, createdTime, deletedAt, 
+      deletionPeriod, content)
+    values (#{notificationid,jdbcType=VARCHAR}, #{senderid,jdbcType=VARCHAR}, #{receiverid,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createdtime,jdbcType=TIMESTAMP}, #{deletedat,jdbcType=DATE}, 
+      #{deletionperiod,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.Notification">
+    insert into notification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="notificationid != null">
+        notificationId,
+      </if>
+      <if test="senderid != null">
+        senderId,
+      </if>
+      <if test="receiverid != null">
+        receiverId,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createdtime != null">
+        createdTime,
+      </if>
+      <if test="deletedat != null">
+        deletedAt,
+      </if>
+      <if test="deletionperiod != null">
+        deletionPeriod,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="notificationid != null">
+        #{notificationid,jdbcType=VARCHAR},
+      </if>
+      <if test="senderid != null">
+        #{senderid,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverid != null">
+        #{receiverid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdtime != null">
+        #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletedat != null">
+        #{deletedat,jdbcType=DATE},
+      </if>
+      <if test="deletionperiod != null">
+        #{deletionperiod,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.NotificationExample" resultType="java.lang.Long">
+    select count(*) from notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update notification
+    <set>
+      <if test="record.notificationid != null">
+        notificationId = #{record.notificationid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.senderid != null">
+        senderId = #{record.senderid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverid != null">
+        receiverId = #{record.receiverid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdtime != null">
+        createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.deletedat != null">
+        deletedAt = #{record.deletedat,jdbcType=DATE},
+      </if>
+      <if test="record.deletionperiod != null">
+        deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update notification
+    set notificationId = #{record.notificationid,jdbcType=VARCHAR},
+      senderId = #{record.senderid,jdbcType=VARCHAR},
+      receiverId = #{record.receiverid,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      deletedAt = #{record.deletedat,jdbcType=DATE},
+      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update notification
+    set notificationId = #{record.notificationid,jdbcType=VARCHAR},
+      senderId = #{record.senderid,jdbcType=VARCHAR},
+      receiverId = #{record.receiverid,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      deletedAt = #{record.deletedat,jdbcType=DATE},
+      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Notification">
+    update notification
+    <set>
+      <if test="senderid != null">
+        senderId = #{senderid,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverid != null">
+        receiverId = #{receiverid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdtime != null">
+        createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletedat != null">
+        deletedAt = #{deletedat,jdbcType=DATE},
+      </if>
+      <if test="deletionperiod != null">
+        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where notificationId = #{notificationid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Notification">
+    update notification
+    set senderId = #{senderid,jdbcType=VARCHAR},
+      receiverId = #{receiverid,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      deletedAt = #{deletedat,jdbcType=DATE},
+      deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where notificationId = #{notificationid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Notification">
+    update notification
+    set senderId = #{senderid,jdbcType=VARCHAR},
+      receiverId = #{receiverid,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      deletedAt = #{deletedat,jdbcType=DATE},
+      deletionPeriod = #{deletionperiod,jdbcType=INTEGER}
+    where notificationId = #{notificationid,jdbcType=VARCHAR}
+  </update>
+</mapper>
