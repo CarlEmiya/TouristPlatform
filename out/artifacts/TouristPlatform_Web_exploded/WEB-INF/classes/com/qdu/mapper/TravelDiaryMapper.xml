@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qdu.mapper.TravelDiaryMapper">
+  <resultMap id="TravelDiaryResultMap" type="com.qdu.entity.TravelDiary">
+    <id column="did" jdbcType="BIGINT" property="did" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="able" jdbcType="BIT" property="able" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="agree" jdbcType="INTEGER" property="agree" />
+  </resultMap>
+  <resultMap extends="TravelDiaryResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.TravelDiary">
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="label" jdbcType="LONGVARCHAR" property="label" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    did, uid, able, created, deleted, period, status, agree
+  </sql>
+  <sql id="Blob_Column_List">
+    title, content, label
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.TravelDiaryExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_diary
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.qdu.entity.TravelDiaryExample" resultMap="TravelDiaryResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from travel_diary
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_diary
+    where did = #{did,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from travel_diary
+    where did = #{did,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qdu.entity.TravelDiaryExample">
+    delete from travel_diary
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qdu.entity.TravelDiary">
+    insert into travel_diary (did, uid, able, created, 
+      deleted, period, status, 
+      agree, title, content, 
+      label)
+    values (#{did,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{able,jdbcType=BIT}, #{created,jdbcType=DATE}, 
+      #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{content,jdbcType=LONGVARCHAR}, 
+      #{label,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qdu.entity.TravelDiary">
+    insert into travel_diary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        did,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="able != null">
+        able,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="agree != null">
+        agree,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="label != null">
+        label,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        #{did,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="able != null">
+        #{able,jdbcType=BIT},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=DATE},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agree != null">
+        #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null">
+        #{label,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qdu.entity.TravelDiaryExample" resultType="java.lang.Long">
+    select count(*) from travel_diary
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update travel_diary
+    <set>
+      <if test="record.did != null">
+        did = #{record.did,jdbcType=BIGINT},
+      </if>
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
+      </if>
+      <if test="record.able != null">
+        able = #{record.able,jdbcType=BIT},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
+      </if>
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
+      </if>
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.agree != null">
+        agree = #{record.agree,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.label != null">
+        label = #{record.label,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update travel_diary
+    set did = #{record.did,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      able = #{record.able,jdbcType=BIT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      agree = #{record.agree,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=LONGVARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      label = #{record.label,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update travel_diary
+    set did = #{record.did,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      able = #{record.able,jdbcType=BIT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      agree = #{record.agree,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.TravelDiary">
+    update travel_diary
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="able != null">
+        able = #{able,jdbcType=BIT},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agree != null">
+        agree = #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null">
+        label = #{label,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where did = #{did,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.TravelDiary">
+    update travel_diary
+    set uid = #{uid,jdbcType=BIGINT},
+      able = #{able,jdbcType=BIT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      agree = #{agree,jdbcType=INTEGER},
+      title = #{title,jdbcType=LONGVARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      label = #{label,jdbcType=LONGVARCHAR}
+    where did = #{did,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.TravelDiary">
+    update travel_diary
+    set uid = #{uid,jdbcType=BIGINT},
+      able = #{able,jdbcType=BIT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      agree = #{agree,jdbcType=INTEGER}
+    where did = #{did,jdbcType=BIGINT}
+  </update>
+</mapper>

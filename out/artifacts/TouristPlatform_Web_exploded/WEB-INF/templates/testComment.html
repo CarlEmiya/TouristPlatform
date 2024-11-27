@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>评论功能测试页面</title>
+    <!-- 假设这里的CSS文件路径根据实际情况进行了调整，确保能正确加载 -->
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <!-- 引入jQuery库，假设路径正确 -->
+    <script src="../../static/js/jquery.min-3.5.1.js"></script>
+</head>
+<body>
+<!-- 使用Thymeleaf的条件判断来检查用户是否登录，通过session获取user信息 -->
+<div th:if="${session.user!= null}">
+    <h2>评论功能测试</h2>
+
+    <!-- 发布评论区域 -->
+    <form id="postCommentForm" th:action="@{/comment/add}" method="post">
+        <label for="connectid">关联对象ID（日记/活动）：</label>
+        <input type="text" id="connectid" name="connectid" required><br>
+
+        <label for="uid">用户ID：</label>
+        <input type="text" id="uid" name="uid" required><br>
+
+        <label for="type">关联对象类型：</label>
+        <input type="text" id="type" name="type" required><br>
+
+        <label for="content">评论内容：</label>
+        <textarea id="content" name="content" required></textarea><br>
+
+        <input type="submit" value="发布评论">
+    </form>
+
+    <!-- 获取评论列表区域 -->
+    <div id="commentListDiv">
+        <h3>评论列表：</h3>
+        <ul id="commentListUl">
+        </ul>
+    </div>
+
+    <!-- 点赞和删除评论的Ajax函数 -->
+    <script>
+        // 发布评论的Ajax函数
+        $('#postCommentForm').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: formData,
+                success: function (result) {
+                    if (result === 1) {
+                        alert('评论发布成功！');
+                        // 刷新评论列表
+                        getCommentList();
+                    } else if (result === 0) {
+                        alert('评论发布失败，请稍后再试！');
+                    } else {
+                        alert('发布评论时出现错误，请检查网络或联系管理员！');
+                    }
+                },
+                error: function () {
+                    alert('发布评论时出现网络错误，请检查网络连接！');
+                }
+            });
+        });
+
+        // 获取评论列表的Ajax函数
+        function getCommentList() {
+            var connectid = $("#connectid").val();
+            var uid = $("#uid").val();
+            var type = $("#type").val();
+
+            $.ajax({
+                url: "/comment/list",
+                type: "GET",
+                data: {
+                    connectid: connectid,
+                    uid: uid,
+                    type: type
+                },
+                success: function (data) {
+                    var commentListUl = $("#commentListUl");
+                    commentListUl.empty();
+
+                    $.each(data, function (index, comment) {
+                        var li = $('<li>');
+                        var contentP = $('<p>').text('评论内容：' + comment.content);
+                        var agreeP = $('<p>').text('点赞数：' + comment.agree);
+                        var likeButton = $('<p>').text('点赞').click(function () {
+                            likeComment(comment.cid);
+                        });
+                        var deleteButton = $('<p>').text('删除').text('删除').click(function () {
+                            deleteComment(comment.cid);
+                        });
+
+                        li.append(contentP);
+                        li.append(agreeP);
+                        li.append(likeButton);
+                        li.append(deleteButton);
+
+                        commentListUl.append(li);
+                    });
+                },
+                error: function () {
+                    alert('获取评论列表时出现网络错误，请检查网络连接！');
+                }
+            });
+        }
+
+        // 点赞评论的Ajax函数
+        function likeComment(cid) {
+            $.ajax({
+                url: "/comment/like",
+                type: "POST",
+                data: {
+                    cid: cid
+                },
+                success: function (result) {
+                    if (result === 1) {
+                        alert('点赞成功！');
+                        // 刷新评论列表
+                        getCommentList();
+                    } else if (result === 0) {
+                        alert('点赞失败，请稍后再试！');
+                    } else {
+                        alert('点赞时出现错误，请检查网络或联系管理员！');
+                    }
+                },
+                error: function () {
+                    alert('点赞时出现网络错误，请检查网络连接！');
+                }
+            });
+        }
+
+        // 删除评论的Ajax函数
+        function deleteComment(cid) {
+            $.ajax({
+                url: "/comment/delete",
+                type: "DELETE",
+                data: {
+                    cid: cid
+                },
+                success: function (result) {
+                    if (result === 1) {
+                        alert('删除评论成功！');
+                        // 刷新评论列表
+                        getCommentList();
+                    } else if (result === 0) {
+                        alert('删除评论失败，请稍后再试！');
+                    } else {
+                        alert('删除评论时出现错误，请检查网络或联系管理员！');
+                    }
+                },
+                error: function () {
+                    // 可能是网络错误等情况
+                    alert('删除评论时出现网络错误，请检查网络连接！');
+                }
+            });
+        }
+
+        // 页面加载时获取评论列表
+        $(document).ready(function () {
+            getCommentList();
+        });
+    </script>
+</div>
+<div th:if="${session.user == null}">
+    <p>您未此登录，请先 <a href="/login">登录</a>。</p>
+</div>
+</body>
+</html>
