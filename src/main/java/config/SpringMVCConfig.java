@@ -25,8 +25,11 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/toIndex").setViewName("index");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/").setViewName("login");
+        registry.addViewController("/Comment").setViewName("testComment");
+        registry.addViewController("/comment").setViewName("testComment");
+        registry.addViewController("/userInfo").setViewName("UserInfo");
     }
 
     @Bean
@@ -35,7 +38,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCacheable(true);
+        templateResolver.setCacheable(false);
         templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
     }

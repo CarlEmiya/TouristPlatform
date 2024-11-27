@@ -18,7 +18,7 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	@Override
 	public int addActivity(TravelActivity activity) {
 		try {
-			activity.setDeletionperiod(365);
+			activity.setPeriod(365);
 			activityMapper.insert(activity);
 
 			return 1;
@@ -40,9 +40,9 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 
 
 	@Override
-	public int updateActivityStatus(String activityId, int newStatus) {
+	public int updateActivityStatus(Long aid, int newStatus) {
 		try {
-			TravelActivity activity = activityMapper.selectByPrimaryKey(activityId);
+			TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
 			if (activity!= null) {
 				activity.setStatus(newStatus);
 				// 使用updateByPrimaryKey方法根据主键更新活动对象
@@ -57,13 +57,13 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	}
 
 	@Override
-	public int CancelActivity(String activityId, int newStatus, String cancelReason) {
+	public int CancelActivity(Long aid, int newStatus, String cancelReason) {
 		try {
-			TravelActivity activity = activityMapper.selectByPrimaryKey(activityId);
+			TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
 			if (activity!= null) {
 				activity.setStatus(newStatus);
 				if (newStatus == 7) {
-					activity.setCancelReason(cancelReason);
+					activity.setReason(cancelReason);
 					activity.setStatus(7);
 				}
 				activityMapper.updateByPrimaryKey(activity);
@@ -92,8 +92,8 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	public int deleteActivity(TravelActivity activity,int deletePeriod) {
 		try {
 			activity.setStatus(3);
-			activity.setDeletionperiod(deletePeriod);
-			activity.setDeletedat(new Date());
+			activity.setPeriod(deletePeriod);
+			activity.setDeleted(new Date());
 			activityMapper.updateByPrimaryKey(activity);
 			return 1;
 		} catch (Exception e) {
@@ -106,8 +106,8 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	public int withdrawActivity(TravelActivity activity) {
 		try {
 			activity.setStatus(16);
-			activity.setDeletionperiod(0);
-			activity.setDeletedat(null);
+			activity.setPeriod(0);
+			activity.setDeleted(null);
 			activityMapper.updateByPrimaryKey(activity);
 			return 1;
 		} catch (Exception e) {
@@ -117,9 +117,9 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	}
 
 	// 查询单个活动
-	public TravelActivity getActivityByActivityId(String activityId) {
+	public TravelActivity getActivityByActivityId(Long aid) {
 		try {
-			return activityMapper.selectByPrimaryKey(activityId);
+			return activityMapper.selectByPrimaryKey(aid);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -147,7 +147,7 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 			Date endTime = new Date(currentTime.getTime() - timeInterval * 24 * 60 * 60 * 1000);
 
 			// 设置基于发布时间字段的时间范围查询条件
-			example.createCriteria().andStartdateBetween(endTime, currentTime).andStatusNotEqualTo(2);
+			example.createCriteria().andStartBetween(endTime, currentTime).andStatusNotEqualTo(2);
 			return activityMapper.selectByExample(example);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -155,13 +155,13 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 		}
 	}
 
-	public List<TravelActivity> searchActivitiesByTimeAndUserId(String userId, int timeInterval) {
+	public List<TravelActivity> searchActivitiesByTimeAndUid(Long uid, int timeInterval) {
 		try {
 			TravelActivityExample example = new TravelActivityExample();
 			Date currentTime = new Date();
 			Date endTime = new Date(currentTime.getTime() - timeInterval * 24 * 60 * 60 * 1000);
 			// 设置基于发布时间字段的时间范围查询条件
-			example.createCriteria().andStartdateBetween(endTime, currentTime).andUseridEqualTo(userId);
+			example.createCriteria().andStartBetween(endTime, currentTime).andUidEqualTo(uid);
 			return activityMapper.selectByExample(example);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,9 +170,9 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	}
 
 	//隐藏活动
-	public int hideActivity(String activityId) {
+	public int hideActivity(Long aid) {
 		try {
-			TravelActivity activity = activityMapper.selectByPrimaryKey(activityId);
+			TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
 			if (activity!= null) {
 				activity.setStatus(2);
 				activityMapper.updateByPrimaryKey(activity);

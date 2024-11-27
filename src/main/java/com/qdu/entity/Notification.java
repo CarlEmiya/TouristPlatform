@@ -4,46 +4,46 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Notification implements Serializable {
-    private String notificationid;
+    private Long nid;
 
-    private String senderid;
+    private Long senderid;
 
-    private String receiverid;
+    private Long readerid;
 
     private Integer status;
 
-    private Date createdtime;
+    private Date created;
 
-    private Date deletedat;
+    private Date deleted;
 
-    private Integer deletionperiod;
+    private Integer period;
 
     private String content;
 
     private static final long serialVersionUID = 1L;
 
-    public String getNotificationid() {
-        return notificationid;
+    public Long getNid() {
+        return nid;
     }
 
-    public void setNotificationid(String notificationid) {
-        this.notificationid = notificationid;
+    public void setNid(Long nid) {
+        this.nid = nid;
     }
 
-    public String getSenderid() {
+    public Long getSenderid() {
         return senderid;
     }
 
-    public void setSenderid(String senderid) {
+    public void setSenderid(Long senderid) {
         this.senderid = senderid;
     }
 
-    public String getReceiverid() {
-        return receiverid;
+    public Long getReaderid() {
+        return readerid;
     }
 
-    public void setReceiverid(String receiverid) {
-        this.receiverid = receiverid;
+    public void setReaderid(Long readerid) {
+        this.readerid = readerid;
     }
 
     public Integer getStatus() {
@@ -54,28 +54,28 @@ public class Notification implements Serializable {
         this.status = status;
     }
 
-    public Date getCreatedtime() {
-        return createdtime;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedtime(Date createdtime) {
-        this.createdtime = createdtime;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public Date getDeletedat() {
-        return deletedat;
+    public Date getDeleted() {
+        return deleted;
     }
 
-    public void setDeletedat(Date deletedat) {
-        this.deletedat = deletedat;
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
-    public Integer getDeletionperiod() {
-        return deletionperiod;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public void setDeletionperiod(Integer deletionperiod) {
-        this.deletionperiod = deletionperiod;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public String getContent() {
@@ -92,13 +92,13 @@ public class Notification implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", notificationid=").append(notificationid);
+        sb.append(", nid=").append(nid);
         sb.append(", senderid=").append(senderid);
-        sb.append(", receiverid=").append(receiverid);
+        sb.append(", readerid=").append(readerid);
         sb.append(", status=").append(status);
-        sb.append(", createdtime=").append(createdtime);
-        sb.append(", deletedat=").append(deletedat);
-        sb.append(", deletionperiod=").append(deletionperiod);
+        sb.append(", created=").append(created);
+        sb.append(", deleted=").append(deleted);
+        sb.append(", period=").append(period);
         sb.append(", content=").append(content);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

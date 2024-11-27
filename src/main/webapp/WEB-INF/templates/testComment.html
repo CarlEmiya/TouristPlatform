@@ -15,14 +15,14 @@
 
     <!-- 发布评论区域 -->
     <form id="postCommentForm" th:action="@{/comment/add}" method="post">
-        <label for="associatedId">关联对象ID（日记/活动）：</label>
-        <input type="text" id="associatedId" name="associatedId" required><br>
+        <label for="connectid">关联对象ID（日记/活动）：</label>
+        <input type="text" id="connectid" name="connectid" required><br>
 
-        <label for="userId">用户ID：</label>
-        <input type="text" id="userId" name="userId" required><br>
+        <label for="uid">用户ID：</label>
+        <input type="text" id="uid" name="uid" required><br>
 
-        <label for="associatedType">关联对象类型：</label>
-        <input type="text" id="associatedType" name="associatedType" required><br>
+        <label for="type">关联对象类型：</label>
+        <input type="text" id="type" name="type" required><br>
 
         <label for="content">评论内容：</label>
         <textarea id="content" name="content" required></textarea><br>
@@ -66,17 +66,17 @@
 
         // 获取评论列表的Ajax函数
         function getCommentList() {
-            var associatedId = $("#associatedId").val();
-            var userId = $("#userId").val();
-            var associatedType = $("#associatedType").val();
+            var connectid = $("#connectid").val();
+            var uid = $("#uid").val();
+            var type = $("#type").val();
 
             $.ajax({
                 url: "/comment/list",
                 type: "GET",
                 data: {
-                    associatedId: associatedId,
-                    userId: userId,
-                    associatedType: associatedType
+                    connectid: connectid,
+                    uid: uid,
+                    type: type
                 },
                 success: function (data) {
                     var commentListUl = $("#commentListUl");
@@ -87,10 +87,10 @@
                         var contentP = $('<p>').text('评论内容：' + comment.content);
                         var agreeP = $('<p>').text('点赞数：' + comment.agree);
                         var likeButton = $('<p>').text('点赞').click(function () {
-                            likeComment(comment.commentId);
+                            likeComment(comment.cid);
                         });
                         var deleteButton = $('<p>').text('删除').text('删除').click(function () {
-                            deleteComment(comment.commentId);
+                            deleteComment(comment.cid);
                         });
 
                         li.append(contentP);
@@ -108,12 +108,12 @@
         }
 
         // 点赞评论的Ajax函数
-        function likeComment(commentId) {
+        function likeComment(cid) {
             $.ajax({
                 url: "/comment/like",
                 type: "POST",
                 data: {
-                    commentId: commentId
+                    cid: cid
                 },
                 success: function (result) {
                     if (result === 1) {
@@ -133,12 +133,12 @@
         }
 
         // 删除评论的Ajax函数
-        function deleteComment(commentId) {
+        function deleteComment(cid) {
             $.ajax({
                 url: "/comment/delete",
                 type: "DELETE",
                 data: {
-                    commentId: commentId
+                    cid: cid
                 },
                 success: function (result) {
                     if (result === 1) {

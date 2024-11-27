@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.User">
-    <id column="userId" jdbcType="VARCHAR" property="userId" />
-    <result column="userName" jdbcType="VARCHAR" property="userName" />
+  <resultMap id="UserResultMap" type="com.qdu.entity.User">
+    <id column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="gender" jdbcType="CHAR" property="gender" />
-    <result column="birthDate" jdbcType="DATE" property="birthDate" />
-    <result column="idCard" jdbcType="CHAR" property="idCard" />
+    <result column="birth" jdbcType="DATE" property="birth" />
+    <result column="idcard" jdbcType="CHAR" property="idcard" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="occupation" jdbcType="VARCHAR" property="occupation" />
-    <result column="recoveryQuestion" jdbcType="VARCHAR" property="recoveryQuestion" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
     <result column="level" jdbcType="INTEGER" property="level" />
-    <result column="createdAt" jdbcType="DATE" property="createdAt" />
-    <result column="deletedAt" jdbcType="DATE" property="deletedAt" />
-    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionPeriod" />
-    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="identify" jdbcType="INTEGER" property="identify" />
-    <result column="answer" jdbcType="VARCHAR" property="answer" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.User">
+  <resultMap extends="UserResultMap" id="UserResultMapWithBLOBs" type="com.qdu.entity.User">
+    <result column="answer" jdbcType="LONGVARCHAR" property="answer" />
     <result column="picture" jdbcType="LONGVARCHAR" property="picture" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
   </resultMap>
@@ -84,14 +84,13 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    userId, userName, password, gender, birthDate, idCard, email, phone, city, occupation, 
-    recoveryQuestion, level, createdAt, deletedAt, deletionPeriod, STATUS, identify, 
-    answer
+    uid, name, password, gender, birth, idcard, email, phone, city, occupation, question, 
+    level, created, deleted, period, status, identify
   </sql>
   <sql id="Blob_Column_List">
-    picture, description
+    answer, picture, description
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.UserExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.UserExample" resultMap="UserResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -107,7 +106,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.UserExample" resultMap="UserResultMap">
     select
     <if test="distinct">
       distinct
@@ -121,17 +120,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="UserResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from user
-    where userId = #{userid,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user
-    where userId = #{userid,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.UserExample">
     delete from user
@@ -140,29 +139,29 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.User">
-    insert into user (userId, userName, password, 
-      gender, birthDate, idCard, email, 
+    insert into user (uid, name, password, 
+      gender, birth, idcard, email, 
       phone, city, occupation, 
-      recoveryQuestion, level, createdAt, 
-      deletedAt, deletionPeriod, STATUS, 
+      question, level, created, 
+      deleted, period, status, 
       identify, answer, picture, 
       description)
-    values (#{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=CHAR}, #{birthDate,jdbcType=DATE}, #{idCard,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
+    values (#{uid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=CHAR}, #{birth,jdbcType=DATE}, #{idcard,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, 
-      #{recoveryQuestion,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{createdAt,jdbcType=DATE}, 
-      #{deletedAt,jdbcType=DATE}, #{deletionPeriod,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
-      #{identify,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{picture,jdbcType=LONGVARCHAR}, 
+      #{question,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{created,jdbcType=DATE}, 
+      #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{identify,jdbcType=INTEGER}, #{answer,jdbcType=LONGVARCHAR}, #{picture,jdbcType=LONGVARCHAR}, 
       #{description,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userid != null">
-        userId,
+      <if test="uid != null">
+        uid,
       </if>
-      <if test="username != null">
-        userName,
+      <if test="name != null">
+        name,
       </if>
       <if test="password != null">
         password,
@@ -170,11 +169,11 @@
       <if test="gender != null">
         gender,
       </if>
-      <if test="birthDate != null">
-        birthDate,
+      <if test="birth != null">
+        birth,
       </if>
-      <if test="idCard != null">
-        idCard,
+      <if test="idcard != null">
+        idcard,
       </if>
       <if test="email != null">
         email,
@@ -188,23 +187,23 @@
       <if test="occupation != null">
         occupation,
       </if>
-      <if test="recoveryQuestion != null">
-        recoveryQuestion,
+      <if test="question != null">
+        question,
       </if>
       <if test="level != null">
         level,
       </if>
-      <if test="createdAt != null">
-        createdAt,
+      <if test="created != null">
+        created,
       </if>
-      <if test="deletedAt != null">
-        deletedAt,
+      <if test="deleted != null">
+        deleted,
       </if>
-      <if test="deletionPeriod != null">
-        deletionPeriod,
+      <if test="period != null">
+        period,
       </if>
       <if test="status != null">
-        STATUS,
+        status,
       </if>
       <if test="identify != null">
         identify,
@@ -220,11 +219,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userid != null">
-        #{userid,jdbcType=VARCHAR},
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
       </if>
-      <if test="username != null">
-        #{username,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -232,11 +231,11 @@
       <if test="gender != null">
         #{gender,jdbcType=CHAR},
       </if>
-      <if test="birthDate != null">
-        #{birthDate,jdbcType=DATE},
+      <if test="birth != null">
+        #{birth,jdbcType=DATE},
       </if>
-      <if test="idCard != null">
-        #{idCard,jdbcType=CHAR},
+      <if test="idcard != null">
+        #{idcard,jdbcType=CHAR},
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
@@ -250,20 +249,20 @@
       <if test="occupation != null">
         #{occupation,jdbcType=VARCHAR},
       </if>
-      <if test="recoveryQuestion != null">
-        #{recoveryQuestion,jdbcType=VARCHAR},
+      <if test="question != null">
+        #{question,jdbcType=VARCHAR},
       </if>
       <if test="level != null">
         #{level,jdbcType=INTEGER},
       </if>
-      <if test="createdAt != null">
-        #{createdAt,jdbcType=DATE},
+      <if test="created != null">
+        #{created,jdbcType=DATE},
       </if>
-      <if test="deletedAt != null">
-        #{deletedAt,jdbcType=DATE},
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionPeriod != null">
-        #{deletionPeriod,jdbcType=INTEGER},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -272,7 +271,7 @@
         #{identify,jdbcType=INTEGER},
       </if>
       <if test="answer != null">
-        #{answer,jdbcType=VARCHAR},
+        #{answer,jdbcType=LONGVARCHAR},
       </if>
       <if test="picture != null">
         #{picture,jdbcType=LONGVARCHAR},
@@ -291,11 +290,11 @@
   <update id="updateByExampleSelective" parameterType="map">
     update user
     <set>
-      <if test="record.userid != null">
-        userId = #{record.userid,jdbcType=VARCHAR},
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
       </if>
-      <if test="record.username != null">
-        userName = #{record.username,jdbcType=VARCHAR},
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
@@ -303,11 +302,11 @@
       <if test="record.gender != null">
         gender = #{record.gender,jdbcType=CHAR},
       </if>
-      <if test="record.birthDate != null">
-        birthDate = #{record.birthDate,jdbcType=DATE},
+      <if test="record.birth != null">
+        birth = #{record.birth,jdbcType=DATE},
       </if>
-      <if test="record.idCard != null">
-        idCard = #{record.idCard,jdbcType=CHAR},
+      <if test="record.idcard != null">
+        idcard = #{record.idcard,jdbcType=CHAR},
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
@@ -321,29 +320,29 @@
       <if test="record.occupation != null">
         occupation = #{record.occupation,jdbcType=VARCHAR},
       </if>
-      <if test="record.recoveryQuestion != null">
-        recoveryQuestion = #{record.recoveryQuestion,jdbcType=VARCHAR},
+      <if test="record.question != null">
+        question = #{record.question,jdbcType=VARCHAR},
       </if>
       <if test="record.level != null">
         level = #{record.level,jdbcType=INTEGER},
       </if>
-      <if test="record.createdAt != null">
-        createdAt = #{record.createdAt,jdbcType=DATE},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
       </if>
-      <if test="record.deletedAt != null">
-        deletedAt = #{record.deletedAt,jdbcType=DATE},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
       </if>
-      <if test="record.deletionPeriod != null">
-        deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
-        STATUS = #{record.status,jdbcType=INTEGER},
+        status = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.identify != null">
         identify = #{record.identify,jdbcType=INTEGER},
       </if>
       <if test="record.answer != null">
-        answer = #{record.answer,jdbcType=VARCHAR},
+        answer = #{record.answer,jdbcType=LONGVARCHAR},
       </if>
       <if test="record.picture != null">
         picture = #{record.picture,jdbcType=LONGVARCHAR},
@@ -358,24 +357,24 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update user
-    set userId = #{record.userid,jdbcType=VARCHAR},
-      userName = #{record.username,jdbcType=VARCHAR},
+    set uid = #{record.uid,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       gender = #{record.gender,jdbcType=CHAR},
-      birthDate = #{record.birthDate,jdbcType=DATE},
-      idCard = #{record.idCard,jdbcType=CHAR},
+      birth = #{record.birth,jdbcType=DATE},
+      idcard = #{record.idcard,jdbcType=CHAR},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       occupation = #{record.occupation,jdbcType=VARCHAR},
-      recoveryQuestion = #{record.recoveryQuestion,jdbcType=VARCHAR},
+      question = #{record.question,jdbcType=VARCHAR},
       level = #{record.level,jdbcType=INTEGER},
-      createdAt = #{record.createdAt,jdbcType=DATE},
-      deletedAt = #{record.deletedAt,jdbcType=DATE},
-      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
-      STATUS = #{record.status,jdbcType=INTEGER},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
       identify = #{record.identify,jdbcType=INTEGER},
-      answer = #{record.answer,jdbcType=VARCHAR},
+      answer = #{record.answer,jdbcType=LONGVARCHAR},
       picture = #{record.picture,jdbcType=LONGVARCHAR},
       description = #{record.description,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -384,24 +383,23 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update user
-    set userId = #{record.userid,jdbcType=VARCHAR},
-      userName = #{record.username,jdbcType=VARCHAR},
+    set uid = #{record.uid,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       gender = #{record.gender,jdbcType=CHAR},
-      birthDate = #{record.birthDate,jdbcType=DATE},
-      idCard = #{record.idCard,jdbcType=CHAR},
+      birth = #{record.birth,jdbcType=DATE},
+      idcard = #{record.idcard,jdbcType=CHAR},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       occupation = #{record.occupation,jdbcType=VARCHAR},
-      recoveryQuestion = #{record.recoveryQuestion,jdbcType=VARCHAR},
+      question = #{record.question,jdbcType=VARCHAR},
       level = #{record.level,jdbcType=INTEGER},
-      createdAt = #{record.createdAt,jdbcType=DATE},
-      deletedAt = #{record.deletedAt,jdbcType=DATE},
-      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
-      STATUS = #{record.status,jdbcType=INTEGER},
-      identify = #{record.identify,jdbcType=INTEGER},
-      answer = #{record.answer,jdbcType=VARCHAR}
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      identify = #{record.identify,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -409,8 +407,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.User">
     update user
     <set>
-      <if test="username != null">
-        userName = #{username,jdbcType=VARCHAR},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
@@ -418,11 +416,11 @@
       <if test="gender != null">
         gender = #{gender,jdbcType=CHAR},
       </if>
-      <if test="birthDate != null">
-        birthDate = #{birthDate,jdbcType=DATE},
+      <if test="birth != null">
+        birth = #{birth,jdbcType=DATE},
       </if>
-      <if test="idCard != null">
-        idCard = #{idCard,jdbcType=CHAR},
+      <if test="idcard != null">
+        idcard = #{idcard,jdbcType=CHAR},
       </if>
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
@@ -436,29 +434,29 @@
       <if test="occupation != null">
         occupation = #{occupation,jdbcType=VARCHAR},
       </if>
-      <if test="recoveryQuestion != null">
-        recoveryQuestion = #{recoveryQuestion,jdbcType=VARCHAR},
+      <if test="question != null">
+        question = #{question,jdbcType=VARCHAR},
       </if>
       <if test="level != null">
         level = #{level,jdbcType=INTEGER},
       </if>
-      <if test="createdAt != null">
-        createdAt = #{createdAt,jdbcType=DATE},
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
       </if>
-      <if test="deletedAt != null">
-        deletedAt = #{deletedAt,jdbcType=DATE},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionPeriod != null">
-        deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        STATUS = #{status,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="identify != null">
         identify = #{identify,jdbcType=INTEGER},
       </if>
       <if test="answer != null">
-        answer = #{answer,jdbcType=VARCHAR},
+        answer = #{answer,jdbcType=LONGVARCHAR},
       </if>
       <if test="picture != null">
         picture = #{picture,jdbcType=LONGVARCHAR},
@@ -467,50 +465,49 @@
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where userId = #{userid,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.User">
     update user
-    set userName = #{username,jdbcType=VARCHAR},
+    set name = #{name,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=CHAR},
-      birthDate = #{birthDate,jdbcType=DATE},
-      idCard = #{idCard,jdbcType=CHAR},
+      birth = #{birth,jdbcType=DATE},
+      idcard = #{idcard,jdbcType=CHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       occupation = #{occupation,jdbcType=VARCHAR},
-      recoveryQuestion = #{recoveryQuestion,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
       level = #{level,jdbcType=INTEGER},
-      createdAt = #{createdAt,jdbcType=DATE},
-      deletedAt = #{deletedAt,jdbcType=DATE},
-      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
-      STATUS = #{status,jdbcType=INTEGER},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       identify = #{identify,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=LONGVARCHAR},
       picture = #{picture,jdbcType=LONGVARCHAR},
       description = #{description,jdbcType=LONGVARCHAR}
-    where userId = #{userid,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.User">
     update user
-    set userName = #{username,jdbcType=VARCHAR},
+    set name = #{name,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=CHAR},
-      birthDate = #{birthDate,jdbcType=DATE},
-      idCard = #{idCard,jdbcType=CHAR},
+      birth = #{birth,jdbcType=DATE},
+      idcard = #{idcard,jdbcType=CHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       occupation = #{occupation,jdbcType=VARCHAR},
-      recoveryQuestion = #{recoveryQuestion,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
       level = #{level,jdbcType=INTEGER},
-      createdAt = #{createdAt,jdbcType=DATE},
-      deletedAt = #{deletedAt,jdbcType=DATE},
-      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
-      STATUS = #{status,jdbcType=INTEGER},
-      identify = #{identify,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARCHAR}
-    where userId = #{userid,jdbcType=VARCHAR}
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      identify = #{identify,jdbcType=INTEGER}
+    where uid = #{uid,jdbcType=BIGINT}
   </update>
 </mapper>

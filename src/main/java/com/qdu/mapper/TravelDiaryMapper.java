@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.TravelDiary;
 import com.qdu.entity.TravelDiaryExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TravelDiaryMapper {
     long countByExample(TravelDiaryExample example);
 
     int deleteByExample(TravelDiaryExample example);
 
-    int deleteByPrimaryKey(String diaryid);
+    int deleteByPrimaryKey(Long did);
 
     int insert(TravelDiary record);
 
@@ -20,7 +21,7 @@ public interface TravelDiaryMapper {
 
     List<TravelDiary> selectByExample(TravelDiaryExample example);
 
-    TravelDiary selectByPrimaryKey(String diaryid);
+    TravelDiary selectByPrimaryKey(Long did);
 
     int updateByExampleSelective(@Param("record") TravelDiary record, @Param("example") TravelDiaryExample example);
 

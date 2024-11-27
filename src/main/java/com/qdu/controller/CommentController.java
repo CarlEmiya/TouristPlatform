@@ -25,32 +25,32 @@ public class CommentController {
 
     // 根据关联对象ID、用户ID和关联对象类型获取评论列表
     @GetMapping("/list")
-    public ResponseEntity<List<Comment>> getCommentsByAssociatedIdAndUserIdandAssociatedType(
-            @RequestParam("associatedId") String associatedId,
-            @RequestParam("userId") String userId,
-            @RequestParam("associatedType") String associatedType) {
-        List<Comment> comments = commentService.getCommentsByAssociatedIdAndUserIdandAssociatedType(associatedId, userId, associatedType);
+    public ResponseEntity<List<Comment>> getCommentsByAssociatedIdAndUidandAssociatedType(
+            @RequestParam("aid") Long connectid,
+            @RequestParam("uid") Long uid,
+            @RequestParam("type") String type) {
+        List<Comment> comments = commentService.getCommentsByAssociatedIdAndUidandAssociatedType(connectid, uid, type);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     // 根据评论ID删除评论
     @DeleteMapping("/delete")
-    public ResponseEntity<Integer> deleteCommentById(@RequestParam("commentId") String commentId) {
-        int result = commentService.deleteCommentById(commentId);
+    public ResponseEntity<Integer> deleteCommentById(@RequestParam("cid") Long cid) {
+        int result = commentService.deleteCommentById(cid);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 对评论进行点赞
     @PostMapping("/like")
-    public ResponseEntity<Integer> likeComment(@RequestParam("commentId") String commentId) {
-        int result = commentService.likeComment(commentId);
+    public ResponseEntity<Integer> likeComment(@RequestParam("cid") Long cid) {
+        int result = commentService.likeComment(cid);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 获取某条评论的点赞数
     @GetMapping("/agreeCount")
-    public ResponseEntity<Integer> getCommentAgreeCount(@RequestParam("commentId") String commentId) {
-        int result = commentService.getCommentAgreeCount(commentId);
+    public ResponseEntity<Integer> getCommentAgreeCount(@RequestParam("cid") Long cid) {
+        int result = commentService.getCommentAgreeCount(cid);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

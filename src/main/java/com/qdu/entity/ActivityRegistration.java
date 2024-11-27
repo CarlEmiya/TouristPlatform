@@ -4,48 +4,48 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ActivityRegistration implements Serializable {
-    private String registrationid;
+    private Long arid;
 
-    private String activityid;
+    private Long aid;
 
-    private String userid;
+    private Long uid;
 
-    private Date registrationtime;
+    private Date time;
 
     private Integer status;
 
     private static final long serialVersionUID = 1L;
 
-    public String getRegistrationid() {
-        return registrationid;
+    public Long getArid() {
+        return arid;
     }
 
-    public void setRegistrationid(String registrationid) {
-        this.registrationid = registrationid;
+    public void setArid(Long arid) {
+        this.arid = arid;
     }
 
-    public String getActivityid() {
-        return activityid;
+    public Long getAid() {
+        return aid;
     }
 
-    public void setActivityid(String activityid) {
-        this.activityid = activityid;
+    public void setAid(Long aid) {
+        this.aid = aid;
     }
 
-    public String getUserid() {
-        return userid;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public Date getRegistrationtime() {
-        return registrationtime;
+    public Date getTime() {
+        return time;
     }
 
-    public void setRegistrationtime(Date registrationtime) {
-        this.registrationtime = registrationtime;
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public Integer getStatus() {
@@ -62,10 +62,10 @@ public class ActivityRegistration implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", registrationid=").append(registrationid);
-        sb.append(", activityid=").append(activityid);
-        sb.append(", userid=").append(userid);
-        sb.append(", registrationtime=").append(registrationtime);
+        sb.append(", arid=").append(arid);
+        sb.append(", aid=").append(aid);
+        sb.append(", uid=").append(uid);
+        sb.append(", time=").append(time);
         sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

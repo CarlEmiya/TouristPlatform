@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.ReportMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.Report">
-    <id column="reportId" jdbcType="VARCHAR" property="reportid" />
-    <result column="reporterId" jdbcType="VARCHAR" property="reporterid" />
-    <result column="reportedId" jdbcType="VARCHAR" property="reportedid" />
-    <result column="reportedType" jdbcType="CHAR" property="reportedtype" />
+  <resultMap id="ReportResultMap" type="com.qdu.entity.Report">
+    <id column="rid" jdbcType="BIGINT" property="rid" />
+    <result column="reporter" jdbcType="BIGINT" property="reporter" />
+    <result column="reported" jdbcType="BIGINT" property="reported" />
+    <result column="type" jdbcType="CHAR" property="type" />
     <result column="category" jdbcType="CHAR" property="category" />
-    <result column="createdAt" jdbcType="TIMESTAMP" property="createdat" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="handlerId" jdbcType="VARCHAR" property="handlerid" />
-    <result column="handledAt" jdbcType="DATE" property="handledat" />
+    <result column="handler" jdbcType="VARCHAR" property="handler" />
+    <result column="handled" jdbcType="DATE" property="handled" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Report">
+  <resultMap extends="ReportResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Report">
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -74,8 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    reportId, reporterId, reportedId, reportedType, category, createdAt, status, handlerId, 
-    handledAt
+    rid, reporter, reported, type, category, created, status, handler, handled
   </sql>
   <sql id="Blob_Column_List">
     description
@@ -96,7 +95,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.ReportExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.ReportExample" resultMap="ReportResultMap">
     select
     <if test="distinct">
       distinct
@@ -110,17 +109,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from report
-    where reportId = #{reportid,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from report
-    where reportId = #{reportid,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.ReportExample">
     delete from report
@@ -129,76 +128,76 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.Report">
-    insert into report (reportId, reporterId, reportedId, 
-      reportedType, category, createdAt, 
-      status, handlerId, handledAt, 
+    insert into report (rid, reporter, reported, 
+      type, category, created, 
+      status, handler, handled, 
       description)
-    values (#{reportid,jdbcType=VARCHAR}, #{reporterid,jdbcType=VARCHAR}, #{reportedid,jdbcType=VARCHAR}, 
-      #{reportedtype,jdbcType=CHAR}, #{category,jdbcType=CHAR}, #{createdat,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{handlerid,jdbcType=VARCHAR}, #{handledat,jdbcType=DATE}, 
+    values (#{rid,jdbcType=BIGINT}, #{reporter,jdbcType=BIGINT}, #{reported,jdbcType=BIGINT}, 
+      #{type,jdbcType=CHAR}, #{category,jdbcType=CHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, #{handled,jdbcType=DATE}, 
       #{description,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.Report">
     insert into report
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="reportid != null">
-        reportId,
+      <if test="rid != null">
+        rid,
       </if>
-      <if test="reporterid != null">
-        reporterId,
+      <if test="reporter != null">
+        reporter,
       </if>
-      <if test="reportedid != null">
-        reportedId,
+      <if test="reported != null">
+        reported,
       </if>
-      <if test="reportedtype != null">
-        reportedType,
+      <if test="type != null">
+        type,
       </if>
       <if test="category != null">
         category,
       </if>
-      <if test="createdat != null">
-        createdAt,
+      <if test="created != null">
+        created,
       </if>
       <if test="status != null">
         status,
       </if>
-      <if test="handlerid != null">
-        handlerId,
+      <if test="handler != null">
+        handler,
       </if>
-      <if test="handledat != null">
-        handledAt,
+      <if test="handled != null">
+        handled,
       </if>
       <if test="description != null">
         description,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="reportid != null">
-        #{reportid,jdbcType=VARCHAR},
+      <if test="rid != null">
+        #{rid,jdbcType=BIGINT},
       </if>
-      <if test="reporterid != null">
-        #{reporterid,jdbcType=VARCHAR},
+      <if test="reporter != null">
+        #{reporter,jdbcType=BIGINT},
       </if>
-      <if test="reportedid != null">
-        #{reportedid,jdbcType=VARCHAR},
+      <if test="reported != null">
+        #{reported,jdbcType=BIGINT},
       </if>
-      <if test="reportedtype != null">
-        #{reportedtype,jdbcType=CHAR},
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
       </if>
       <if test="category != null">
         #{category,jdbcType=CHAR},
       </if>
-      <if test="createdat != null">
-        #{createdat,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="handlerid != null">
-        #{handlerid,jdbcType=VARCHAR},
+      <if test="handler != null">
+        #{handler,jdbcType=VARCHAR},
       </if>
-      <if test="handledat != null">
-        #{handledat,jdbcType=DATE},
+      <if test="handled != null">
+        #{handled,jdbcType=DATE},
       </if>
       <if test="description != null">
         #{description,jdbcType=LONGVARCHAR},
@@ -214,32 +213,32 @@
   <update id="updateByExampleSelective" parameterType="map">
     update report
     <set>
-      <if test="record.reportid != null">
-        reportId = #{record.reportid,jdbcType=VARCHAR},
+      <if test="record.rid != null">
+        rid = #{record.rid,jdbcType=BIGINT},
       </if>
-      <if test="record.reporterid != null">
-        reporterId = #{record.reporterid,jdbcType=VARCHAR},
+      <if test="record.reporter != null">
+        reporter = #{record.reporter,jdbcType=BIGINT},
       </if>
-      <if test="record.reportedid != null">
-        reportedId = #{record.reportedid,jdbcType=VARCHAR},
+      <if test="record.reported != null">
+        reported = #{record.reported,jdbcType=BIGINT},
       </if>
-      <if test="record.reportedtype != null">
-        reportedType = #{record.reportedtype,jdbcType=CHAR},
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=CHAR},
       </if>
       <if test="record.category != null">
         category = #{record.category,jdbcType=CHAR},
       </if>
-      <if test="record.createdat != null">
-        createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.handlerid != null">
-        handlerId = #{record.handlerid,jdbcType=VARCHAR},
+      <if test="record.handler != null">
+        handler = #{record.handler,jdbcType=VARCHAR},
       </if>
-      <if test="record.handledat != null">
-        handledAt = #{record.handledat,jdbcType=DATE},
+      <if test="record.handled != null">
+        handled = #{record.handled,jdbcType=DATE},
       </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=LONGVARCHAR},
@@ -251,15 +250,15 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update report
-    set reportId = #{record.reportid,jdbcType=VARCHAR},
-      reporterId = #{record.reporterid,jdbcType=VARCHAR},
-      reportedId = #{record.reportedid,jdbcType=VARCHAR},
-      reportedType = #{record.reportedtype,jdbcType=CHAR},
+    set rid = #{record.rid,jdbcType=BIGINT},
+      reporter = #{record.reporter,jdbcType=BIGINT},
+      reported = #{record.reported,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=CHAR},
       category = #{record.category,jdbcType=CHAR},
-      createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
       status = #{record.status,jdbcType=INTEGER},
-      handlerId = #{record.handlerid,jdbcType=VARCHAR},
-      handledAt = #{record.handledat,jdbcType=DATE},
+      handler = #{record.handler,jdbcType=VARCHAR},
+      handled = #{record.handled,jdbcType=DATE},
       description = #{record.description,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -267,15 +266,15 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update report
-    set reportId = #{record.reportid,jdbcType=VARCHAR},
-      reporterId = #{record.reporterid,jdbcType=VARCHAR},
-      reportedId = #{record.reportedid,jdbcType=VARCHAR},
-      reportedType = #{record.reportedtype,jdbcType=CHAR},
+    set rid = #{record.rid,jdbcType=BIGINT},
+      reporter = #{record.reporter,jdbcType=BIGINT},
+      reported = #{record.reported,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=CHAR},
       category = #{record.category,jdbcType=CHAR},
-      createdAt = #{record.createdat,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
       status = #{record.status,jdbcType=INTEGER},
-      handlerId = #{record.handlerid,jdbcType=VARCHAR},
-      handledAt = #{record.handledat,jdbcType=DATE}
+      handler = #{record.handler,jdbcType=VARCHAR},
+      handled = #{record.handled,jdbcType=DATE}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -283,59 +282,59 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Report">
     update report
     <set>
-      <if test="reporterid != null">
-        reporterId = #{reporterid,jdbcType=VARCHAR},
+      <if test="reporter != null">
+        reporter = #{reporter,jdbcType=BIGINT},
       </if>
-      <if test="reportedid != null">
-        reportedId = #{reportedid,jdbcType=VARCHAR},
+      <if test="reported != null">
+        reported = #{reported,jdbcType=BIGINT},
       </if>
-      <if test="reportedtype != null">
-        reportedType = #{reportedtype,jdbcType=CHAR},
+      <if test="type != null">
+        type = #{type,jdbcType=CHAR},
       </if>
       <if test="category != null">
         category = #{category,jdbcType=CHAR},
       </if>
-      <if test="createdat != null">
-        createdAt = #{createdat,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="handlerid != null">
-        handlerId = #{handlerid,jdbcType=VARCHAR},
+      <if test="handler != null">
+        handler = #{handler,jdbcType=VARCHAR},
       </if>
-      <if test="handledat != null">
-        handledAt = #{handledat,jdbcType=DATE},
+      <if test="handled != null">
+        handled = #{handled,jdbcType=DATE},
       </if>
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where reportId = #{reportid,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Report">
     update report
-    set reporterId = #{reporterid,jdbcType=VARCHAR},
-      reportedId = #{reportedid,jdbcType=VARCHAR},
-      reportedType = #{reportedtype,jdbcType=CHAR},
+    set reporter = #{reporter,jdbcType=BIGINT},
+      reported = #{reported,jdbcType=BIGINT},
+      type = #{type,jdbcType=CHAR},
       category = #{category,jdbcType=CHAR},
-      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER},
-      handlerId = #{handlerid,jdbcType=VARCHAR},
-      handledAt = #{handledat,jdbcType=DATE},
+      handler = #{handler,jdbcType=VARCHAR},
+      handled = #{handled,jdbcType=DATE},
       description = #{description,jdbcType=LONGVARCHAR}
-    where reportId = #{reportid,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Report">
     update report
-    set reporterId = #{reporterid,jdbcType=VARCHAR},
-      reportedId = #{reportedid,jdbcType=VARCHAR},
-      reportedType = #{reportedtype,jdbcType=CHAR},
+    set reporter = #{reporter,jdbcType=BIGINT},
+      reported = #{reported,jdbcType=BIGINT},
+      type = #{type,jdbcType=CHAR},
       category = #{category,jdbcType=CHAR},
-      createdAt = #{createdat,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER},
-      handlerId = #{handlerid,jdbcType=VARCHAR},
-      handledAt = #{handledat,jdbcType=DATE}
-    where reportId = #{reportid,jdbcType=VARCHAR}
+      handler = #{handler,jdbcType=VARCHAR},
+      handled = #{handled,jdbcType=DATE}
+    where rid = #{rid,jdbcType=BIGINT}
   </update>
 </mapper>

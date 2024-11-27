@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class TravelDiary implements Serializable {
-    private String diaryid;
+    private Long did;
 
-    private String userid;
+    private Long uid;
 
-    private Boolean iscommentabled;
+    private Boolean able;
 
-    private Date createdat;
+    private Date created;
 
-    private Date deletedat;
+    private Date deleted;
 
-    private Integer deletionperiod;
+    private Integer period;
 
     private Integer status;
 
@@ -28,52 +28,52 @@ public class TravelDiary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getDiaryid() {
-        return diaryid;
+    public Long getDid() {
+        return did;
     }
 
-    public void setDiaryid(String diaryid) {
-        this.diaryid = diaryid;
+    public void setDid(Long did) {
+        this.did = did;
     }
 
-    public String getUserid() {
-        return userid;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public Boolean getIscommentabled() {
-        return iscommentabled;
+    public Boolean getAble() {
+        return able;
     }
 
-    public void setIscommentabled(Boolean iscommentabled) {
-        this.iscommentabled = iscommentabled;
+    public void setAble(Boolean able) {
+        this.able = able;
     }
 
-    public Date getCreatedat() {
-        return createdat;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedat(Date createdat) {
-        this.createdat = createdat;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public Date getDeletedat() {
-        return deletedat;
+    public Date getDeleted() {
+        return deleted;
     }
 
-    public void setDeletedat(Date deletedat) {
-        this.deletedat = deletedat;
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
-    public Integer getDeletionperiod() {
-        return deletionperiod;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public void setDeletionperiod(Integer deletionperiod) {
-        this.deletionperiod = deletionperiod;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public Integer getStatus() {
@@ -122,12 +122,12 @@ public class TravelDiary implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", diaryid=").append(diaryid);
-        sb.append(", userid=").append(userid);
-        sb.append(", iscommentabled=").append(iscommentabled);
-        sb.append(", createdat=").append(createdat);
-        sb.append(", deletedat=").append(deletedat);
-        sb.append(", deletionperiod=").append(deletionperiod);
+        sb.append(", did=").append(did);
+        sb.append(", uid=").append(uid);
+        sb.append(", able=").append(able);
+        sb.append(", created=").append(created);
+        sb.append(", deleted=").append(deleted);
+        sb.append(", period=").append(period);
         sb.append(", status=").append(status);
         sb.append(", agree=").append(agree);
         sb.append(", title=").append(title);

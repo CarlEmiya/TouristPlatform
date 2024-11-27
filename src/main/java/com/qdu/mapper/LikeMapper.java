@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.Like;
 import com.qdu.entity.LikeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface LikeMapper {
     long countByExample(LikeExample example);
 
     int deleteByExample(LikeExample example);
 
-    int deleteByPrimaryKey(String likeid);
+    int deleteByPrimaryKey(Long lid);
 
     int insert(Like record);
 
@@ -18,7 +19,7 @@ public interface LikeMapper {
 
     List<Like> selectByExample(LikeExample example);
 
-    Like selectByPrimaryKey(String likeid);
+    Like selectByPrimaryKey(Long lid);
 
     int updateByExampleSelective(@Param("record") Like record, @Param("example") LikeExample example);
 

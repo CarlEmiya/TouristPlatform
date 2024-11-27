@@ -4,58 +4,58 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Report implements Serializable {
-    private String reportid;
+    private Long rid;
 
-    private String reporterid;
+    private Long reporter;
 
-    private String reportedid;
+    private Long reported;
 
-    private String reportedtype;
+    private String type;
 
     private String category;
 
-    private Date createdat;
+    private Date created;
 
     private Integer status;
 
-    private String handlerid;
+    private String handler;
 
-    private Date handledat;
+    private Date handled;
 
     private String description;
 
     private static final long serialVersionUID = 1L;
 
-    public String getReportid() {
-        return reportid;
+    public Long getRid() {
+        return rid;
     }
 
-    public void setReportid(String reportid) {
-        this.reportid = reportid;
+    public void setRid(Long rid) {
+        this.rid = rid;
     }
 
-    public String getReporterid() {
-        return reporterid;
+    public Long getReporter() {
+        return reporter;
     }
 
-    public void setReporterid(String reporterid) {
-        this.reporterid = reporterid;
+    public void setReporter(Long reporter) {
+        this.reporter = reporter;
     }
 
-    public String getReportedid() {
-        return reportedid;
+    public Long getReported() {
+        return reported;
     }
 
-    public void setReportedid(String reportedid) {
-        this.reportedid = reportedid;
+    public void setReported(Long reported) {
+        this.reported = reported;
     }
 
-    public String getReportedtype() {
-        return reportedtype;
+    public String getType() {
+        return type;
     }
 
-    public void setReportedtype(String reportedtype) {
-        this.reportedtype = reportedtype;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCategory() {
@@ -66,12 +66,12 @@ public class Report implements Serializable {
         this.category = category;
     }
 
-    public Date getCreatedat() {
-        return createdat;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedat(Date createdat) {
-        this.createdat = createdat;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public Integer getStatus() {
@@ -82,20 +82,20 @@ public class Report implements Serializable {
         this.status = status;
     }
 
-    public String getHandlerid() {
-        return handlerid;
+    public String getHandler() {
+        return handler;
     }
 
-    public void setHandlerid(String handlerid) {
-        this.handlerid = handlerid;
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
-    public Date getHandledat() {
-        return handledat;
+    public Date getHandled() {
+        return handled;
     }
 
-    public void setHandledat(Date handledat) {
-        this.handledat = handledat;
+    public void setHandled(Date handled) {
+        this.handled = handled;
     }
 
     public String getDescription() {
@@ -112,15 +112,15 @@ public class Report implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", reportid=").append(reportid);
-        sb.append(", reporterid=").append(reporterid);
-        sb.append(", reportedid=").append(reportedid);
-        sb.append(", reportedtype=").append(reportedtype);
+        sb.append(", rid=").append(rid);
+        sb.append(", reporter=").append(reporter);
+        sb.append(", reported=").append(reported);
+        sb.append(", type=").append(type);
         sb.append(", category=").append(category);
-        sb.append(", createdat=").append(createdat);
+        sb.append(", created=").append(created);
         sb.append(", status=").append(status);
-        sb.append(", handlerid=").append(handlerid);
-        sb.append(", handledat=").append(handledat);
+        sb.append(", handler=").append(handler);
+        sb.append(", handled=").append(handled);
         sb.append(", description=").append(description);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

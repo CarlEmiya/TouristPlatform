@@ -18,7 +18,7 @@ public interface UserService {
 	int addUser(User user);
 
 	// 用户登录
-	User loginUser(String userId, String password);
+	User loginUser(Long uid, String password);
 
 	// 根据条件查询用户信息
 	List<User> searchUsers(UserExample example);
@@ -27,14 +27,14 @@ public interface UserService {
 	int updateUser(User user);
 
 	// 修改用户等级
-	int updateUserLevel(String userId, int newLevel);
+	int updateUserLevel(Long uid, int newLevel);
 
 	// 修改用户状态
-	int updateUserStatus(String userId, int newStatus);
+	int updateUserStatus(Long uid, int newStatus);
 
 	// 禁用用户
-	int disableUser(String userId);
+	int disableUser(Long uid);
 
 	// 删除用户账户
-	int deleteUser(String userId);
+	int deleteUser(Long uid);
 }

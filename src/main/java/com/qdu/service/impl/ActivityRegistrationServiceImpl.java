@@ -27,7 +27,7 @@ public class ActivityRegistrationServiceImpl implements ActivityRegistrationServ
         try {
             registration.setStatus(4);
             // 设定报名具体时间：当前时间
-            registration.setRegistrationtime(new Date());
+            registration.setTime(new Date());
             activityRegistrationMapper.insert(registration);
             return 1;
         } catch (Exception e) {
@@ -38,13 +38,14 @@ public class ActivityRegistrationServiceImpl implements ActivityRegistrationServ
 
     /**
      * 根据活动id获取报名用户列表
-     * @param activityId
+     * @param aid
      * @return
      */
     @Override
-    public List<User> getRegistrationsByActivityId(String activityId) {
+    public List<User> getRegistrationsByActivityId(Long aid) {
         try {
-            return activityRegistrationMapper.getActivityRegistrationByActivityId(activityId);
+
+            return activityRegistrationMapper.getActivityRegistrationByAid(aid);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -53,13 +54,13 @@ public class ActivityRegistrationServiceImpl implements ActivityRegistrationServ
 
     /**
      * 查询用户参加的活动列表
-     * @param userId
+     * @param uid
      * @return
      */
     @Override
-    public List<TravelActivity> getActivitiesByUserId(String userId) {
+    public List<TravelActivity> getActivitiesByUid(Long uid) {
         try {
-            return activityRegistrationMapper.getActivityByUserId(userId);
+            return activityRegistrationMapper.getActivityByUid(uid);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -72,8 +73,7 @@ public class ActivityRegistrationServiceImpl implements ActivityRegistrationServ
 //    @Override
     public int cancelRegistration(String registrationId) {
         try {
-            activityRegistrationMapper.updateStatus(registrationId,7);
-            return 1;
+            return activityRegistrationMapper.updateStatus(registrationId,7);
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

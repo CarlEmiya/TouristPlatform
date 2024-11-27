@@ -28,15 +28,15 @@ public class ActivityRegistrationController {
 
     // 根据活动id获取报名用户列表
     @GetMapping("/byActivityId")
-    public ResponseEntity<List<User>> getRegistrationsByActivityId(@RequestParam("activityId") String activityId) {
-        List<User> users = activityRegistrationService.getRegistrationsByActivityId(activityId);
+    public ResponseEntity<List<User>> getRegistrationsByActivityId(@RequestParam("aid") Long aid) {
+        List<User> users = activityRegistrationService.getRegistrationsByActivityId(aid);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     // 查询用户参加的活动列表
-    @GetMapping("/byUserId")
-    public ResponseEntity<List<TravelActivity>> getActivitiesByUserId(@RequestParam("userId") String userId) {
-        List<TravelActivity> activities = activityRegistrationService.getActivitiesByUserId(userId);
+    @GetMapping("/byUid")
+    public ResponseEntity<List<TravelActivity>> getActivitiesByUid(@RequestParam("uid") Long uid) {
+        List<TravelActivity> activities = activityRegistrationService.getActivitiesByUid(uid);
         return new ResponseEntity<>(activities, HttpStatus.OK);
     }
 

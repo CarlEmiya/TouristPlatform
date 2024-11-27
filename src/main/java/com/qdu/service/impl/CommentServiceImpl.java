@@ -23,7 +23,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public int addComment(Comment comment) {
-        comment.setCreatedAt(new Date());
+        comment.setCreated(new Date());
         comment.setStatus(1); // 设置为正常状态
         comment.setAgree(0);
 
@@ -38,23 +38,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByAssociatedIdAndUserIdandAssociatedType(String associatedId, String userId, String associatedType) {
+    public List<Comment> getCommentsByAssociatedIdAndUidandAssociatedType(Long connectid, Long uid, String type) {
         CommentExample example = new CommentExample();
         CommentExample.Criteria criteria = example.createCriteria();
 
-        criteria.andAssociatedidEqualTo(associatedId);
-        criteria.andUseridEqualTo(userId);
-        criteria.andAssociatedtypeEqualTo(associatedType);
+        criteria.andConnectidEqualTo(connectid);
+        criteria.andUidEqualTo(uid);
+        criteria.andTypeEqualTo(type);
         return commentMapper.selectByExample(example);
     }
 
 
     @Override
-    public int deleteCommentById(String commentId) {
-        Comment comment = commentMapper.findById(commentId);
+    public int deleteCommentById(Long cid) {
+        Comment comment = commentMapper.selectByPrimaryKey(cid);
         if (comment!= null) {
-            comment.setCommentId(commentId);
-            comment.setDeletedAt(new Date());
+            comment.setCid(cid);
+            comment.setDeleted(new Date());
             comment.setStatus(3); // 设置为预删除状态
             try {
                 commentMapper.updateByPrimaryKey(comment);
@@ -71,8 +71,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public int likeComment(String commentId) {
-        Comment comment = commentMapper.findById(commentId);
+    public int likeComment(Long cid) {
+        Comment comment = commentMapper.selectByPrimaryKey(cid);
         if (comment!= null) {
             try {
                 comment.setAgree(comment.getAgree() + 1);
@@ -89,8 +89,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public int getCommentAgreeCount(String commentId) {
-        Comment comment = commentMapper.findById(commentId);
+    public int getCommentAgreeCount(Long cid) {
+        Comment comment = commentMapper.selectByPrimaryKey(cid);
         if (comment!= null) {
             try {
                 return comment.getAgree();

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.NotificationMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.Notification">
-    <id column="notificationId" jdbcType="VARCHAR" property="notificationid" />
-    <result column="senderId" jdbcType="VARCHAR" property="senderid" />
-    <result column="receiverId" jdbcType="VARCHAR" property="receiverid" />
+  <resultMap id="NotificationResultMap" type="com.qdu.entity.Notification">
+    <id column="nid" jdbcType="BIGINT" property="nid" />
+    <result column="senderid" jdbcType="BIGINT" property="senderid" />
+    <result column="readerid" jdbcType="BIGINT" property="readerid" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="createdTime" jdbcType="TIMESTAMP" property="createdtime" />
-    <result column="deletedAt" jdbcType="DATE" property="deletedat" />
-    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionperiod" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Notification">
+  <resultMap extends="NotificationResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Notification">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -72,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    notificationId, senderId, receiverId, status, createdTime, deletedAt, deletionPeriod
+    nid, senderid, readerid, status, created, deleted, period
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -93,7 +93,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.NotificationExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.NotificationExample" resultMap="NotificationResultMap">
     select
     <if test="distinct">
       distinct
@@ -107,17 +107,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from notification
-    where notificationId = #{notificationid,jdbcType=VARCHAR}
+    where nid = #{nid,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from notification
-    where notificationId = #{notificationid,jdbcType=VARCHAR}
+    where nid = #{nid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.NotificationExample">
     delete from notification
@@ -126,62 +126,62 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.Notification">
-    insert into notification (notificationId, senderId, receiverId, 
-      status, createdTime, deletedAt, 
-      deletionPeriod, content)
-    values (#{notificationid,jdbcType=VARCHAR}, #{senderid,jdbcType=VARCHAR}, #{receiverid,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{createdtime,jdbcType=TIMESTAMP}, #{deletedat,jdbcType=DATE}, 
-      #{deletionperiod,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+    insert into notification (nid, senderid, readerid, 
+      status, created, deleted, 
+      period, content)
+    values (#{nid,jdbcType=BIGINT}, #{senderid,jdbcType=BIGINT}, #{readerid,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{created,jdbcType=TIMESTAMP}, #{deleted,jdbcType=DATE}, 
+      #{period,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.Notification">
     insert into notification
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="notificationid != null">
-        notificationId,
+      <if test="nid != null">
+        nid,
       </if>
       <if test="senderid != null">
-        senderId,
+        senderid,
       </if>
-      <if test="receiverid != null">
-        receiverId,
+      <if test="readerid != null">
+        readerid,
       </if>
       <if test="status != null">
         status,
       </if>
-      <if test="createdtime != null">
-        createdTime,
+      <if test="created != null">
+        created,
       </if>
-      <if test="deletedat != null">
-        deletedAt,
+      <if test="deleted != null">
+        deleted,
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod,
+      <if test="period != null">
+        period,
       </if>
       <if test="content != null">
         content,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="notificationid != null">
-        #{notificationid,jdbcType=VARCHAR},
+      <if test="nid != null">
+        #{nid,jdbcType=BIGINT},
       </if>
       <if test="senderid != null">
-        #{senderid,jdbcType=VARCHAR},
+        #{senderid,jdbcType=BIGINT},
       </if>
-      <if test="receiverid != null">
-        #{receiverid,jdbcType=VARCHAR},
+      <if test="readerid != null">
+        #{readerid,jdbcType=BIGINT},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="createdtime != null">
-        #{createdtime,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="deletedat != null">
-        #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="content != null">
         #{content,jdbcType=LONGVARCHAR},
@@ -197,26 +197,26 @@
   <update id="updateByExampleSelective" parameterType="map">
     update notification
     <set>
-      <if test="record.notificationid != null">
-        notificationId = #{record.notificationid,jdbcType=VARCHAR},
+      <if test="record.nid != null">
+        nid = #{record.nid,jdbcType=BIGINT},
       </if>
       <if test="record.senderid != null">
-        senderId = #{record.senderid,jdbcType=VARCHAR},
+        senderid = #{record.senderid,jdbcType=BIGINT},
       </if>
-      <if test="record.receiverid != null">
-        receiverId = #{record.receiverid,jdbcType=VARCHAR},
+      <if test="record.readerid != null">
+        readerid = #{record.readerid,jdbcType=BIGINT},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.createdtime != null">
-        createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.deletedat != null">
-        deletedAt = #{record.deletedat,jdbcType=DATE},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
       </if>
-      <if test="record.deletionperiod != null">
-        deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
       </if>
       <if test="record.content != null">
         content = #{record.content,jdbcType=LONGVARCHAR},
@@ -228,13 +228,13 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update notification
-    set notificationId = #{record.notificationid,jdbcType=VARCHAR},
-      senderId = #{record.senderid,jdbcType=VARCHAR},
-      receiverId = #{record.receiverid,jdbcType=VARCHAR},
+    set nid = #{record.nid,jdbcType=BIGINT},
+      senderid = #{record.senderid,jdbcType=BIGINT},
+      readerid = #{record.readerid,jdbcType=BIGINT},
       status = #{record.status,jdbcType=INTEGER},
-      createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
-      deletedAt = #{record.deletedat,jdbcType=DATE},
-      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
       content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -242,13 +242,13 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update notification
-    set notificationId = #{record.notificationid,jdbcType=VARCHAR},
-      senderId = #{record.senderid,jdbcType=VARCHAR},
-      receiverId = #{record.receiverid,jdbcType=VARCHAR},
+    set nid = #{record.nid,jdbcType=BIGINT},
+      senderid = #{record.senderid,jdbcType=BIGINT},
+      readerid = #{record.readerid,jdbcType=BIGINT},
       status = #{record.status,jdbcType=INTEGER},
-      createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
-      deletedAt = #{record.deletedat,jdbcType=DATE},
-      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER}
+      created = #{record.created,jdbcType=TIMESTAMP},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -257,48 +257,48 @@
     update notification
     <set>
       <if test="senderid != null">
-        senderId = #{senderid,jdbcType=VARCHAR},
+        senderid = #{senderid,jdbcType=BIGINT},
       </if>
-      <if test="receiverid != null">
-        receiverId = #{receiverid,jdbcType=VARCHAR},
+      <if test="readerid != null">
+        readerid = #{readerid,jdbcType=BIGINT},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="createdtime != null">
-        createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="deletedat != null">
-        deletedAt = #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="content != null">
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where notificationId = #{notificationid,jdbcType=VARCHAR}
+    where nid = #{nid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Notification">
     update notification
-    set senderId = #{senderid,jdbcType=VARCHAR},
-      receiverId = #{receiverid,jdbcType=VARCHAR},
+    set senderid = #{senderid,jdbcType=BIGINT},
+      readerid = #{readerid,jdbcType=BIGINT},
       status = #{status,jdbcType=INTEGER},
-      createdTime = #{createdtime,jdbcType=TIMESTAMP},
-      deletedAt = #{deletedat,jdbcType=DATE},
-      deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      created = #{created,jdbcType=TIMESTAMP},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
       content = #{content,jdbcType=LONGVARCHAR}
-    where notificationId = #{notificationid,jdbcType=VARCHAR}
+    where nid = #{nid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Notification">
     update notification
-    set senderId = #{senderid,jdbcType=VARCHAR},
-      receiverId = #{receiverid,jdbcType=VARCHAR},
+    set senderid = #{senderid,jdbcType=BIGINT},
+      readerid = #{readerid,jdbcType=BIGINT},
       status = #{status,jdbcType=INTEGER},
-      createdTime = #{createdtime,jdbcType=TIMESTAMP},
-      deletedAt = #{deletedat,jdbcType=DATE},
-      deletionPeriod = #{deletionperiod,jdbcType=INTEGER}
-    where notificationId = #{notificationid,jdbcType=VARCHAR}
+      created = #{created,jdbcType=TIMESTAMP},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER}
+    where nid = #{nid,jdbcType=BIGINT}
   </update>
 </mapper>

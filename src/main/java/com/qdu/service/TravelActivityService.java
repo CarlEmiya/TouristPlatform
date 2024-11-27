@@ -14,10 +14,10 @@ public interface TravelActivityService {
 	List<TravelActivity> searchActivities(TravelActivityExample activity);
 
 	// 取消活动
-	int CancelActivity(String activityId, int newStatus, String cancelReason);
+	int CancelActivity(Long aid, int newStatus, String cancelReason);
 
 	// 修改活动状态
-	public int updateActivityStatus(String activityId, int newStatus)
+	public int updateActivityStatus(Long aid, int newStatus);
 
 	// 更新活动内容
 	int updateActivity(TravelActivity activity);

@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.Comment;
 import com.qdu.entity.CommentExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CommentMapper {
     long countByExample(CommentExample example);
 
     int deleteByExample(CommentExample example);
 
-    int deleteByPrimaryKey(String commentid);
+    int deleteByPrimaryKey(Long cid);
 
     int insert(Comment record);
 
@@ -20,7 +21,7 @@ public interface CommentMapper {
 
     List<Comment> selectByExample(CommentExample example);
 
-    Comment findById(String commentid);
+    Comment selectByPrimaryKey(Long cid);
 
     int updateByExampleSelective(@Param("record") Comment record, @Param("example") CommentExample example);
 

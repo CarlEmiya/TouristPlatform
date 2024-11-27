@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.TravelActivity;
 import com.qdu.entity.TravelActivityExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TravelActivityMapper {
     long countByExample(TravelActivityExample example);
 
     int deleteByExample(TravelActivityExample example);
 
-    int deleteByPrimaryKey(String activityid);
+    int deleteByPrimaryKey(Long aid);
 
     int insert(TravelActivity record);
 
@@ -20,7 +21,7 @@ public interface TravelActivityMapper {
 
     List<TravelActivity> selectByExample(TravelActivityExample example);
 
-    TravelActivity selectByPrimaryKey(String activityid);
+    TravelActivity selectByPrimaryKey(Long aid);
 
     int updateByExampleSelective(@Param("record") TravelActivity record, @Param("example") TravelActivityExample example);
 

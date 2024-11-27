@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.User;
 import com.qdu.entity.UserExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserMapper {
     long countByExample(UserExample example);
 
     int deleteByExample(UserExample example);
 
-    int deleteByPrimaryKey(String userid);
+    int deleteByPrimaryKey(Long uid);
 
     int insert(User record);
 
@@ -20,7 +21,7 @@ public interface UserMapper {
 
     List<User> selectByExample(UserExample example);
 
-    User selectByPrimaryKey(String userid);
+    User selectByPrimaryKey(Long uid);
 
     int updateByExampleSelective(@Param("record") User record, @Param("example") UserExample example);
 

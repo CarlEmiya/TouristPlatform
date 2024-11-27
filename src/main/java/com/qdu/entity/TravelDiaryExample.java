@@ -132,383 +132,363 @@ public class TravelDiaryExample {
             addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
         }
 
-        public Criteria andDiaryidIsNull() {
-            addCriterion("diaryId is null");
+        public Criteria andDidIsNull() {
+            addCriterion("did is null");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidIsNotNull() {
-            addCriterion("diaryId is not null");
+        public Criteria andDidIsNotNull() {
+            addCriterion("did is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidEqualTo(String value) {
-            addCriterion("diaryId =", value, "diaryid");
+        public Criteria andDidEqualTo(Long value) {
+            addCriterion("did =", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidNotEqualTo(String value) {
-            addCriterion("diaryId <>", value, "diaryid");
+        public Criteria andDidNotEqualTo(Long value) {
+            addCriterion("did <>", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidGreaterThan(String value) {
-            addCriterion("diaryId >", value, "diaryid");
+        public Criteria andDidGreaterThan(Long value) {
+            addCriterion("did >", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidGreaterThanOrEqualTo(String value) {
-            addCriterion("diaryId >=", value, "diaryid");
+        public Criteria andDidGreaterThanOrEqualTo(Long value) {
+            addCriterion("did >=", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidLessThan(String value) {
-            addCriterion("diaryId <", value, "diaryid");
+        public Criteria andDidLessThan(Long value) {
+            addCriterion("did <", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidLessThanOrEqualTo(String value) {
-            addCriterion("diaryId <=", value, "diaryid");
+        public Criteria andDidLessThanOrEqualTo(Long value) {
+            addCriterion("did <=", value, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidLike(String value) {
-            addCriterion("diaryId like", value, "diaryid");
+        public Criteria andDidIn(List<Long> values) {
+            addCriterion("did in", values, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidNotLike(String value) {
-            addCriterion("diaryId not like", value, "diaryid");
+        public Criteria andDidNotIn(List<Long> values) {
+            addCriterion("did not in", values, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidIn(List<String> values) {
-            addCriterion("diaryId in", values, "diaryid");
+        public Criteria andDidBetween(Long value1, Long value2) {
+            addCriterion("did between", value1, value2, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidNotIn(List<String> values) {
-            addCriterion("diaryId not in", values, "diaryid");
+        public Criteria andDidNotBetween(Long value1, Long value2) {
+            addCriterion("did not between", value1, value2, "did");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidBetween(String value1, String value2) {
-            addCriterion("diaryId between", value1, value2, "diaryid");
+        public Criteria andUidIsNull() {
+            addCriterion("uid is null");
             return (Criteria) this;
         }
 
-        public Criteria andDiaryidNotBetween(String value1, String value2) {
-            addCriterion("diaryId not between", value1, value2, "diaryid");
+        public Criteria andUidIsNotNull() {
+            addCriterion("uid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIsNull() {
-            addCriterion("userId is null");
+        public Criteria andUidEqualTo(Long value) {
+            addCriterion("uid =", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIsNotNull() {
-            addCriterion("userId is not null");
+        public Criteria andUidNotEqualTo(Long value) {
+            addCriterion("uid <>", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridEqualTo(String value) {
-            addCriterion("userId =", value, "userid");
+        public Criteria andUidGreaterThan(Long value) {
+            addCriterion("uid >", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotEqualTo(String value) {
-            addCriterion("userId <>", value, "userid");
+        public Criteria andUidGreaterThanOrEqualTo(Long value) {
+            addCriterion("uid >=", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThan(String value) {
-            addCriterion("userId >", value, "userid");
+        public Criteria andUidLessThan(Long value) {
+            addCriterion("uid <", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThanOrEqualTo(String value) {
-            addCriterion("userId >=", value, "userid");
+        public Criteria andUidLessThanOrEqualTo(Long value) {
+            addCriterion("uid <=", value, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThan(String value) {
-            addCriterion("userId <", value, "userid");
+        public Criteria andUidIn(List<Long> values) {
+            addCriterion("uid in", values, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThanOrEqualTo(String value) {
-            addCriterion("userId <=", value, "userid");
+        public Criteria andUidNotIn(List<Long> values) {
+            addCriterion("uid not in", values, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLike(String value) {
-            addCriterion("userId like", value, "userid");
+        public Criteria andUidBetween(Long value1, Long value2) {
+            addCriterion("uid between", value1, value2, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotLike(String value) {
-            addCriterion("userId not like", value, "userid");
+        public Criteria andUidNotBetween(Long value1, Long value2) {
+            addCriterion("uid not between", value1, value2, "uid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIn(List<String> values) {
-            addCriterion("userId in", values, "userid");
+        public Criteria andAbleIsNull() {
+            addCriterion("able is null");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotIn(List<String> values) {
-            addCriterion("userId not in", values, "userid");
+        public Criteria andAbleIsNotNull() {
+            addCriterion("able is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUseridBetween(String value1, String value2) {
-            addCriterion("userId between", value1, value2, "userid");
+        public Criteria andAbleEqualTo(Boolean value) {
+            addCriterion("able =", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotBetween(String value1, String value2) {
-            addCriterion("userId not between", value1, value2, "userid");
+        public Criteria andAbleNotEqualTo(Boolean value) {
+            addCriterion("able <>", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledIsNull() {
-            addCriterion("IsCommentAbled is null");
+        public Criteria andAbleGreaterThan(Boolean value) {
+            addCriterion("able >", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledIsNotNull() {
-            addCriterion("IsCommentAbled is not null");
+        public Criteria andAbleGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("able >=", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledEqualTo(Boolean value) {
-            addCriterion("IsCommentAbled =", value, "iscommentabled");
+        public Criteria andAbleLessThan(Boolean value) {
+            addCriterion("able <", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledNotEqualTo(Boolean value) {
-            addCriterion("IsCommentAbled <>", value, "iscommentabled");
+        public Criteria andAbleLessThanOrEqualTo(Boolean value) {
+            addCriterion("able <=", value, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledGreaterThan(Boolean value) {
-            addCriterion("IsCommentAbled >", value, "iscommentabled");
+        public Criteria andAbleIn(List<Boolean> values) {
+            addCriterion("able in", values, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("IsCommentAbled >=", value, "iscommentabled");
+        public Criteria andAbleNotIn(List<Boolean> values) {
+            addCriterion("able not in", values, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledLessThan(Boolean value) {
-            addCriterion("IsCommentAbled <", value, "iscommentabled");
+        public Criteria andAbleBetween(Boolean value1, Boolean value2) {
+            addCriterion("able between", value1, value2, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledLessThanOrEqualTo(Boolean value) {
-            addCriterion("IsCommentAbled <=", value, "iscommentabled");
+        public Criteria andAbleNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("able not between", value1, value2, "able");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledIn(List<Boolean> values) {
-            addCriterion("IsCommentAbled in", values, "iscommentabled");
+        public Criteria andCreatedIsNull() {
+            addCriterion("created is null");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledNotIn(List<Boolean> values) {
-            addCriterion("IsCommentAbled not in", values, "iscommentabled");
+        public Criteria andCreatedIsNotNull() {
+            addCriterion("created is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledBetween(Boolean value1, Boolean value2) {
-            addCriterion("IsCommentAbled between", value1, value2, "iscommentabled");
+        public Criteria andCreatedEqualTo(Date value) {
+            addCriterionForJDBCDate("created =", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andIscommentabledNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("IsCommentAbled not between", value1, value2, "iscommentabled");
+        public Criteria andCreatedNotEqualTo(Date value) {
+            addCriterionForJDBCDate("created <>", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatIsNull() {
-            addCriterion("createdAt is null");
+        public Criteria andCreatedGreaterThan(Date value) {
+            addCriterionForJDBCDate("created >", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatIsNotNull() {
-            addCriterion("createdAt is not null");
+        public Criteria andCreatedGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("created >=", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatEqualTo(Date value) {
-            addCriterionForJDBCDate("createdAt =", value, "createdat");
+        public Criteria andCreatedLessThan(Date value) {
+            addCriterionForJDBCDate("created <", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatNotEqualTo(Date value) {
-            addCriterionForJDBCDate("createdAt <>", value, "createdat");
+        public Criteria andCreatedLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("created <=", value, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatGreaterThan(Date value) {
-            addCriterionForJDBCDate("createdAt >", value, "createdat");
+        public Criteria andCreatedIn(List<Date> values) {
+            addCriterionForJDBCDate("created in", values, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("createdAt >=", value, "createdat");
+        public Criteria andCreatedNotIn(List<Date> values) {
+            addCriterionForJDBCDate("created not in", values, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatLessThan(Date value) {
-            addCriterionForJDBCDate("createdAt <", value, "createdat");
+        public Criteria andCreatedBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("created between", value1, value2, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("createdAt <=", value, "createdat");
+        public Criteria andCreatedNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("created not between", value1, value2, "created");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatIn(List<Date> values) {
-            addCriterionForJDBCDate("createdAt in", values, "createdat");
+        public Criteria andDeletedIsNull() {
+            addCriterion("deleted is null");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatNotIn(List<Date> values) {
-            addCriterionForJDBCDate("createdAt not in", values, "createdat");
+        public Criteria andDeletedIsNotNull() {
+            addCriterion("deleted is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("createdAt between", value1, value2, "createdat");
+        public Criteria andDeletedEqualTo(Date value) {
+            addCriterionForJDBCDate("deleted =", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedatNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("createdAt not between", value1, value2, "createdat");
+        public Criteria andDeletedNotEqualTo(Date value) {
+            addCriterionForJDBCDate("deleted <>", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatIsNull() {
-            addCriterion("deletedAt is null");
+        public Criteria andDeletedGreaterThan(Date value) {
+            addCriterionForJDBCDate("deleted >", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatIsNotNull() {
-            addCriterion("deletedAt is not null");
+        public Criteria andDeletedGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("deleted >=", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatEqualTo(Date value) {
-            addCriterionForJDBCDate("deletedAt =", value, "deletedat");
+        public Criteria andDeletedLessThan(Date value) {
+            addCriterionForJDBCDate("deleted <", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatNotEqualTo(Date value) {
-            addCriterionForJDBCDate("deletedAt <>", value, "deletedat");
+        public Criteria andDeletedLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("deleted <=", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatGreaterThan(Date value) {
-            addCriterionForJDBCDate("deletedAt >", value, "deletedat");
+        public Criteria andDeletedIn(List<Date> values) {
+            addCriterionForJDBCDate("deleted in", values, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("deletedAt >=", value, "deletedat");
+        public Criteria andDeletedNotIn(List<Date> values) {
+            addCriterionForJDBCDate("deleted not in", values, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatLessThan(Date value) {
-            addCriterionForJDBCDate("deletedAt <", value, "deletedat");
+        public Criteria andDeletedBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("deleted between", value1, value2, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("deletedAt <=", value, "deletedat");
+        public Criteria andDeletedNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("deleted not between", value1, value2, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatIn(List<Date> values) {
-            addCriterionForJDBCDate("deletedAt in", values, "deletedat");
+        public Criteria andPeriodIsNull() {
+            addCriterion("period is null");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatNotIn(List<Date> values) {
-            addCriterionForJDBCDate("deletedAt not in", values, "deletedat");
+        public Criteria andPeriodIsNotNull() {
+            addCriterion("period is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("deletedAt between", value1, value2, "deletedat");
+        public Criteria andPeriodEqualTo(Integer value) {
+            addCriterion("period =", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedatNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("deletedAt not between", value1, value2, "deletedat");
+        public Criteria andPeriodNotEqualTo(Integer value) {
+            addCriterion("period <>", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodIsNull() {
-            addCriterion("deletionPeriod is null");
+        public Criteria andPeriodGreaterThan(Integer value) {
+            addCriterion("period >", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodIsNotNull() {
-            addCriterion("deletionPeriod is not null");
+        public Criteria andPeriodGreaterThanOrEqualTo(Integer value) {
+            addCriterion("period >=", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodEqualTo(Integer value) {
-            addCriterion("deletionPeriod =", value, "deletionperiod");
+        public Criteria andPeriodLessThan(Integer value) {
+            addCriterion("period <", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodNotEqualTo(Integer value) {
-            addCriterion("deletionPeriod <>", value, "deletionperiod");
+        public Criteria andPeriodLessThanOrEqualTo(Integer value) {
+            addCriterion("period <=", value, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodGreaterThan(Integer value) {
-            addCriterion("deletionPeriod >", value, "deletionperiod");
+        public Criteria andPeriodIn(List<Integer> values) {
+            addCriterion("period in", values, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodGreaterThanOrEqualTo(Integer value) {
-            addCriterion("deletionPeriod >=", value, "deletionperiod");
+        public Criteria andPeriodNotIn(List<Integer> values) {
+            addCriterion("period not in", values, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodLessThan(Integer value) {
-            addCriterion("deletionPeriod <", value, "deletionperiod");
+        public Criteria andPeriodBetween(Integer value1, Integer value2) {
+            addCriterion("period between", value1, value2, "period");
             return (Criteria) this;
         }
 
-        public Criteria andDeletionperiodLessThanOrEqualTo(Integer value) {
-            addCriterion("deletionPeriod <=", value, "deletionperiod");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeletionperiodIn(List<Integer> values) {
-            addCriterion("deletionPeriod in", values, "deletionperiod");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeletionperiodNotIn(List<Integer> values) {
-            addCriterion("deletionPeriod not in", values, "deletionperiod");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeletionperiodBetween(Integer value1, Integer value2) {
-            addCriterion("deletionPeriod between", value1, value2, "deletionperiod");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeletionperiodNotBetween(Integer value1, Integer value2) {
-            addCriterion("deletionPeriod not between", value1, value2, "deletionperiod");
+        public Criteria andPeriodNotBetween(Integer value1, Integer value2) {
+            addCriterion("period not between", value1, value2, "period");
             return (Criteria) this;
         }
 

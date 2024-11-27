@@ -2,15 +2,16 @@ package com.qdu.mapper;
 
 import com.qdu.entity.Notification;
 import com.qdu.entity.NotificationExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface NotificationMapper {
     long countByExample(NotificationExample example);
 
     int deleteByExample(NotificationExample example);
 
-    int deleteByPrimaryKey(String notificationid);
+    int deleteByPrimaryKey(Long nid);
 
     int insert(Notification record);
 
@@ -20,7 +21,7 @@ public interface NotificationMapper {
 
     List<Notification> selectByExample(NotificationExample example);
 
-    Notification selectByPrimaryKey(String notificationid);
+    Notification selectByPrimaryKey(Long nid);
 
     int updateByExampleSelective(@Param("record") Notification record, @Param("example") NotificationExample example);
 

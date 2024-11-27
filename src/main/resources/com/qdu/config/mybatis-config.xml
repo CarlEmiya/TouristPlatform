@@ -11,12 +11,12 @@
         <package name="com.qdu.entity" />
     </typeAliases>
 
-    <plugins>
-        <plugin interceptor="org.mybatis.plugin.page.PageInterceptor">
-            <property name="pageSize" value="10"/>
-            <property name="reasonable" value="true"/>
-        </plugin>
-    </plugins>
+<!--    <plugins>-->
+<!--        <plugin interceptor="org.mybatis.plugin.page.PageInterceptor">-->
+<!--            <property name="pageSize" value="10"/>-->
+<!--            <property name="reasonable" value="true"/>-->
+<!--        </plugin>-->
+<!--    </plugins>-->
 
     <environments default="development">
         <environment id="development">

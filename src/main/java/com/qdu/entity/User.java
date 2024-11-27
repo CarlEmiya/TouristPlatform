@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class User implements Serializable {
-    private String userId;
+    private Long uid;
 
-    private String userName;
+    private String name;
 
     private String password;
 
     private String gender;
 
-    private Date birthDate;
+    private Date birth;
 
-    private String idCard;
+    private String idcard;
 
     private String email;
 
@@ -24,15 +24,15 @@ public class User implements Serializable {
 
     private String occupation;
 
-    private String recoveryQuestion;
+    private String question;
 
     private Integer level;
 
-    private Date createdAt;
+    private Date created;
 
-    private Date deletedAt;
+    private Date deleted;
 
-    private Integer deletionPeriod;
+    private Integer period;
 
     private Integer status;
 
@@ -46,20 +46,20 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getUserId() {
-        return userId;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
@@ -78,20 +78,20 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public Date getBirth() {
+        return birth;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirth(Date birth) {
+        this.birth = birth;
     }
 
-    public String getIdCard() {
-        return idCard;
+    public String getIdcard() {
+        return idcard;
     }
 
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
     }
 
     public String getEmail() {
@@ -126,12 +126,12 @@ public class User implements Serializable {
         this.occupation = occupation;
     }
 
-    public String getRecoveryQuestion() {
-        return recoveryQuestion;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setRecoveryQuestion(String recoveryQuestion) {
-        this.recoveryQuestion = recoveryQuestion;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     public Integer getLevel() {
@@ -142,28 +142,28 @@ public class User implements Serializable {
         this.level = level;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public Date getDeletedAt() {
-        return deletedAt;
+    public Date getDeleted() {
+        return deleted;
     }
 
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
-    public Integer getDeletionPeriod() {
-        return deletionPeriod;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public void setDeletionPeriod(Integer deletionPeriod) {
-        this.deletionPeriod = deletionPeriod;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public Integer getStatus() {
@@ -212,21 +212,21 @@ public class User implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", userid=").append(userId);
-        sb.append(", username=").append(userName);
+        sb.append(", uid=").append(uid);
+        sb.append(", name=").append(name);
         sb.append(", password=").append(password);
         sb.append(", gender=").append(gender);
-        sb.append(", birthdate=").append(birthDate);
-        sb.append(", idcard=").append(idCard);
+        sb.append(", birth=").append(birth);
+        sb.append(", idcard=").append(idcard);
         sb.append(", email=").append(email);
         sb.append(", phone=").append(phone);
         sb.append(", city=").append(city);
         sb.append(", occupation=").append(occupation);
-        sb.append(", recoveryquestion=").append(recoveryQuestion);
+        sb.append(", question=").append(question);
         sb.append(", level=").append(level);
-        sb.append(", createdat=").append(createdAt);
-        sb.append(", deletedat=").append(deletedAt);
-        sb.append(", deletionperiod=").append(deletionPeriod);
+        sb.append(", created=").append(created);
+        sb.append(", deleted=").append(deleted);
+        sb.append(", period=").append(period);
         sb.append(", status=").append(status);
         sb.append(", identify=").append(identify);
         sb.append(", answer=").append(answer);
@@ -235,5 +235,40 @@ public class User implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
+    }
+
+
+
+    public User(Long uid, String name, String password, String gender, Date birth, String idcard, String email, String phone, String city, String occupation, String question, Integer level, Date created, Date deleted, Integer period, Integer status, Integer identify, String answer, String picture, String description) {
+        this.uid = uid;
+        this.name = name;
+        this.password = password;
+        this.gender = gender;
+        this.birth = birth;
+        this.idcard = idcard;
+        this.email = email;
+        this.phone = phone;
+        this.city = city;
+        this.occupation = occupation;
+        this.question = question;
+        this.level = level;
+        this.created = created;
+        this.deleted = deleted;
+        this.period = period;
+        this.status = status;
+        this.identify = identify;
+        this.answer = answer;
+        this.picture = picture;
+        this.description = description;
+    }
+
+    public User() {
+    }
+
+    public User(String name, String password, String email, String phone) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
     }
 }

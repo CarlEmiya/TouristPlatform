@@ -21,7 +21,7 @@ public class TravelActivityController {
     // 添加旅游活动
     @PostMapping("/add")
     public ResponseEntity<Integer> addActivity(@RequestBody TravelActivity activity) {
-        activity.setDeletionperiod(365); // 设置默认删除周期为365天
+        activity.setPeriod(365); // 设置默认删除周期为365天
         int result = travelActivityService.addActivity(activity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -36,19 +36,19 @@ public class TravelActivityController {
     // 更新指定活动的状态
     @PutMapping("/updateStatus")
     public ResponseEntity<Integer> updateActivityStatus(
-            @RequestParam("activityId") String activityId,
+            @RequestParam("aid") Long aid,
             @RequestParam("newStatus") int newStatus) {
-        int result = travelActivityService.updateActivityStatus(activityId, newStatus);
+        int result = travelActivityService.updateActivityStatus(aid, newStatus);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 取消活动，并记录取消原因
     @PutMapping("/cancel")
     public ResponseEntity<Integer> CancelActivity(
-            @RequestParam("activityId") String activityId,
+            @RequestParam("aid") Long aid,
             @RequestParam("newStatus") int newStatus,
             @RequestParam("cancelReason") String cancelReason) {
-        int result = travelActivityService.CancelActivity(activityId, newStatus, cancelReason);
+        int result = travelActivityService.CancelActivity(aid, newStatus, cancelReason);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -78,8 +78,8 @@ public class TravelActivityController {
     // 获取指定ID的活动详细信息
     @GetMapping("/getActivity")
     public ResponseEntity<TravelActivity> getActivity(
-            @RequestParam("activityId") String activityId) {
-        TravelActivity activity = travelActivityService.getActivityByActivityId(activityId);
+            @RequestParam("aid") Long aid) {
+        TravelActivity activity = travelActivityService.getActivityByActivityId(aid);
         if (activity!= null) {
             return new ResponseEntity<>(activity, HttpStatus.OK);
         } else {
@@ -104,18 +104,18 @@ public class TravelActivityController {
     }
 
     // 根据用户ID和时间间隔筛选活动
-    @GetMapping("/searchByTimeAndUserId")
-    public ResponseEntity<List<TravelActivity>> searchActivitiesByTimeAndUserId(
-            @RequestParam("userId") String userId,
+    @GetMapping("/searchByTimeAndUid")
+    public ResponseEntity<List<TravelActivity>> searchActivitiesByTimeAndUid(
+            @RequestParam("uid") Long uid,
             @RequestParam("timeInterval") int timeInterval) {
-        List<TravelActivity> activities = travelActivityService.searchActivitiesByTimeAndUserId(userId, timeInterval);
+        List<TravelActivity> activities = travelActivityService.searchActivitiesByTimeAndUid(uid, timeInterval);
         return new ResponseEntity<>(activities, HttpStatus.OK);
     }
 
     // 隐藏活动
     @PutMapping("/hide")
-    public ResponseEntity<Integer> hideActivity(@RequestParam("activityId") String activityId) {
-        int result = travelActivityService.hideActivity(activityId);
+    public ResponseEntity<Integer> hideActivity(@RequestParam("aid") Long aid) {
+        int result = travelActivityService.hideActivity(aid);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

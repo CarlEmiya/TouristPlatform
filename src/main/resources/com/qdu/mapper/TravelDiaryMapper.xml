@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.TravelDiaryMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.TravelDiary">
-    <id column="diaryId" jdbcType="VARCHAR" property="diaryid" />
-    <result column="userId" jdbcType="VARCHAR" property="userid" />
-    <result column="IsCommentAbled" jdbcType="BIT" property="iscommentabled" />
-    <result column="createdAt" jdbcType="DATE" property="createdat" />
-    <result column="deletedAt" jdbcType="DATE" property="deletedat" />
-    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionperiod" />
+  <resultMap id="TravelDiaryResultMap" type="com.qdu.entity.TravelDiary">
+    <id column="did" jdbcType="BIGINT" property="did" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="able" jdbcType="BIT" property="able" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="agree" jdbcType="INTEGER" property="agree" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.TravelDiary">
+  <resultMap extends="TravelDiaryResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.TravelDiary">
     <result column="title" jdbcType="LONGVARCHAR" property="title" />
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
     <result column="label" jdbcType="LONGVARCHAR" property="label" />
@@ -75,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    diaryId, userId, IsCommentAbled, createdAt, deletedAt, deletionPeriod, status, agree
+    did, uid, able, created, deleted, period, status, agree
   </sql>
   <sql id="Blob_Column_List">
     title, content, label
@@ -96,7 +96,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.TravelDiaryExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.TravelDiaryExample" resultMap="TravelDiaryResultMap">
     select
     <if test="distinct">
       distinct
@@ -110,17 +110,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from travel_diary
-    where diaryId = #{diaryid,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from travel_diary
-    where diaryId = #{diaryid,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.TravelDiaryExample">
     delete from travel_diary
@@ -129,35 +129,35 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.TravelDiary">
-    insert into travel_diary (diaryId, userId, IsCommentAbled, 
-      createdAt, deletedAt, deletionPeriod, 
-      status, agree, title, 
-      content, label)
-    values (#{diaryid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{iscommentabled,jdbcType=BIT}, 
-      #{createdat,jdbcType=DATE}, #{deletedat,jdbcType=DATE}, #{deletionperiod,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, 
-      #{content,jdbcType=LONGVARCHAR}, #{label,jdbcType=LONGVARCHAR})
+    insert into travel_diary (did, uid, able, created, 
+      deleted, period, status, 
+      agree, title, content, 
+      label)
+    values (#{did,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{able,jdbcType=BIT}, #{created,jdbcType=DATE}, 
+      #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{content,jdbcType=LONGVARCHAR}, 
+      #{label,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.TravelDiary">
     insert into travel_diary
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="diaryid != null">
-        diaryId,
+      <if test="did != null">
+        did,
       </if>
-      <if test="userid != null">
-        userId,
+      <if test="uid != null">
+        uid,
       </if>
-      <if test="iscommentabled != null">
-        IsCommentAbled,
+      <if test="able != null">
+        able,
       </if>
-      <if test="createdat != null">
-        createdAt,
+      <if test="created != null">
+        created,
       </if>
-      <if test="deletedat != null">
-        deletedAt,
+      <if test="deleted != null">
+        deleted,
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod,
+      <if test="period != null">
+        period,
       </if>
       <if test="status != null">
         status,
@@ -176,23 +176,23 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="diaryid != null">
-        #{diaryid,jdbcType=VARCHAR},
+      <if test="did != null">
+        #{did,jdbcType=BIGINT},
       </if>
-      <if test="userid != null">
-        #{userid,jdbcType=VARCHAR},
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
       </if>
-      <if test="iscommentabled != null">
-        #{iscommentabled,jdbcType=BIT},
+      <if test="able != null">
+        #{able,jdbcType=BIT},
       </if>
-      <if test="createdat != null">
-        #{createdat,jdbcType=DATE},
+      <if test="created != null">
+        #{created,jdbcType=DATE},
       </if>
-      <if test="deletedat != null">
-        #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -220,23 +220,23 @@
   <update id="updateByExampleSelective" parameterType="map">
     update travel_diary
     <set>
-      <if test="record.diaryid != null">
-        diaryId = #{record.diaryid,jdbcType=VARCHAR},
+      <if test="record.did != null">
+        did = #{record.did,jdbcType=BIGINT},
       </if>
-      <if test="record.userid != null">
-        userId = #{record.userid,jdbcType=VARCHAR},
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
       </if>
-      <if test="record.iscommentabled != null">
-        IsCommentAbled = #{record.iscommentabled,jdbcType=BIT},
+      <if test="record.able != null">
+        able = #{record.able,jdbcType=BIT},
       </if>
-      <if test="record.createdat != null">
-        createdAt = #{record.createdat,jdbcType=DATE},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
       </if>
-      <if test="record.deletedat != null">
-        deletedAt = #{record.deletedat,jdbcType=DATE},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
       </if>
-      <if test="record.deletionperiod != null">
-        deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
@@ -260,12 +260,12 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update travel_diary
-    set diaryId = #{record.diaryid,jdbcType=VARCHAR},
-      userId = #{record.userid,jdbcType=VARCHAR},
-      IsCommentAbled = #{record.iscommentabled,jdbcType=BIT},
-      createdAt = #{record.createdat,jdbcType=DATE},
-      deletedAt = #{record.deletedat,jdbcType=DATE},
-      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+    set did = #{record.did,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      able = #{record.able,jdbcType=BIT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       agree = #{record.agree,jdbcType=INTEGER},
       title = #{record.title,jdbcType=LONGVARCHAR},
@@ -277,12 +277,12 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update travel_diary
-    set diaryId = #{record.diaryid,jdbcType=VARCHAR},
-      userId = #{record.userid,jdbcType=VARCHAR},
-      IsCommentAbled = #{record.iscommentabled,jdbcType=BIT},
-      createdAt = #{record.createdat,jdbcType=DATE},
-      deletedAt = #{record.deletedat,jdbcType=DATE},
-      deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+    set did = #{record.did,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      able = #{record.able,jdbcType=BIT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       agree = #{record.agree,jdbcType=INTEGER}
     <if test="_parameter != null">
@@ -292,20 +292,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.TravelDiary">
     update travel_diary
     <set>
-      <if test="userid != null">
-        userId = #{userid,jdbcType=VARCHAR},
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
       </if>
-      <if test="iscommentabled != null">
-        IsCommentAbled = #{iscommentabled,jdbcType=BIT},
+      <if test="able != null">
+        able = #{able,jdbcType=BIT},
       </if>
-      <if test="createdat != null">
-        createdAt = #{createdat,jdbcType=DATE},
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
       </if>
-      <if test="deletedat != null">
-        deletedAt = #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -323,31 +323,31 @@
         label = #{label,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where diaryId = #{diaryid,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.TravelDiary">
     update travel_diary
-    set userId = #{userid,jdbcType=VARCHAR},
-      IsCommentAbled = #{iscommentabled,jdbcType=BIT},
-      createdAt = #{createdat,jdbcType=DATE},
-      deletedAt = #{deletedat,jdbcType=DATE},
-      deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+    set uid = #{uid,jdbcType=BIGINT},
+      able = #{able,jdbcType=BIT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       agree = #{agree,jdbcType=INTEGER},
       title = #{title,jdbcType=LONGVARCHAR},
       content = #{content,jdbcType=LONGVARCHAR},
       label = #{label,jdbcType=LONGVARCHAR}
-    where diaryId = #{diaryid,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.TravelDiary">
     update travel_diary
-    set userId = #{userid,jdbcType=VARCHAR},
-      IsCommentAbled = #{iscommentabled,jdbcType=BIT},
-      createdAt = #{createdat,jdbcType=DATE},
-      deletedAt = #{deletedat,jdbcType=DATE},
-      deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+    set uid = #{uid,jdbcType=BIGINT},
+      able = #{able,jdbcType=BIT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       agree = #{agree,jdbcType=INTEGER}
-    where diaryId = #{diaryid,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=BIGINT}
   </update>
 </mapper>

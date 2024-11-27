@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qdu.mapper.LikeMapper">
-  <resultMap id="LikeResultMap" type="com.qdu.entity.Like">
-    <id column="lid" jdbcType="BIGINT" property="lid" />
-    <result column="uid" jdbcType="BIGINT" property="uid" />
+<mapper namespace="com.qdu.mapper.FileMapper">
+  <resultMap id="FileResultMap" type="com.qdu.entity.File">
+    <id column="fid" jdbcType="BIGINT" property="fid" />
     <result column="connectid" jdbcType="BIGINT" property="connectid" />
-    <result column="type" jdbcType="CHAR" property="type" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="status" jdbcType="BIT" property="status" />
+  </resultMap>
+  <resultMap extends="FileResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.File">
+    <result column="path" jdbcType="LONGVARCHAR" property="path" />
+    <result column="type" jdbcType="LONGVARCHAR" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,15 +68,20 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    lid, uid, connectid, type, created, status
+    fid, connectid
   </sql>
-  <select id="selectByExample" parameterType="com.qdu.entity.LikeExample" resultMap="LikeResultMap">
+  <sql id="Blob_Column_List">
+    path, type
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.FileExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from like
+    ,
+    <include refid="Blob_Column_List" />
+    from file
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,143 +89,144 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="LikeResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.FileExample" resultMap="FileResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
-    from like
-    where lid = #{lid,jdbcType=BIGINT}
+    ,
+    <include refid="Blob_Column_List" />
+    from file
+    where fid = #{fid,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from like
-    where lid = #{lid,jdbcType=BIGINT}
+    delete from file
+    where fid = #{fid,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.qdu.entity.LikeExample">
-    delete from like
+  <delete id="deleteByExample" parameterType="com.qdu.entity.FileExample">
+    delete from file
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.qdu.entity.Like">
-    insert into like (lid, uid, connectid, 
-      type, created, status)
-    values (#{lid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, 
-      #{type,jdbcType=CHAR}, #{created,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
+  <insert id="insert" parameterType="com.qdu.entity.File">
+    insert into file (fid, connectid, path, 
+      type)
+    values (#{fid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, #{path,jdbcType=LONGVARCHAR}, 
+      #{type,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.qdu.entity.Like">
-    insert into like
+  <insert id="insertSelective" parameterType="com.qdu.entity.File">
+    insert into file
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="lid != null">
-        lid,
-      </if>
-      <if test="uid != null">
-        uid,
+      <if test="fid != null">
+        fid,
       </if>
       <if test="connectid != null">
         connectid,
       </if>
+      <if test="path != null">
+        path,
+      </if>
       <if test="type != null">
         type,
       </if>
-      <if test="created != null">
-        created,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="lid != null">
-        #{lid,jdbcType=BIGINT},
-      </if>
-      <if test="uid != null">
-        #{uid,jdbcType=BIGINT},
+      <if test="fid != null">
+        #{fid,jdbcType=BIGINT},
       </if>
       <if test="connectid != null">
         #{connectid,jdbcType=BIGINT},
       </if>
+      <if test="path != null">
+        #{path,jdbcType=LONGVARCHAR},
+      </if>
       <if test="type != null">
-        #{type,jdbcType=CHAR},
-      </if>
-      <if test="created != null">
-        #{created,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=BIT},
+        #{type,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.qdu.entity.LikeExample" resultType="java.lang.Long">
-    select count(*) from like
+  <select id="countByExample" parameterType="com.qdu.entity.FileExample" resultType="java.lang.Long">
+    select count(*) from file
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update like
+    update file
     <set>
-      <if test="record.lid != null">
-        lid = #{record.lid,jdbcType=BIGINT},
-      </if>
-      <if test="record.uid != null">
-        uid = #{record.uid,jdbcType=BIGINT},
+      <if test="record.fid != null">
+        fid = #{record.fid,jdbcType=BIGINT},
       </if>
       <if test="record.connectid != null">
         connectid = #{record.connectid,jdbcType=BIGINT},
       </if>
+      <if test="record.path != null">
+        path = #{record.path,jdbcType=LONGVARCHAR},
+      </if>
       <if test="record.type != null">
-        type = #{record.type,jdbcType=CHAR},
-      </if>
-      <if test="record.created != null">
-        created = #{record.created,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.status != null">
-        status = #{record.status,jdbcType=BIT},
+        type = #{record.type,jdbcType=LONGVARCHAR},
       </if>
     </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update file
+    set fid = #{record.fid,jdbcType=BIGINT},
+      connectid = #{record.connectid,jdbcType=BIGINT},
+      path = #{record.path,jdbcType=LONGVARCHAR},
+      type = #{record.type,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update like
-    set lid = #{record.lid,jdbcType=BIGINT},
-      uid = #{record.uid,jdbcType=BIGINT},
-      connectid = #{record.connectid,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=CHAR},
-      created = #{record.created,jdbcType=TIMESTAMP},
-      status = #{record.status,jdbcType=BIT}
+    update file
+    set fid = #{record.fid,jdbcType=BIGINT},
+      connectid = #{record.connectid,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Like">
-    update like
+  <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.File">
+    update file
     <set>
-      <if test="uid != null">
-        uid = #{uid,jdbcType=BIGINT},
-      </if>
       <if test="connectid != null">
         connectid = #{connectid,jdbcType=BIGINT},
       </if>
+      <if test="path != null">
+        path = #{path,jdbcType=LONGVARCHAR},
+      </if>
       <if test="type != null">
-        type = #{type,jdbcType=CHAR},
-      </if>
-      <if test="created != null">
-        created = #{created,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=BIT},
+        type = #{type,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where lid = #{lid,jdbcType=BIGINT}
+    where fid = #{fid,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Like">
-    update like
-    set uid = #{uid,jdbcType=BIGINT},
-      connectid = #{connectid,jdbcType=BIGINT},
-      type = #{type,jdbcType=CHAR},
-      created = #{created,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=BIT}
-    where lid = #{lid,jdbcType=BIGINT}
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.File">
+    update file
+    set connectid = #{connectid,jdbcType=BIGINT},
+      path = #{path,jdbcType=LONGVARCHAR},
+      type = #{type,jdbcType=LONGVARCHAR}
+    where fid = #{fid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.File">
+    update file
+    set connectid = #{connectid,jdbcType=BIGINT}
+    where fid = #{fid,jdbcType=BIGINT}
   </update>
 </mapper>

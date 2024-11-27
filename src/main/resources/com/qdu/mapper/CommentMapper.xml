@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.CommentMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.Comment">
-    <id column="commentId" jdbcType="VARCHAR" property="commentId" />
-    <result column="associatedId" jdbcType="VARCHAR" property="associatedId" />
-    <result column="userId" jdbcType="VARCHAR" property="userId" />
-    <result column="createdAt" jdbcType="DATE" property="createdAt" />
-    <result column="deletedAt" jdbcType="DATE" property="deletedAt" />
-    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionPeriod" />
+  <resultMap id="CommentResultMap" type="com.qdu.entity.Comment">
+    <id column="cid" jdbcType="BIGINT" property="cid" />
+    <result column="connectid" jdbcType="BIGINT" property="connectid" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="rate" jdbcType="DOUBLE" property="rate" />
     <result column="agree" jdbcType="INTEGER" property="agree" />
-    <result column="AssociatedType" jdbcType="VARCHAR" property="associatedType" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Comment">
+  <resultMap extends="CommentResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.Comment">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="type" jdbcType="LONGVARCHAR" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,11 +75,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    commentId, associatedId, userId, createdAt, deletedAt, deletionPeriod, status, rate, 
-    agree, AssociatedType
+    cid, connectid, uid, created, deleted, period, status, rate, agree
   </sql>
   <sql id="Blob_Column_List">
-    content
+    content, type
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.CommentExample" resultMap="ResultMapWithBLOBs">
     select
@@ -97,7 +96,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.CommentExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.CommentExample" resultMap="CommentResultMap">
     select
     <if test="distinct">
       distinct
@@ -111,17 +110,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="findById" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from comment
-    where commentId = #{commentId,jdbcType=VARCHAR}
+    where cid = #{cid,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from comment
-    where commentId = #{commentId,jdbcType=VARCHAR}
+    where cid = #{cid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.CommentExample">
     delete from comment
@@ -130,35 +129,35 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.Comment">
-    insert into comment (commentId, associatedId, userId, 
-      createdAt, deletedAt, deletionPeriod, 
+    insert into comment (cid, connectid, uid, 
+      created, deleted, period, 
       status, rate, agree, 
-      AssociatedType, content)
-    values (#{commentId,jdbcType=VARCHAR}, #{associatedId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
-      #{createdAt,jdbcType=DATE}, #{deletedAt,jdbcType=DATE}, #{deletionPeriod,jdbcType=INTEGER}, 
+      content, type)
+    values (#{cid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, 
+      #{created,jdbcType=DATE}, #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER}, 
-      #{associatedType,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+      #{content,jdbcType=LONGVARCHAR}, #{type,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.Comment">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="commentId != null">
-        commentId,
+      <if test="cid != null">
+        cid,
       </if>
-      <if test="associatedId != null">
-        associatedId,
+      <if test="connectid != null">
+        connectid,
       </if>
-      <if test="userId != null">
-        userId,
+      <if test="uid != null">
+        uid,
       </if>
-      <if test="createdAt != null">
-        createdAt,
+      <if test="created != null">
+        created,
       </if>
-      <if test="deletedAt != null">
-        deletedAt,
+      <if test="deleted != null">
+        deleted,
       </if>
-      <if test="deletionPeriod != null">
-        deletionPeriod,
+      <if test="period != null">
+        period,
       </if>
       <if test="status != null">
         status,
@@ -169,31 +168,31 @@
       <if test="agree != null">
         agree,
       </if>
-      <if test="associatedType != null">
-        AssociatedType,
-      </if>
       <if test="content != null">
         content,
       </if>
+      <if test="type != null">
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="commentId != null">
-        #{commentId,jdbcType=VARCHAR},
+      <if test="cid != null">
+        #{cid,jdbcType=BIGINT},
       </if>
-      <if test="associatedId != null">
-        #{associatedId,jdbcType=VARCHAR},
+      <if test="connectid != null">
+        #{connectid,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=VARCHAR},
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
       </if>
-      <if test="createdAt != null">
-        #{createdAt,jdbcType=DATE},
+      <if test="created != null">
+        #{created,jdbcType=DATE},
       </if>
-      <if test="deletedAt != null">
-        #{deletedAt,jdbcType=DATE},
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionPeriod != null">
-        #{deletionPeriod,jdbcType=INTEGER},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -204,11 +203,11 @@
       <if test="agree != null">
         #{agree,jdbcType=INTEGER},
       </if>
-      <if test="associatedType != null">
-        #{associatedType,jdbcType=VARCHAR},
-      </if>
       <if test="content != null">
         #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -221,23 +220,23 @@
   <update id="updateByExampleSelective" parameterType="map">
     update comment
     <set>
-      <if test="record.commentId != null">
-        commentId = #{record.commentId,jdbcType=VARCHAR},
+      <if test="record.cid != null">
+        cid = #{record.cid,jdbcType=BIGINT},
       </if>
-      <if test="record.associatedId != null">
-        associatedId = #{record.associatedId,jdbcType=VARCHAR},
+      <if test="record.connectid != null">
+        connectid = #{record.connectid,jdbcType=BIGINT},
       </if>
-      <if test="record.userId != null">
-        userId = #{record.userId,jdbcType=VARCHAR},
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
       </if>
-      <if test="record.createdAt != null">
-        createdAt = #{record.createdAt,jdbcType=DATE},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
       </if>
-      <if test="record.deletedAt != null">
-        deletedAt = #{record.deletedAt,jdbcType=DATE},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
       </if>
-      <if test="record.deletionPeriod != null">
-        deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
@@ -248,11 +247,11 @@
       <if test="record.agree != null">
         agree = #{record.agree,jdbcType=INTEGER},
       </if>
-      <if test="record.associatedType != null">
-        AssociatedType = #{record.associatedType,jdbcType=VARCHAR},
-      </if>
       <if test="record.content != null">
         content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -261,33 +260,32 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update comment
-    set commentId = #{record.commentId,jdbcType=VARCHAR},
-      associatedId = #{record.associatedId,jdbcType=VARCHAR},
-      userId = #{record.userId,jdbcType=VARCHAR},
-      createdAt = #{record.createdAt,jdbcType=DATE},
-      deletedAt = #{record.deletedAt,jdbcType=DATE},
-      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+    set cid = #{record.cid,jdbcType=BIGINT},
+      connectid = #{record.connectid,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       rate = #{record.rate,jdbcType=DOUBLE},
       agree = #{record.agree,jdbcType=INTEGER},
-      AssociatedType = #{record.associatedType,jdbcType=VARCHAR},
-      content = #{record.content,jdbcType=LONGVARCHAR}
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      type = #{record.type,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update comment
-    set commentId = #{record.commentId,jdbcType=VARCHAR},
-      associatedId = #{record.associatedId,jdbcType=VARCHAR},
-      userId = #{record.userId,jdbcType=VARCHAR},
-      createdAt = #{record.createdAt,jdbcType=DATE},
-      deletedAt = #{record.deletedAt,jdbcType=DATE},
-      deletionPeriod = #{record.deletionPeriod,jdbcType=INTEGER},
+    set cid = #{record.cid,jdbcType=BIGINT},
+      connectid = #{record.connectid,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      created = #{record.created,jdbcType=DATE},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       rate = #{record.rate,jdbcType=DOUBLE},
-      agree = #{record.agree,jdbcType=INTEGER},
-      AssociatedType = #{record.associatedType,jdbcType=VARCHAR}
+      agree = #{record.agree,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -295,20 +293,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.Comment">
     update comment
     <set>
-      <if test="associatedId != null">
-        associatedId = #{associatedId,jdbcType=VARCHAR},
+      <if test="connectid != null">
+        connectid = #{connectid,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        userId = #{userId,jdbcType=VARCHAR},
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
       </if>
-      <if test="createdAt != null">
-        createdAt = #{createdAt,jdbcType=DATE},
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
       </if>
-      <if test="deletedAt != null">
-        deletedAt = #{deletedAt,jdbcType=DATE},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionPeriod != null">
-        deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -319,40 +317,39 @@
       <if test="agree != null">
         agree = #{agree,jdbcType=INTEGER},
       </if>
-      <if test="associatedType != null">
-        AssociatedType = #{associatedType,jdbcType=VARCHAR},
-      </if>
       <if test="content != null">
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
+      <if test="type != null">
+        type = #{type,jdbcType=LONGVARCHAR},
+      </if>
     </set>
-    where commentId = #{commentId,jdbcType=VARCHAR}
+    where cid = #{cid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.Comment">
     update comment
-    set associatedId = #{associatedId,jdbcType=VARCHAR},
-      userId = #{userId,jdbcType=VARCHAR},
-      createdAt = #{createdAt,jdbcType=DATE},
-      deletedAt = #{deletedAt,jdbcType=DATE},
-      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+    set connectid = #{connectid,jdbcType=BIGINT},
+      uid = #{uid,jdbcType=BIGINT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       rate = #{rate,jdbcType=DOUBLE},
       agree = #{agree,jdbcType=INTEGER},
-      AssociatedType = #{associatedType,jdbcType=VARCHAR},
-      content = #{content,jdbcType=LONGVARCHAR}
-    where commentId = #{commentId,jdbcType=VARCHAR}
+      content = #{content,jdbcType=LONGVARCHAR},
+      type = #{type,jdbcType=LONGVARCHAR}
+    where cid = #{cid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.Comment">
     update comment
-    set associatedId = #{associatedId,jdbcType=VARCHAR},
-      userId = #{userId,jdbcType=VARCHAR},
-      createdAt = #{createdAt,jdbcType=DATE},
-      deletedAt = #{deletedAt,jdbcType=DATE},
-      deletionPeriod = #{deletionPeriod,jdbcType=INTEGER},
+    set connectid = #{connectid,jdbcType=BIGINT},
+      uid = #{uid,jdbcType=BIGINT},
+      created = #{created,jdbcType=DATE},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       rate = #{rate,jdbcType=DOUBLE},
-      agree = #{agree,jdbcType=INTEGER},
-      AssociatedType = #{associatedType,jdbcType=VARCHAR}
-    where commentId = #{commentId,jdbcType=VARCHAR}
+      agree = #{agree,jdbcType=INTEGER}
+    where cid = #{cid,jdbcType=BIGINT}
   </update>
 </mapper>

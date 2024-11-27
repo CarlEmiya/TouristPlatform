@@ -12,10 +12,10 @@ public interface ActivityRegistrationService {
 	int registerForActivity(ActivityRegistration registration);
 
 	// 根据活动id获取报名用户列表
-	List<User> getRegistrationsByActivityId(String activityId);
+	List<User> getRegistrationsByActivityId(Long aid);
 
 	// 查询用户参加的活动列表
-	List<TravelActivity> getActivitiesByUserId(String userId);
+	List<TravelActivity> getActivitiesByUid(Long uid);
 
 	// 根据报名id取消报名
 	int cancelRegistration(String registrationId);

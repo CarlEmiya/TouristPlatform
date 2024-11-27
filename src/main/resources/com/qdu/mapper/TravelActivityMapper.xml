@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qdu.mapper.TravelActivityMapper">
-  <resultMap id="BaseResultMap" type="com.qdu.entity.TravelActivity">
-    <id column="activityId" jdbcType="VARCHAR" property="activityId" />
-    <result column="userId" jdbcType="VARCHAR" property="userId" />
-    <result column="participantLevel" jdbcType="INTEGER" property="participantLevel" />
-    <result column="requiredParticipants" jdbcType="INTEGER" property="requiredParticipants" />
-    <result column="currentParticipants" jdbcType="INTEGER" property="currentParticipants" />
-    <result column="startDate" jdbcType="DATE" property="startDate" />
-    <result column="endDate" jdbcType="DATE" property="endDate" />
+  <resultMap id="TravelActivityResultMap" type="com.qdu.entity.TravelActivity">
+    <id column="aid" jdbcType="BIGINT" property="aid" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="min" jdbcType="INTEGER" property="min" />
+    <result column="required" jdbcType="INTEGER" property="required" />
+    <result column="current" jdbcType="INTEGER" property="current" />
+    <result column="start" jdbcType="DATE" property="start" />
+    <result column="end" jdbcType="DATE" property="end" />
     <result column="cost" jdbcType="DECIMAL" property="cost" />
     <result column="location" jdbcType="VARCHAR" property="location" />
-    <result column="deletedAt" jdbcType="DATE" property="deletedat" />
-    <result column="deletionPeriod" jdbcType="INTEGER" property="deletionperiod" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="RegistrationDeadline" jdbcType="TIMESTAMP" property="registrationdeadline" />
-    <result column="createdAt" jdbcType="DATE" property="createdat" />
+    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
+    <result column="created" jdbcType="DATE" property="created" />
     <result column="rate" jdbcType="DOUBLE" property="rate" />
     <result column="agree" jdbcType="INTEGER" property="agree" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qdu.entity.TravelActivity">
+  <resultMap extends="TravelActivityResultMap" id="TravelActivityResultMapWithBLOBs" type="com.qdu.entity.TravelActivity">
     <result column="title" jdbcType="LONGVARCHAR" property="title" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
     <result column="label" jdbcType="LONGVARCHAR" property="label" />
-    <result column="CancelReason" jdbcType="LONGVARCHAR" property="cancelReason" />
+    <result column="reason" jdbcType="LONGVARCHAR" property="reason" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -84,14 +84,13 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    activityId, userId, participantLevel, requiredParticipants, currentParticipants,
-    startDate, endDate, cost, location, deletedAt, deletionPeriod, status, RegistrationDeadline, 
-    createdAt, rate, agree
+    aid, uid, min, required, current, start, end, cost, location, deleted, period, status, 
+    deadline, created, rate, agree
   </sql>
   <sql id="Blob_Column_List">
-    title, description, label, CancelReason
+    title, description, label, reason
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.TravelActivityExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.qdu.entity.TravelActivityExample" resultMap="TravelActivityResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -107,7 +106,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.qdu.entity.TravelActivityExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.qdu.entity.TravelActivityExample" resultMap="TravelActivityResultMap">
     select
     <if test="distinct">
       distinct
@@ -121,17 +120,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
-    select
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="TravelActivityResultMapWithBLOBs">
+    select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from travel_activity
-    where activityId = #{activityid,jdbcType=VARCHAR}
+    where aid = #{aid,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from travel_activity
-    where activityId = #{activityid,jdbcType=VARCHAR}
+    where aid = #{aid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qdu.entity.TravelActivityExample">
     delete from travel_activity
@@ -140,46 +139,44 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qdu.entity.TravelActivity">
-    insert into travel_activity (activityId, userId, participantLevel,
-                                 requiredParticipants, currentParticipants,
-                                 startDate, endDate, cost,
-                                 location, deletedAt, deletionPeriod,
-                                 status, RegistrationDeadline, createdAt,
-                                 rate, agree, title,
-                                 description, label, CancelReason
-    )
-    values (#{activityid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{participantlevel,jdbcType=INTEGER},
-            #{requiredparticipants,jdbcType=INTEGER}, #{currentparticipants,jdbcType=INTEGER},
-            #{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, #{cost,jdbcType=DECIMAL},
-            #{location,jdbcType=VARCHAR}, #{deletedat,jdbcType=DATE}, #{deletionperiod,jdbcType=INTEGER},
-            #{status,jdbcType=INTEGER}, #{registrationdeadline,jdbcType=TIMESTAMP}, #{createdat,jdbcType=DATE},
-            #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR},
-            #{description,jdbcType=LONGVARCHAR}, #{label,jdbcType=LONGVARCHAR}, #{cancelreason,jdbcType=LONGVARCHAR}
-           )
+    insert into travel_activity (aid, uid, min, 
+      required, current, start, 
+      end, cost, location, deleted, 
+      period, status, deadline, 
+      created, rate, agree, title, 
+      description, label, reason
+      )
+    values (#{aid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{min,jdbcType=INTEGER}, 
+      #{required,jdbcType=INTEGER}, #{current,jdbcType=INTEGER}, #{start,jdbcType=DATE}, 
+      #{end,jdbcType=DATE}, #{cost,jdbcType=DECIMAL}, #{location,jdbcType=VARCHAR}, #{deleted,jdbcType=DATE}, 
+      #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{deadline,jdbcType=TIMESTAMP}, 
+      #{created,jdbcType=DATE}, #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, 
+      #{description,jdbcType=LONGVARCHAR}, #{label,jdbcType=LONGVARCHAR}, #{reason,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qdu.entity.TravelActivity">
     insert into travel_activity
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="activityid != null">
-        activityId,
+      <if test="aid != null">
+        aid,
       </if>
-      <if test="userid != null">
-        userId,
+      <if test="uid != null">
+        uid,
       </if>
-      <if test="participantlevel != null">
-        participantLevel,
+      <if test="min != null">
+        min,
       </if>
-      <if test="requiredparticipants != null">
-        requiredParticipants,
+      <if test="required != null">
+        required,
       </if>
-      <if test="currentparticipants != null">
-        currentParticipants,
+      <if test="current != null">
+        current,
       </if>
-      <if test="startdate != null">
-        startDate,
+      <if test="start != null">
+        start,
       </if>
-      <if test="enddate != null">
-        endDate,
+      <if test="end != null">
+        end,
       </if>
       <if test="cost != null">
         cost,
@@ -187,20 +184,20 @@
       <if test="location != null">
         location,
       </if>
-      <if test="deletedat != null">
-        deletedAt,
+      <if test="deleted != null">
+        deleted,
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod,
+      <if test="period != null">
+        period,
       </if>
       <if test="status != null">
         status,
       </if>
-      <if test="registrationdeadline != null">
-        RegistrationDeadline,
+      <if test="deadline != null">
+        deadline,
       </if>
-      <if test="createdat != null">
-        createdAt,
+      <if test="created != null">
+        created,
       </if>
       <if test="rate != null">
         rate,
@@ -217,31 +214,31 @@
       <if test="label != null">
         label,
       </if>
-      <if test="cancelreason != null">
-        CancelReason,
+      <if test="reason != null">
+        reason,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="activityid != null">
-        #{activityid,jdbcType=VARCHAR},
+      <if test="aid != null">
+        #{aid,jdbcType=BIGINT},
       </if>
-      <if test="userid != null">
-        #{userid,jdbcType=VARCHAR},
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
       </if>
-      <if test="participantlevel != null">
-        #{participantlevel,jdbcType=INTEGER},
+      <if test="min != null">
+        #{min,jdbcType=INTEGER},
       </if>
-      <if test="requiredparticipants != null">
-        #{requiredparticipants,jdbcType=INTEGER},
+      <if test="required != null">
+        #{required,jdbcType=INTEGER},
       </if>
-      <if test="currentparticipants != null">
-        #{currentparticipants,jdbcType=INTEGER},
+      <if test="current != null">
+        #{current,jdbcType=INTEGER},
       </if>
-      <if test="startdate != null">
-        #{startdate,jdbcType=DATE},
+      <if test="start != null">
+        #{start,jdbcType=DATE},
       </if>
-      <if test="enddate != null">
-        #{enddate,jdbcType=DATE},
+      <if test="end != null">
+        #{end,jdbcType=DATE},
       </if>
       <if test="cost != null">
         #{cost,jdbcType=DECIMAL},
@@ -249,20 +246,20 @@
       <if test="location != null">
         #{location,jdbcType=VARCHAR},
       </if>
-      <if test="deletedat != null">
-        #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="registrationdeadline != null">
-        #{registrationdeadline,jdbcType=TIMESTAMP},
+      <if test="deadline != null">
+        #{deadline,jdbcType=TIMESTAMP},
       </if>
-      <if test="createdat != null">
-        #{createdat,jdbcType=DATE},
+      <if test="created != null">
+        #{created,jdbcType=DATE},
       </if>
       <if test="rate != null">
         #{rate,jdbcType=DOUBLE},
@@ -279,8 +276,8 @@
       <if test="label != null">
         #{label,jdbcType=LONGVARCHAR},
       </if>
-      <if test="cancelreason != null">
-        #{cancelreason,jdbcType=LONGVARCHAR},
+      <if test="reason != null">
+        #{reason,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -293,26 +290,26 @@
   <update id="updateByExampleSelective" parameterType="map">
     update travel_activity
     <set>
-      <if test="record.activityid != null">
-        activityId = #{record.activityid,jdbcType=VARCHAR},
+      <if test="record.aid != null">
+        aid = #{record.aid,jdbcType=BIGINT},
       </if>
-      <if test="record.userid != null">
-        userId = #{record.userid,jdbcType=VARCHAR},
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
       </if>
-      <if test="record.participantlevel != null">
-        participantLevel = #{record.participantlevel,jdbcType=INTEGER},
+      <if test="record.min != null">
+        min = #{record.min,jdbcType=INTEGER},
       </if>
-      <if test="record.requiredparticipants != null">
-        requiredParticipants = #{record.requiredparticipants,jdbcType=INTEGER},
+      <if test="record.required != null">
+        required = #{record.required,jdbcType=INTEGER},
       </if>
-      <if test="record.currentparticipants != null">
-        currentParticipants = #{record.currentparticipants,jdbcType=INTEGER},
+      <if test="record.current != null">
+        current = #{record.current,jdbcType=INTEGER},
       </if>
-      <if test="record.startdate != null">
-        startDate = #{record.startdate,jdbcType=DATE},
+      <if test="record.start != null">
+        start = #{record.start,jdbcType=DATE},
       </if>
-      <if test="record.enddate != null">
-        endDate = #{record.enddate,jdbcType=DATE},
+      <if test="record.end != null">
+        end = #{record.end,jdbcType=DATE},
       </if>
       <if test="record.cost != null">
         cost = #{record.cost,jdbcType=DECIMAL},
@@ -320,20 +317,20 @@
       <if test="record.location != null">
         location = #{record.location,jdbcType=VARCHAR},
       </if>
-      <if test="record.deletedat != null">
-        deletedAt = #{record.deletedat,jdbcType=DATE},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
       </if>
-      <if test="record.deletionperiod != null">
-        deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.registrationdeadline != null">
-        RegistrationDeadline = #{record.registrationdeadline,jdbcType=TIMESTAMP},
+      <if test="record.deadline != null">
+        deadline = #{record.deadline,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.createdat != null">
-        createdAt = #{record.createdat,jdbcType=DATE},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
       </if>
       <if test="record.rate != null">
         rate = #{record.rate,jdbcType=DOUBLE},
@@ -350,8 +347,8 @@
       <if test="record.label != null">
         label = #{record.label,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.cancelreason != null">
-        CancelReason = #{record.cancelreason,jdbcType=LONGVARCHAR},
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -360,48 +357,48 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update travel_activity
-    set activityId = #{record.activityid,jdbcType=VARCHAR},
-    userId = #{record.userid,jdbcType=VARCHAR},
-    participantLevel = #{record.participantlevel,jdbcType=INTEGER},
-    requiredParticipants = #{record.requiredparticipants,jdbcType=INTEGER},
-    currentParticipants = #{record.currentparticipants,jdbcType=INTEGER},
-    startDate = #{record.startdate,jdbcType=DATE},
-    endDate = #{record.enddate,jdbcType=DATE},
-    cost = #{record.cost,jdbcType=DECIMAL},
-    location = #{record.location,jdbcType=VARCHAR},
-    deletedAt = #{record.deletedat,jdbcType=DATE},
-    deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
-    status = #{record.status,jdbcType=INTEGER},
-    RegistrationDeadline = #{record.registrationdeadline,jdbcType=TIMESTAMP},
-    createdAt = #{record.createdat,jdbcType=DATE},
-    rate = #{record.rate,jdbcType=DOUBLE},
-    agree = #{record.agree,jdbcType=INTEGER},
-    title = #{record.title,jdbcType=LONGVARCHAR},
-    description = #{record.description,jdbcType=LONGVARCHAR},
-    label = #{record.label,jdbcType=LONGVARCHAR},
-    CancelReason = #{record.cancelreason,jdbcType=LONGVARCHAR}
+    set aid = #{record.aid,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      min = #{record.min,jdbcType=INTEGER},
+      required = #{record.required,jdbcType=INTEGER},
+      current = #{record.current,jdbcType=INTEGER},
+      start = #{record.start,jdbcType=DATE},
+      end = #{record.end,jdbcType=DATE},
+      cost = #{record.cost,jdbcType=DECIMAL},
+      location = #{record.location,jdbcType=VARCHAR},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      deadline = #{record.deadline,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=DATE},
+      rate = #{record.rate,jdbcType=DOUBLE},
+      agree = #{record.agree,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=LONGVARCHAR},
+      description = #{record.description,jdbcType=LONGVARCHAR},
+      label = #{record.label,jdbcType=LONGVARCHAR},
+      reason = #{record.reason,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update travel_activity
-    set activityId = #{record.activityid,jdbcType=VARCHAR},
-    userId = #{record.userid,jdbcType=VARCHAR},
-    participantLevel = #{record.participantlevel,jdbcType=INTEGER},
-    requiredParticipants = #{record.requiredparticipants,jdbcType=INTEGER},
-    currentParticipants = #{record.currentparticipants,jdbcType=INTEGER},
-    startDate = #{record.startdate,jdbcType=DATE},
-    endDate = #{record.enddate,jdbcType=DATE},
-    cost = #{record.cost,jdbcType=DECIMAL},
-    location = #{record.location,jdbcType=VARCHAR},
-    deletedAt = #{record.deletedat,jdbcType=DATE},
-    deletionPeriod = #{record.deletionperiod,jdbcType=INTEGER},
-    status = #{record.status,jdbcType=INTEGER},
-    RegistrationDeadline = #{record.registrationdeadline,jdbcType=TIMESTAMP},
-    createdAt = #{record.createdat,jdbcType=DATE},
-    rate = #{record.rate,jdbcType=DOUBLE},
-    agree = #{record.agree,jdbcType=INTEGER}
+    set aid = #{record.aid,jdbcType=BIGINT},
+      uid = #{record.uid,jdbcType=BIGINT},
+      min = #{record.min,jdbcType=INTEGER},
+      required = #{record.required,jdbcType=INTEGER},
+      current = #{record.current,jdbcType=INTEGER},
+      start = #{record.start,jdbcType=DATE},
+      end = #{record.end,jdbcType=DATE},
+      cost = #{record.cost,jdbcType=DECIMAL},
+      location = #{record.location,jdbcType=VARCHAR},
+      deleted = #{record.deleted,jdbcType=DATE},
+      period = #{record.period,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      deadline = #{record.deadline,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=DATE},
+      rate = #{record.rate,jdbcType=DOUBLE},
+      agree = #{record.agree,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -409,23 +406,23 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qdu.entity.TravelActivity">
     update travel_activity
     <set>
-      <if test="userid != null">
-        userId = #{userid,jdbcType=VARCHAR},
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
       </if>
-      <if test="participantlevel != null">
-        participantLevel = #{participantlevel,jdbcType=INTEGER},
+      <if test="min != null">
+        min = #{min,jdbcType=INTEGER},
       </if>
-      <if test="requiredparticipants != null">
-        requiredParticipants = #{requiredparticipants,jdbcType=INTEGER},
+      <if test="required != null">
+        required = #{required,jdbcType=INTEGER},
       </if>
-      <if test="currentparticipants != null">
-        currentParticipants = #{currentparticipants,jdbcType=INTEGER},
+      <if test="current != null">
+        current = #{current,jdbcType=INTEGER},
       </if>
-      <if test="startdate != null">
-        startDate = #{startdate,jdbcType=DATE},
+      <if test="start != null">
+        start = #{start,jdbcType=DATE},
       </if>
-      <if test="enddate != null">
-        endDate = #{enddate,jdbcType=DATE},
+      <if test="end != null">
+        end = #{end,jdbcType=DATE},
       </if>
       <if test="cost != null">
         cost = #{cost,jdbcType=DECIMAL},
@@ -433,20 +430,20 @@
       <if test="location != null">
         location = #{location,jdbcType=VARCHAR},
       </if>
-      <if test="deletedat != null">
-        deletedAt = #{deletedat,jdbcType=DATE},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
       </if>
-      <if test="deletionperiod != null">
-        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="registrationdeadline != null">
-        RegistrationDeadline = #{registrationdeadline,jdbcType=TIMESTAMP},
+      <if test="deadline != null">
+        deadline = #{deadline,jdbcType=TIMESTAMP},
       </if>
-      <if test="createdat != null">
-        createdAt = #{createdat,jdbcType=DATE},
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
       </if>
       <if test="rate != null">
         rate = #{rate,jdbcType=DOUBLE},
@@ -463,52 +460,52 @@
       <if test="label != null">
         label = #{label,jdbcType=LONGVARCHAR},
       </if>
-      <if test="cancelreason != null">
-        CancelReason = #{cancelreason,jdbcType=LONGVARCHAR},
+      <if test="reason != null">
+        reason = #{reason,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where activityId = #{activityid,jdbcType=VARCHAR}
+    where aid = #{aid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.TravelActivity">
     update travel_activity
-    set userId = #{userid,jdbcType=VARCHAR},
-        participantLevel = #{participantlevel,jdbcType=INTEGER},
-        requiredParticipants = #{requiredparticipants,jdbcType=INTEGER},
-        currentParticipants = #{currentparticipants,jdbcType=INTEGER},
-        startDate = #{startdate,jdbcType=DATE},
-        endDate = #{enddate,jdbcType=DATE},
-        cost = #{cost,jdbcType=DECIMAL},
-        location = #{location,jdbcType=VARCHAR},
-        deletedAt = #{deletedat,jdbcType=DATE},
-        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
-        status = #{status,jdbcType=INTEGER},
-        RegistrationDeadline = #{registrationdeadline,jdbcType=TIMESTAMP},
-        createdAt = #{createdat,jdbcType=DATE},
-        rate = #{rate,jdbcType=DOUBLE},
-        agree = #{agree,jdbcType=INTEGER},
-        title = #{title,jdbcType=LONGVARCHAR},
-        description = #{description,jdbcType=LONGVARCHAR},
-        label = #{label,jdbcType=LONGVARCHAR},
-        CancelReason = #{cancelreason,jdbcType=LONGVARCHAR}
-    where activityId = #{activityid,jdbcType=VARCHAR}
+    set uid = #{uid,jdbcType=BIGINT},
+      min = #{min,jdbcType=INTEGER},
+      required = #{required,jdbcType=INTEGER},
+      current = #{current,jdbcType=INTEGER},
+      start = #{start,jdbcType=DATE},
+      end = #{end,jdbcType=DATE},
+      cost = #{cost,jdbcType=DECIMAL},
+      location = #{location,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      deadline = #{deadline,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=DATE},
+      rate = #{rate,jdbcType=DOUBLE},
+      agree = #{agree,jdbcType=INTEGER},
+      title = #{title,jdbcType=LONGVARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR},
+      label = #{label,jdbcType=LONGVARCHAR},
+      reason = #{reason,jdbcType=LONGVARCHAR}
+    where aid = #{aid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qdu.entity.TravelActivity">
     update travel_activity
-    set userId = #{userid,jdbcType=VARCHAR},
-        participantLevel = #{participantlevel,jdbcType=INTEGER},
-        requiredParticipants = #{requiredparticipants,jdbcType=INTEGER},
-        currentParticipants = #{currentparticipants,jdbcType=INTEGER},
-        startDate = #{startdate,jdbcType=DATE},
-        endDate = #{enddate,jdbcType=DATE},
-        cost = #{cost,jdbcType=DECIMAL},
-        location = #{location,jdbcType=VARCHAR},
-        deletedAt = #{deletedat,jdbcType=DATE},
-        deletionPeriod = #{deletionperiod,jdbcType=INTEGER},
-        status = #{status,jdbcType=INTEGER},
-        RegistrationDeadline = #{registrationdeadline,jdbcType=TIMESTAMP},
-        createdAt = #{createdat,jdbcType=DATE},
-        rate = #{rate,jdbcType=DOUBLE},
-        agree = #{agree,jdbcType=INTEGER}
-    where activityId = #{activityid,jdbcType=VARCHAR}
+    set uid = #{uid,jdbcType=BIGINT},
+      min = #{min,jdbcType=INTEGER},
+      required = #{required,jdbcType=INTEGER},
+      current = #{current,jdbcType=INTEGER},
+      start = #{start,jdbcType=DATE},
+      end = #{end,jdbcType=DATE},
+      cost = #{cost,jdbcType=DECIMAL},
+      location = #{location,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=DATE},
+      period = #{period,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      deadline = #{deadline,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=DATE},
+      rate = #{rate,jdbcType=DOUBLE},
+      agree = #{agree,jdbcType=INTEGER}
+    where aid = #{aid,jdbcType=BIGINT}
   </update>
 </mapper>

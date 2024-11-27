@@ -4,58 +4,58 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Like implements Serializable {
-    private String likeid;
+    private Long lid;
 
-    private String userid;
+    private Long uid;
 
-    private String entityid;
+    private Long connectid;
 
-    private String entitytype;
+    private String type;
 
-    private Date createdat;
+    private Date created;
 
     private Boolean status;
 
     private static final long serialVersionUID = 1L;
 
-    public String getLikeid() {
-        return likeid;
+    public Long getLid() {
+        return lid;
     }
 
-    public void setLikeid(String likeid) {
-        this.likeid = likeid;
+    public void setLid(Long lid) {
+        this.lid = lid;
     }
 
-    public String getUserid() {
-        return userid;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public String getEntityid() {
-        return entityid;
+    public Long getConnectid() {
+        return connectid;
     }
 
-    public void setEntityid(String entityid) {
-        this.entityid = entityid;
+    public void setConnectid(Long connectid) {
+        this.connectid = connectid;
     }
 
-    public String getEntitytype() {
-        return entitytype;
+    public String getType() {
+        return type;
     }
 
-    public void setEntitytype(String entitytype) {
-        this.entitytype = entitytype;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Date getCreatedat() {
-        return createdat;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedat(Date createdat) {
-        this.createdat = createdat;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public Boolean getStatus() {
@@ -72,11 +72,11 @@ public class Like implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", likeid=").append(likeid);
-        sb.append(", userid=").append(userid);
-        sb.append(", entityid=").append(entityid);
-        sb.append(", entitytype=").append(entitytype);
-        sb.append(", createdat=").append(createdat);
+        sb.append(", lid=").append(lid);
+        sb.append(", uid=").append(uid);
+        sb.append(", connectid=").append(connectid);
+        sb.append(", type=").append(type);
+        sb.append(", created=").append(created);
         sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

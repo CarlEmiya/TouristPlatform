@@ -10,14 +10,14 @@ public interface CommentService {
 
 	// 根据关联对象ID和用户ID获取评论列表
 
-	List<Comment> getCommentsByAssociatedIdAndUserIdandAssociatedType(String associatedId, String userId, String associatedType);
+	List<Comment> getCommentsByAssociatedIdAndUidandAssociatedType(Long connectid, Long uid, String type);
 
 	// 根据评论ID删除评论
-	int deleteCommentById(String commentId);
+	int deleteCommentById(Long cid);
 
 	// 对评论进行点赞
-	int likeComment(String commentId);
+	int likeComment(Long cid);
 
 	// 获取某条评论的点赞数
-	int getCommentAgreeCount(String commentId);
+	int getCommentAgreeCount(Long cid);
 }

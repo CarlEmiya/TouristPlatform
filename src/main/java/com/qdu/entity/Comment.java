@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Comment implements Serializable {
-    private String commentId;
+    private Long cid;
 
-    private String associatedId;
+    private Long connectid;
 
-    private String userId;
+    private Long uid;
 
-    private Date createdAt;
+    private Date created;
 
-    private Date deletedAt;
+    private Date deleted;
 
-    private Integer deletionPeriod;
+    private Integer period;
 
     private Integer status;
 
@@ -22,58 +22,58 @@ public class Comment implements Serializable {
 
     private Integer agree;
 
-    private String associatedType;
-
     private String content;
+
+    private String type;
 
     private static final long serialVersionUID = 1L;
 
-    public String getCommentId() {
-        return commentId;
+    public Long getCid() {
+        return cid;
     }
 
-    public void setCommentId(String commentId) {
-        this.commentId = commentId;
+    public void setCid(Long cid) {
+        this.cid = cid;
     }
 
-    public String getAssociatedId() {
-        return associatedId;
+    public Long getConnectid() {
+        return connectid;
     }
 
-    public void setAssociatedId(String associatedId) {
-        this.associatedId = associatedId;
+    public void setConnectid(Long connectid) {
+        this.connectid = connectid;
     }
 
-    public String getUserId() {
-        return userId;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public Date getDeletedAt() {
-        return deletedAt;
+    public Date getDeleted() {
+        return deleted;
     }
 
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
-    public Integer getDeletionPeriod() {
-        return deletionPeriod;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public void setDeletionPeriod(Integer deletionPeriod) {
-        this.deletionPeriod = deletionPeriod;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public Integer getStatus() {
@@ -100,14 +100,6 @@ public class Comment implements Serializable {
         this.agree = agree;
     }
 
-    public String getAssociatedType() {
-        return associatedType;
-    }
-
-    public void setAssociatedType(String associatedType) {
-        this.associatedType = associatedType;
-    }
-
     public String getContent() {
         return content;
     }
@@ -116,23 +108,31 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", commentid=").append(commentId);
-        sb.append(", associatedid=").append(associatedId);
-        sb.append(", userid=").append(userId);
-        sb.append(", createdat=").append(createdAt);
-        sb.append(", deletedat=").append(deletedAt);
-        sb.append(", deletionperiod=").append(deletionPeriod);
+        sb.append(", cid=").append(cid);
+        sb.append(", connectid=").append(connectid);
+        sb.append(", uid=").append(uid);
+        sb.append(", created=").append(created);
+        sb.append(", deleted=").append(deleted);
+        sb.append(", period=").append(period);
         sb.append(", status=").append(status);
         sb.append(", rate=").append(rate);
         sb.append(", agree=").append(agree);
-        sb.append(", associatedtype=").append(associatedType);
         sb.append(", content=").append(content);
+        sb.append(", type=").append(type);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

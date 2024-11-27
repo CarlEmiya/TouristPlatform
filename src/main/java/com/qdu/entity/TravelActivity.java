@@ -5,35 +5,33 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TravelActivity implements Serializable {
-    private String activityId;
+    private Long aid;
 
-    private String CancelReason;
+    private Long uid;
 
-    private String userId;
+    private Integer min;
 
-    private Integer participantLevel;
+    private Integer required;
 
-    private Integer requiredParticipants;
+    private Integer current;
 
-    private Integer currentParticipants;
+    private Date start;
 
-    private Date startDate;
-
-    private Date endDate;
+    private Date end;
 
     private BigDecimal cost;
 
     private String location;
 
-    private Date deletedat;
+    private Date deleted;
 
-    private Integer deletionperiod;
+    private Integer period;
 
     private Integer status;
 
-    private Date registrationdeadline;
+    private Date deadline;
 
-    private Date createdat;
+    private Date created;
 
     private Double rate;
 
@@ -45,93 +43,64 @@ public class TravelActivity implements Serializable {
 
     private String label;
 
+    private String reason;
+
     private static final long serialVersionUID = 1L;
 
-    public String getActivityId() {
-        return activityId;
+    public Long getAid() {
+        return aid;
     }
 
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
+    public void setAid(Long aid) {
+        this.aid = aid;
     }
 
-    public String getUserId() {
-        return userId;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public String getCancelReason() {
-        return CancelReason;
+    public Integer getMin() {
+        return min;
     }
 
-    public void setCancelReason(String cancelReason) {
-        CancelReason = cancelReason;
+    public void setMin(Integer min) {
+        this.min = min;
     }
 
-    public TravelActivity(String activityid, String cancelReason, String userid, Integer participantlevel, Integer requiredparticipants, Integer currentparticipants, Date startdate, Date enddate, BigDecimal cost, String location, Date deletedat, Integer deletionperiod, Integer status, Date registrationdeadline, Date createdat, Double rate, Integer agree, String title, String description, String label) {
-        this.activityId = activityid;
-        CancelReason = cancelReason;
-        this.userId = userid;
-        this.participantLevel = participantlevel;
-        this.requiredParticipants = requiredparticipants;
-        this.currentParticipants = currentparticipants;
-        this.startDate = startdate;
-        this.endDate = enddate;
-        this.cost = cost;
-        this.location = location;
-        this.deletedat = deletedat;
-        this.deletionperiod = deletionperiod;
-        this.status = status;
-        this.registrationdeadline = registrationdeadline;
-        this.createdat = createdat;
-        this.rate = rate;
-        this.agree = agree;
-        this.title = title;
-        this.description = description;
-        this.label = label;
+    public Integer getRequired() {
+        return required;
     }
 
-    public Integer getParticipantLevel() {
-        return participantLevel;
+    public void setRequired(Integer required) {
+        this.required = required;
     }
 
-    public void setParticipantLevel(Integer participantLevel) {
-        this.participantLevel = participantLevel;
+    public Integer getCurrent() {
+        return current;
     }
 
-    public Integer getRequiredParticipants() {
-        return requiredParticipants;
+    public void setCurrent(Integer current) {
+        this.current = current;
     }
 
-    public void setRequiredParticipants(Integer requiredParticipants) {
-        this.requiredParticipants = requiredParticipants;
+    public Date getStart() {
+        return start;
     }
 
-    public Integer getCurrentParticipants() {
-        return currentParticipants;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public void setCurrentParticipants(Integer currentParticipants) {
-        this.currentParticipants = currentParticipants;
+    public Date getEnd() {
+        return end;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
     public BigDecimal getCost() {
@@ -150,20 +119,20 @@ public class TravelActivity implements Serializable {
         this.location = location;
     }
 
-    public Date getDeletedat() {
-        return deletedat;
+    public Date getDeleted() {
+        return deleted;
     }
 
-    public void setDeletedat(Date deletedat) {
-        this.deletedat = deletedat;
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
-    public Integer getDeletionperiod() {
-        return deletionperiod;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public void setDeletionperiod(Integer deletionperiod) {
-        this.deletionperiod = deletionperiod;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
     public Integer getStatus() {
@@ -174,20 +143,20 @@ public class TravelActivity implements Serializable {
         this.status = status;
     }
 
-    public Date getRegistrationdeadline() {
-        return registrationdeadline;
+    public Date getDeadline() {
+        return deadline;
     }
 
-    public void setRegistrationdeadline(Date registrationdeadline) {
-        this.registrationdeadline = registrationdeadline;
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
     }
 
-    public Date getCreatedat() {
-        return createdat;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreatedat(Date createdat) {
-        this.createdat = createdat;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public Double getRate() {
@@ -230,31 +199,40 @@ public class TravelActivity implements Serializable {
         this.label = label;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", activityid=").append(activityId);
-        sb.append(", userid=").append(userId);
-        sb.append(", participantlevel=").append(participantLevel);
-        sb.append(", requiredparticipants=").append(requiredParticipants);
-        sb.append(", currentparticipants=").append(currentParticipants);
-        sb.append(", startdate=").append(startDate);
-        sb.append(", enddate=").append(endDate);
+        sb.append(", aid=").append(aid);
+        sb.append(", uid=").append(uid);
+        sb.append(", min=").append(min);
+        sb.append(", required=").append(required);
+        sb.append(", current=").append(current);
+        sb.append(", start=").append(start);
+        sb.append(", end=").append(end);
         sb.append(", cost=").append(cost);
         sb.append(", location=").append(location);
-        sb.append(", deletedat=").append(deletedat);
-        sb.append(", deletionperiod=").append(deletionperiod);
+        sb.append(", deleted=").append(deleted);
+        sb.append(", period=").append(period);
         sb.append(", status=").append(status);
-        sb.append(", registrationdeadline=").append(registrationdeadline);
-        sb.append(", createdat=").append(createdat);
+        sb.append(", deadline=").append(deadline);
+        sb.append(", created=").append(created);
         sb.append(", rate=").append(rate);
         sb.append(", agree=").append(agree);
         sb.append(", title=").append(title);
         sb.append(", description=").append(description);
         sb.append(", label=").append(label);
+        sb.append(", reason=").append(reason);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
