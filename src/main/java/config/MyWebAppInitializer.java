@@ -6,17 +6,17 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.Filter;
 
 public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-
+	// 指定Spring配置类有哪些，加载这些配置类形成根容器，根容器管理程序的基础bean（数据源、Dao、Service等）
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		return new Class[] { SpringConfig.class };
 	}
-
+	// 指定Spring MVC配置类有哪些，加载这些配置类形成Servlet上下文容器，上下文容器管理Web层相关的bean，包括控制器、视图解析器等
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class[] { SpringMVCConfig.class };
 	}
-
+	// 指定DispatcherServlet拦截的请求的url，/表示除了*.jsp之外的所有请求
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
@@ -37,5 +37,7 @@ public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServl
 
 		// 将过滤器放入数据中，相当于注册，这样过滤器才会被应用
 		return new Filter[] { filter };
+
+
 	}
 }
