@@ -59,7 +59,7 @@ public class UserController {
     public String userInfo(HttpSession session, Model model) {
         User user = (User) session.getAttribute("currentUser"); // 从Session中获取当前用户
         if (user == null) {
-            return "redirect:/login"; // 如果用户未登录，跳转到登录页
+            return "login"; // 如果用户未登录，跳转到登录页
         }
         model.addAttribute("user", user); // 将用户信息添加到模型中
         return "userInfo"; // 渲染userInfo.html页面
