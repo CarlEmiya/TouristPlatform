@@ -36,5 +36,7 @@ public interface UserService {
 	int disableUser(Long uid);
 
 	// 删除用户账户
-	int deleteUser(Long uid);
+	int deleteUserTotally(Long uid);
+
+    int deleteUser(Long uid, int period);
 }

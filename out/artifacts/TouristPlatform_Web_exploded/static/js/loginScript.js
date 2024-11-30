@@ -75,8 +75,8 @@ function submitLoginForm() {
         $.ajax({
             type: "POST",
             url: "/user/login",
-            data: JSON.stringify(formData),
-            contentType: "application/json", // 设置请求头x
+                data: JSON.stringify(formData),
+                contentType: "application/json", // 设置请求头x
             success: function () {
                 // alert("登录成功！即将跳转到用户信息页面。");
                 window.location.href = "/userInfo";

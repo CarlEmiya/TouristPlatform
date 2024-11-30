@@ -237,7 +237,15 @@ public class User implements Serializable {
         return sb.toString();
     }
 
+    public User(Long uid, Integer status) {
+        this.uid = uid;
+        this.status = status;
+    }
 
+    public User(Long uid, String password) {
+        this.uid = uid;
+        this.password = password;
+    }
 
     public User(Long uid, String name, String password, String gender, Date birth, String idcard, String email, String phone, String city, String occupation, String question, Integer level, Date created, Date deleted, Integer period, Integer status, Integer identify, String answer, String picture, String description) {
         this.uid = uid;

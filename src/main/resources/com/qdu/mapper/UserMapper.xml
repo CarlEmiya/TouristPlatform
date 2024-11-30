@@ -467,47 +467,15 @@
     </set>
     where uid = #{uid,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qdu.entity.User">
-    update user
-    set name = #{name,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=CHAR},
-      birth = #{birth,jdbcType=DATE},
-      idcard = #{idcard,jdbcType=CHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
-      occupation = #{occupation,jdbcType=VARCHAR},
-      question = #{question,jdbcType=VARCHAR},
-      level = #{level,jdbcType=INTEGER},
-      created = #{created,jdbcType=DATE},
-      deleted = #{deleted,jdbcType=DATE},
-      period = #{period,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      identify = #{identify,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=LONGVARCHAR},
-      picture = #{picture,jdbcType=LONGVARCHAR},
-      description = #{description,jdbcType=LONGVARCHAR}
-    where uid = #{uid,jdbcType=BIGINT}
+  <update id="updateStatusByPrimaryKey">
+        update user
+        set status = #{status,jdbcType=INTEGER}
+        where uid = #{uid,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.qdu.entity.User">
-    update user
-    set name = #{name,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=CHAR},
-      birth = #{birth,jdbcType=DATE},
-      idcard = #{idcard,jdbcType=CHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
-      occupation = #{occupation,jdbcType=VARCHAR},
-      question = #{question,jdbcType=VARCHAR},
-      level = #{level,jdbcType=INTEGER},
-      created = #{created,jdbcType=DATE},
-      deleted = #{deleted,jdbcType=DATE},
-      period = #{period,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      identify = #{identify,jdbcType=INTEGER}
-    where uid = #{uid,jdbcType=BIGINT}
+  <update id="enableUser">
+        update user
+        set status = 1,period = 0,deleted = null
+        where uid = #{uid};
   </update>
+
 </mapper>

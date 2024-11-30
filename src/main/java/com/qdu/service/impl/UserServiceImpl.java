@@ -5,6 +5,7 @@ import com.qdu.entity.User;
 import com.qdu.entity.UserExample;
 import com.qdu.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,10 +66,10 @@ public class UserServiceImpl implements UserService {
         criteria.andPasswordEqualTo(encryptedPassword);
 
         try {
-            List<User> users = userMapper.selectByExample(example);
+            User user = userMapper.selectByPrimaryKey(uid);
 
-            if (users!= null &&!users.isEmpty()) {
-                return users.get(0);
+            if (null != user) {
+                return user;
             }
             return null;
         } catch (Exception e) {
@@ -76,6 +77,9 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+
+
 
     @Override
     public List<User> searchUsers(UserExample example) {
@@ -87,10 +91,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+
+
     @Override
     public int updateUser(User user) {
         try {
-            userMapper.updateByPrimaryKey(user);
+            userMapper.updateByPrimaryKeySelective(user);
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,11 +145,28 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public int deleteUser(Long uid) {
+
+    public int deleteUserTotally(Long uid) {
         try {
             userMapper.deleteByPrimaryKey(uid);
             return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    @Override
+    public int deleteUser(Long uid, int period) {
+        try {
+            User user = userMapper.selectByPrimaryKey(uid);
+            if (user!= null) {
+                user.setDeleted(new Date());
+                user.setPeriod(period);
+                user.setStatus(3);
+                System.out.println(user);
+                return userMapper.updateByPrimaryKeySelective(user);
+            }
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -162,4 +186,24 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    public User getUserById(Long uid) {
+        try {
+           User user =userMapper.selectByPrimaryKey(uid);
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int enableUser(@Param("uid") Long uid) {
+        try {
+            return userMapper.enableUser(uid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 }

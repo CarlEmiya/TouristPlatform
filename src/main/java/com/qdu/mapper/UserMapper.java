@@ -4,6 +4,7 @@ import com.qdu.entity.User;
 import com.qdu.entity.UserExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserMapper {
@@ -31,7 +32,7 @@ public interface UserMapper {
 
     int updateByPrimaryKeySelective(User record);
 
-    int updateByPrimaryKeyWithBLOBs(User record);
+    int updateStatusByPrimaryKey(Long uid, int status);
 
-    int updateByPrimaryKey(User record);
+    int enableUser(Long uid);
 }
