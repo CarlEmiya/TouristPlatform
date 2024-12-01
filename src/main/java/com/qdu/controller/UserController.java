@@ -138,12 +138,24 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    /**
+     * 管理员 - 修改用户等级，并发送通知给用户
+     * 还没实现发送通知的方法，假设已经有一个发送通知的方法sendNotification
+     * @param requestData
+     * @param session
+     * @return
+     */
     // 管理员 - 修改用户等级
     @PostMapping("/updateLevel")
     public ResponseEntity<Integer> updateUserLevel(@RequestBody Map<String, Object> requestData, HttpSession session) {
         Long uid = Long.parseLong(requestData.get("uid").toString());
         int newLevel = Integer.parseInt(requestData.get("newLevel").toString());
         int result = userService.updateUserLevel(uid, newLevel);
+
+        // 这里可添加发送通知给用户的逻辑，假设已经有一个发送通知的方法sendNotification
+        // sendNotification(uid, "您的用户等级已被提升至" + newLevel);
+
+
         if (result == 1) {
             // 这里可添加发送通知给用户的逻辑，假设已经有一个发送通知的方法sendNotification
             // sendNotification(uid, "您的用户等级已被提升至" + newLevel);
@@ -157,8 +169,8 @@ public class UserController {
 
     // 管理员 - 禁用用户账户
     @PostMapping("/disable")
-    public ResponseEntity<Integer> disableUser(@RequestBody Map<String, Long> map, HttpSession session ) {
-        Long uid = map.get("uid");
+    public ResponseEntity<Integer> disableUser(@RequestBody Map<String, Object> requestData, HttpSession session ) {
+        Long uid = Long.parseLong(requestData.get("uid").toString());
         int result = userService.disableUser(uid);
         User user1 = userService.getUserById(uid);
         session.setAttribute("currentUser", user1);

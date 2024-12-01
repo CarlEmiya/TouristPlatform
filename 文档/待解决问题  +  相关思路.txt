@@ -25,6 +25,8 @@ const text = editor.getText()
 生日那个日历，最好默认值是当前生日，但是做不到
 恢复本账号  按钮，值是正确的，就是类型不知道，值是1，但是if (uid == 1)  和 (uid == "1") 都用不了，就很诡异
 
+7.关于修改等级之后，通知用户
+UserController中，updateUserLevel方法，留了注释，但是没有实现，需要自己实现。
 
 
 实现：

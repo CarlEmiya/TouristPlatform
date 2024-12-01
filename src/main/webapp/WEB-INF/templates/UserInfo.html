@@ -150,7 +150,8 @@
         <button id="saveInfoBtn" onclick="saveInfo()">保存修改</button>
         <button id="changePasswordBtn" onclick="showChangePasswordDialog()">修改密码</button>
         <button id="statusBtn" onclick="showDisableConfirmDialog()">状态</button>
-
+        <button id="disableBtn" onclick="disableAccount()">禁用账号</button>
+        <button id="LevleBtn" onclick="updateLevel()">等级</button>
         <button id="deleteAccountBtn" onclick="showDeleteAccountDialog()">删除账户</button>
         <button id="hideAccountBtn" onclick="hideAccount()">隐藏本账号</button>
     </div>
@@ -190,6 +191,71 @@
             },
         });
     }
+
+    // 获取当前用户的UID，假设用户ID已经在页面上设置（例如：作为一个data属性或存在于session中）
+    let currentUserId = $("#LoginUid").val(); // 示例从 sessionStorage 中获取用户ID
+
+    // 禁用账号的功能
+    function disableAccount() {
+        let uid = $("#LoginUid").val(); // 获取当前要禁用的用户的UID
+        $.ajax({
+            url: '/user/disable',  // 控制器方法的URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ uid: uid }), // 将数据作为JSON发送
+            success: function(response) {
+                if (response === 1) {
+                    alert("账号已成功禁用！");
+                    location.reload();
+                    // 更新用户信息或界面
+                    // 例如，刷新页面或更新界面中的用户状态
+                } else {
+                    alert("禁用账号失败，请稍后重试！");
+                }
+            },
+            error: function() {
+                alert("禁用账号时发生错误！");
+            }
+        });
+    }
+
+    // 修改用户等级的功能
+    function updateLevel() {
+        let uid = $("#LoginUid").val(); // 获取当前要修改等级的用户UID
+        let newLevel = prompt("请输入新的等级："); // 获取新的等级，假设通过prompt获取
+        console.log("表单数据：", uid, newLevel);
+        if (newLevel && !isNaN(newLevel)) {
+            $.ajax({
+                url: '/user/updateLevel',  // 控制器方法的URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    uid: uid,
+                    newLevel: parseInt(newLevel)  // 将输入的等级转换为整数
+                }),
+
+                success: function(response) {
+                    if (response === 1) {
+                        alert("用户等级已成功更新！");
+                        location.reload();
+                        // 更新用户信息或界面
+                        // 例如，刷新页面或更新界面中的等级
+                    } else {
+                        alert("更新等级失败，请稍后重试！");
+                    }
+                },
+                error: function() {
+                    alert("更新等级时发生错误！");
+                }
+            });
+        } else {
+            alert("请输入有效的等级！");
+        }
+    }
+
+
+
+
 
     // 显示修改密码对话框
     function showChangePasswordDialog() {
