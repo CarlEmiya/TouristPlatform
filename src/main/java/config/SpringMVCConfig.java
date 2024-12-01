@@ -14,7 +14,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
 @Configuration
-@ComponentScan(basePackages = {"com.qdu.controller"})
+@ComponentScan(basePackages = {"com.travel.controller"})
 @EnableWebMvc
 public class SpringMVCConfig implements WebMvcConfigurer {
 
@@ -27,7 +27,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/").setViewName("login");
-        registry.addViewController("/Comment").setViewName("testComment");
+        registry.addViewController("/testComment").setViewName("testComment");
         registry.addViewController("/comment").setViewName("testComment");
         registry.addViewController("/userInfo").setViewName("UserInfo");
     }

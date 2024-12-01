@@ -1,126 +1,20 @@
-1. 发布和管理组团旅游活动
-用户级别要求：达到一定级别（如三级，自定）后，用户可发布组团旅游活动。
-活动信息要求：
-活动主题
-活动类型
-需要人数
-活动报名截止时间
-活动开始和结束的日期时间
-活动自费金额（可选）
-活动地点（列表选择省市区，后接输入框详细描述，最后拼接成完整地址给后端）
-活动介绍和备注
-参与级别要求（可限制报名者级别或默认不限制）
-活动标签（最多 5 个标签，可选择或自行添加）（可以自行编写）
-活动状态：
-新发布活动状态默认为“组团中”。
-状态可以为“组团中”、“已成团”、“活动开始”、“活动结束”、“取消”等。
-组团满额后，状态自动改为“已成团”，系统需发送邮件或消息提醒活动发布者。
-（后端触发，主动给前端发消息）
-活动发布者可修改活动状态：
-“取消”需填写取消原因。
-活动内容更新：活动页面附带相关联的日记，点击日记可进入对应日记详情页面
-2. 活动参与和评论
-参与条件：
-用户可报名参与活动。
-如果活动要求特定级别，未达级别的用户将收到提示""您的级别不足,请完善信息提升等级后再报名并无法参与。
-活动评论：
-用户可在活动页面评论活动。
-发布活动的用户可回复留言或提问。
-活动点赞和评级：
-用户可对参与的活动进行点赞和评级（如 1-5 星），评级可修改。
-3. 活动列表和筛选
-发布者查看：
-活动发布者可查看自己发布的所有活动。
-可筛选活动列表，查看最近一个月、三个月、半年或一年发布的活动。
-可根据关键字检索活动。
-参与者查看：
-用户可查看自己参与的所有活动。
-可筛选活动状态（如进行中、已结束）或根据时间（如最近一个月、三个月）查看活动。
-4. 活动举报
-用户可举报存在问题的活动或活动发布者。
-5. 管理员功能
-活动管理：
-查看所有活动列表。
-筛选条件：时间、标签、发布人、参与人等。
-删除活动。
+4.1.2 发布和管理发布的旅游日记
+1) 用户可登录到平台后发布旅游日志，分享旅游感受，发布内容可包含文字、音频、视频或
+图片等，也可随时修改或删除日志。其他用户可对日志进行评论。发布日志的用户可选择
+禁用评论功能，则其他用户不可评论该日志。
+2) 用户可查看自己发布的旅游列表， 或根据关键字、 发布时间、 游记标题等筛选日志列
+表，并查看对应的日志详细信息，也可编辑日志内容或删除日志。
+3) 用户可以查看别人的日志，可根据关键字筛选想要查看的日志，若日志存在不当内容，可
+举报日志。可对别人的日志进行评论，或回复他人的评论，或删除自己的评论。
+4) 用户也可对他人日志进行点赞。
 
 
+参与活动用户和非参与用户可在活动发布页面评论该旅游组团活动。
 
---------------------------------------------------------------
-src
-main
-java
-qdu
-controller
-ActivityRegistrationController
-CommentController
-NotificationController
-ReportController
-TravelActivityController
-TravelDiaryController
-UserController
-entity
-ActivityRegistration
-ActivityRegistrationExample
-Comment
-CommentExample
-Like
-LikeExample
-Notification
-NotificationExample
-Report
-ReportExample
-TravelActivity
-TravelActivityExample
-TravelDiary
-TravelDiaryExample
-User
-UserExample
-handler
-ListTypeHandler
-mapper
-ActivityRegistrationMapper
-CommentMapper
-LikeMapper
-NotificationMapper
-ReportMapper
-TravelActivityMapper
-TravelDiaryMapper
-UserMapper
-service
-impl
-ActivityRegistrationService
-CommentService
-NotificationService
-ReportService
-TravelActibityService
-TravelDiaryService
-UserService
-util
-MyBatisUtil
-config
-MyWebAppInitializer
-SpringConfig
-SpringMVCConfig
-resources
-qdu
-config
-dbconfig.properties
-mybatis-config.xml
-mapper
-properties
-generator-configuration.xml
-log4j2.xml
-webapp
-static
-css
-img
-js
-WEB-INF
-lib
-templates
+4.1.5 管理个人日记评论
+个人用户可查看自己发布的日记评论，并管理自己的评论，如删除自己的评论。
 
-
+管理员可以管理所有评论，删除
 
 
 ------------------------------------------------
@@ -152,3 +46,22 @@ messages_en_US.properties
 messages_zh_CN.properties
 generator-configuration.xml
 log4j2.xml
+
+
+
+------------------------------------
+状态：
+0	被封禁
+1	正常
+2	隐藏，隐私
+3	预删除
+4	组团中
+5	已成团
+6	活动开始
+7	已取消
+10	已被接受
+11	被拒绝
+12	待处理
+13	处理中
+14	被驳回
+15	举报通过

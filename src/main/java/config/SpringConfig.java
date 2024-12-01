@@ -12,11 +12,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import javax.sql.DataSource;
-//@PropertySource("classpath:com.qdu.config.dbconfig.properties")
-@PropertySource("classpath:com/qdu/config/dbconfig.properties")
+//@PropertySource("classpath:com.travel.config.dbconfig.properties")
+@PropertySource("classpath:com/travel/config/dbconfig.properties")
 @Configuration
-@ComponentScan(basePackages = {"com.qdu.service"})
-@MapperScan("com.qdu.mapper")
+@ComponentScan(basePackages = {"com.travel.service"})
+@MapperScan("com.travel.mapper")
 public class SpringConfig {
 
     @Bean
@@ -50,7 +50,7 @@ public class SpringConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
         // 设置mybatis-config.xml的位置
-        Resource configResource = new ClassPathResource("com/qdu/config/mybatis-config.xml");
+        Resource configResource = new ClassPathResource("com/travel/config/mybatis-config.xml");
         try {
             sqlSessionFactoryBean.setConfigLocation(configResource);
         } catch (Exception e) {

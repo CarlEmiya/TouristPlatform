@@ -28,6 +28,8 @@ const text = editor.getText()
 7.关于修改等级之后，通知用户
 UserController中，updateUserLevel方法，留了注释，但是没有实现，需要自己实现。
 
+8.12/1 22:06重新改了一下数据库，把通知表，活动表几个列改成了datetime类型，java这端不知道哪里要改
+只改了活动表，与其级联的活动报名表，别的没改
 
 实现：
 用户上传文件：

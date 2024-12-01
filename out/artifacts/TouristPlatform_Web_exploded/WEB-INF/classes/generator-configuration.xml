@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
 	<!-- 1. properties标记(0个或1个)：用于指定需要使用的外部属性文件 -->
-	<properties resource="com/qdu/config/dbconfig.properties" />
+	<properties resource="com/travel/config/dbconfig.properties" />
 
 	<!-- 3. context标记(1个或多个)： 最重要的配置，配置生成一组对象的环境，可配置多个，如针对不同的数据库配置多个context，一般一个就够了 -->
 	<context id="mysqlGeneratorContext" 
@@ -32,19 +32,19 @@
 
 		<!-- 3.6 javaModelGenerator标记(1个)：控制实体类的生成，生成的实体类个数受context标记的defaultModelType值的影响 -->
 		<javaModelGenerator 
-			targetPackage="com.qdu.entity"
+			targetPackage="com.travel.entity"
 			targetProject="src/main/java">
 		</javaModelGenerator>
 
 		<!-- 3.7 sqlMapGenerator标记(0个或1个)：控制xml映射文件的生成 -->
 		<sqlMapGenerator 
-			targetPackage="com.qdu.mapper" 
+			targetPackage="com.travel.mapper"
 			targetProject="src/main/resources">
 		</sqlMapGenerator>
 
 		<!-- 3.8 javaClientGenerator标记(0个或1个)：控制Dao接口，也就是Mapper接口的生成，如果不配置该元素，就不会生成Mapper接口。 -->
 		<javaClientGenerator
-			targetPackage="com.qdu.mapper" 
+			targetPackage="com.travel.mapper"
 			type="XMLMAPPER"
 			targetProject="src/main/java" >
 			<!-- enableSubPackages用于指定是否根据数据库名(qdu)和架构名(schema)生成子包 -->

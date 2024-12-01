@@ -2,6 +2,6 @@
 <!--OFF 表示不打印log4j2自身的日志 -->
 <configuration status="OFF">
     <Loggers>
-        <Logger name="com.qdu.mapper" level="debug"/>
+        <Logger name="com.travel.mapper" level="debug"/>
     </Loggers>
 </configuration>

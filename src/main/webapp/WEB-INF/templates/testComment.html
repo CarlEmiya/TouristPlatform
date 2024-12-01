@@ -1,171 +1,245 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>评论功能测试页面</title>
-    <!-- 假设这里的CSS文件路径根据实际情况进行了调整，确保能正确加载 -->
-    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
-    <!-- 引入jQuery库，假设路径正确 -->
-    <script src="../../static/js/jquery.min-3.5.1.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <script src="static/js/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@4.6.16/dist/wangEditor.min.js"></script>
+    <style>
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .comment-item {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .comment-item button {
+            margin-left: 10px;
+        }
+
+        .like-button {
+            color: gray;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .like-button.active {
+            color: yellow;
+        }
+
+        .comment-item img {
+            width: 100px;
+            height: auto;
+            margin-left: 15px;
+        }
+
+        .no-comment {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .modal-body input, .modal-body select, .modal-body textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<!-- 使用Thymeleaf的条件判断来检查用户是否登录，通过session获取user信息 -->
-<div th:if="${session.user!= null}">
-    <h2>评论功能测试</h2>
+<div class="container mt-5">
+    <div th:object="${session.currentUser}">
+        <input type="hidden" th:value="*{uid}" id="LoginUid" />
+    </div>
+    <h2>评论管理</h2>
 
-    <!-- 发布评论区域 -->
-    <form id="postCommentForm" th:action="@{/comment/add}" method="post">
-        <label for="connectid">关联对象ID（日记/活动）：</label>
-        <input type="text" id="connectid" name="connectid" required><br>
-
-        <label for="uid">用户ID：</label>
-        <input type="text" id="uid" name="uid" required><br>
-
-        <label for="type">关联对象类型：</label>
-        <input type="text" id="type" name="type" required><br>
-
-        <label for="content">评论内容：</label>
-        <textarea id="content" name="content" required></textarea><br>
-
-        <input type="submit" value="发布评论">
-    </form>
-
-    <!-- 获取评论列表区域 -->
-    <div id="commentListDiv">
-        <h3>评论列表：</h3>
-        <ul id="commentListUl">
-        </ul>
+    <!-- 发布评论 -->
+    <div class="mb-3">
+        <h4>发布评论</h4>
+        <div id="editor-container"></div>
+        <button id="addCommentBtn" class="btn btn-primary mt-2">发布评论</button>
     </div>
 
-    <!-- 点赞和删除评论的Ajax函数 -->
-    <script>
-        // 发布评论的Ajax函数
-        $('#postCommentForm').submit(function (e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            $.ajax({
-                url: $(this).attr('action'),
-                type: "POST",
-                data: formData,
-                success: function (result) {
-                    if (result === 1) {
-                        alert('评论发布成功！');
-                        // 刷新评论列表
-                        getCommentList();
-                    } else if (result === 0) {
-                        alert('评论发布失败，请稍后再试！');
-                    } else {
-                        alert('发布评论时出现错误，请检查网络或联系管理员！');
+    <!-- 查看评论 -->
+    <div class="mb-3">
+        <h4>评论列表</h4>
+        <div id="commentList" class="comment-list">
+            <!-- 如果评论为空显示提示图片 -->
+            <div id="noComment" class="no-comment">
+                <img src="static/img/Comment/nullComment.png" alt="No Comments">
+            </div>
+            <!-- 评论项 -->
+        </div>
+    </div>
+
+    <!-- 举报评论模态框 -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">举报评论</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select id="reportCategory" class="form-control">
+                        <option value="dislike">我不喜欢</option>
+                        <option value="FalseInformation">虚假信息</option>
+                        <option value="Infringement">侵犯权益</option>
+                        <option value="SexualLewd">色情低俗</option>
+                        <option value="CyberBullying">网络暴力</option>
+                        <option value="politically sensitive">政治敏感</option>
+                        <option value="delinquency">违法犯罪</option>
+                        <option value="else">其他</option>
+                    </select>
+                    <textarea id="reportReason" class="form-control" rows="5" placeholder="请输入举报原因..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" id="submitReport" class="btn btn-primary">提交举报</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 模拟当前登录的用户ID
+        const  currentUserId = $("#LoginUid").val();
+        console.log("表单数据：", currentUserId);
+        let editor = new wangEditor('#editor-container');
+        editor.create();
+
+        // 发布评论
+        $("#addCommentBtn").click(function() {
+            const content = editor.txt.html();
+            if (content.trim()) {
+                $.ajax({
+                    url: "/comment/add",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        uid: currentUserId,
+                        content: editor.getText(),
+                        created: new Date(),
+                        type: "Comment"
+                    }),
+                    success: function(response) {
+                        alert("评论发布成功！");
+                        loadComments();
+                        editor.txt.clear();  // 清空编辑器内容
+                    },
+                    error: function() {
+                        alert("发布评论失败，请重试！");
                     }
-                },
-                error: function () {
-                    alert('发布评论时出现网络错误，请检查网络连接！');
-                }
-            });
+                });
+            }
         });
 
-        // 获取评论列表的Ajax函数
-        function getCommentList() {
-            var connectid = $("#connectid").val();
-            var uid = $("#uid").val();
-            var type = $("#type").val();
-
+        // 查看评论
+        function loadComments() {
+            console.log("currentUserId：", currentUserId);
             $.ajax({
-                url: "/comment/list",
+                url: "/comment/listByUid",  // 这里是 URL 参数形式
                 type: "GET",
-                data: {
-                    connectid: connectid,
-                    uid: uid,
-                    type: type
-                },
-                success: function (data) {
-                    var commentListUl = $("#commentListUl");
-                    commentListUl.empty();
+                data: { uid: currentUserId },  // 使用查询参数传递 uid
+                success: function(response) {
+                    const commentList = $("#commentList");
+                    const noComment = $("#noComment");
+                    commentList.empty();
+                    if (response.length === 0) {
+                        noComment.show();
+                    } else {
+                        noComment.hide();
+                        response.forEach(function(comment) {
+                            const likeClass = comment.agree > 0 ? 'like-button active' : 'like-button';
+                            const commentItem = `
+                        <div class="comment-item" id="comment-${comment.cid}">
 
-                    $.each(data, function (index, comment) {
-                        var li = $('<li>');
-                        var contentP = $('<p>').text('评论内容：' + comment.content);
-                        var agreeP = $('<p>').text('点赞数：' + comment.agree);
-                        var likeButton = $('<p>').text('点赞').click(function () {
-                            likeComment(comment.cid);
+                            <div><img src="static/img/default.png" alt="头像" th:src="${user.picture}"></div>
+                            <div class="username" th:text="${user.name}"></div>
+                            < <div class="time">${comment.created}</div>
+<!--                            //显示位置-->
+                            <p class="time">${user.city}</p>
+                            <div>
+<!--                            当成网页解析出来，用thymeleaf解析&ndash;&gt;-->
+                                <strong>评论内容：</strong> <span id="commentContent">@{comment.content}</span>
+                            </div>
+                            <button class="like-button ${likeClass}" onclick="likeComment(${comment.cid})">👍</button>
+                            <span id="agreeCount-${comment.cid}">${comment.agree}</span>
+                            <button class="btn btn-sm btn-info" onclick="replyComment(${comment.cid}, '${comment.uid}')">回复</button>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="setReportComment(${comment.cid})">举报</button>
+                        </div>
+                    `;
+                            commentList.append(commentItem);
                         });
-                        var deleteButton = $('<p>').text('删除').text('删除').click(function () {
-                            deleteComment(comment.cid);
-                        });
-
-                        li.append(contentP);
-                        li.append(agreeP);
-                        li.append(likeButton);
-                        li.append(deleteButton);
-
-                        commentListUl.append(li);
-                    });
-                },
-                error: function () {
-                    alert('获取评论列表时出现网络错误，请检查网络连接！');
+                    }
                 }
             });
         }
 
-        // 点赞评论的Ajax函数
-        function likeComment(cid) {
+
+        // 点赞评论
+        window.likeComment = function(cid) {
             $.ajax({
                 url: "/comment/like",
                 type: "POST",
-                data: {
-                    cid: cid
+                contentType: "application/json",
+                data: JSON.stringify({ cid: cid, uid: currentUserId }),
+                success: function(response) {
+                    $(`#comment-${cid} .like-button`).addClass('active');
+                    $(`#agreeCount-${cid}`).text(parseInt($(`#agreeCount-${cid}`).text()) + 1);
                 },
-                success: function (result) {
-                    if (result === 1) {
-                        alert('点赞成功！');
-                        // 刷新评论列表
-                        getCommentList();
-                    } else if (result === 0) {
-                        alert('点赞失败，请稍后再试！');
-                    } else {
-                        alert('点赞时出现错误，请检查网络或联系管理员！');
-                    }
-                },
-                error: function () {
-                    alert('点赞时出现网络错误，请检查网络连接！');
+                error: function() {
+                    alert("点赞失败，请重试！");
                 }
             });
-        }
+        };
 
-        // 删除评论的Ajax函数
-        function deleteComment(cid) {
-            $.ajax({
-                url: "/comment/delete",
-                type: "DELETE",
-                data: {
-                    cid: cid
-                },
-                success: function (result) {
-                    if (result === 1) {
-                        alert('删除评论成功！');
-                        // 刷新评论列表
-                        getCommentList();
-                    } else if (result === 0) {
-                        alert('删除评论失败，请稍后再试！');
-                    } else {
-                        alert('删除评论时出现错误，请检查网络或联系管理员！');
+        // 回复评论
+        window.replyComment = function(cid, uid) {
+            const replyContent = `@${uid}：`;
+            editor.txt.html(replyContent);
+            $('html, body').animate({ scrollTop: $('#commentContent').offset().top }, 500);
+        };
+
+        // 设置举报评论
+        window.setReportComment = function(cid) {
+            $('#submitReport').off('click').on('click', function() {
+                const category = $('#reportCategory').val();
+                const reason = $('#reportReason').val();
+                $.ajax({
+                    url: "/comment/report",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        reporter: currentUserId,
+                        cid: cid,
+                        category: category,
+                        reason: reason
+                    }),
+                    success: function(response) {
+                        alert("举报成功！");
+                        $('#reportModal').modal('hide');
+                    },
+                    error: function() {
+                        alert("举报失败，请重试！");
                     }
-                },
-                error: function () {
-                    // 可能是网络错误等情况
-                    alert('删除评论时出现网络错误，请检查网络连接！');
-                }
+                });
             });
-        }
+        };
 
-        // 页面加载时获取评论列表
-        $(document).ready(function () {
-            getCommentList();
-        });
-    </script>
-</div>
-<div th:if="${session.user == null}">
-    <p>您未此登录，请先 <a href="/login">登录</a>。</p>
-</div>
+        // 初次加载评论列表
+        loadComments();
+    });
+</script>
 </body>
 </html>
