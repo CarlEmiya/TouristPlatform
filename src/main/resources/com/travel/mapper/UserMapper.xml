@@ -287,6 +287,18 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
+
+
+  <select id="getUsersByUids" resultType="com.travel.entity.User">
+    select * from user where uid in
+    <foreach collection="uids" item="uid" open="(" separator="," close=")">
+      #{uid}
+    </foreach>
+  </select>
+
+
+
   <update id="updateByExampleSelective" parameterType="map">
     update user
     <set>

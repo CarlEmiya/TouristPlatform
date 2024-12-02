@@ -28,6 +28,15 @@ public class Like implements Serializable {
         this.status = status;
     }
 
+    public Like(Long lid, Long uid, Long connectid, String type, Date created, Boolean status) {
+        this.lid = lid;
+        this.uid = uid;
+        this.connectid = connectid;
+        this.type = type;
+        this.created = created;
+        this.status = status;
+    }
+
     public Long getLid() {
         return lid;
     }

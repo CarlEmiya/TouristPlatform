@@ -206,4 +206,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public List<User> getUsersByUids(List<Long> uids) {
+        try {
+            return userMapper.getUsersByUids(uids);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

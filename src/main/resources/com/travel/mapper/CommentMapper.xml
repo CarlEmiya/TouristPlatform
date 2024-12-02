@@ -16,6 +16,30 @@
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
     <result column="type" jdbcType="LONGVARCHAR" property="type" />
   </resultMap>
+  <resultMap id="UserResultMap" type="com.travel.entity.User">
+    <id column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="birth" jdbcType="DATE" property="birth" />
+    <result column="idcard" jdbcType="CHAR" property="idcard" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="identify" jdbcType="INTEGER" property="identify" />
+  </resultMap>
+  <resultMap extends="UserResultMap" id="UserResultMapWithBLOBs" type="com.travel.entity.User">
+    <result column="answer" jdbcType="LONGVARCHAR" property="answer" />
+    <result column="picture" jdbcType="LONGVARCHAR" property="picture" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -230,6 +254,14 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
+
+  <select id="getUserByUid" resultType="com.travel.entity.User">
+    select * from user where uid = #{uid,jdbcType=BIGINT}
+  </select>
+
+
+
   <update id="updateByExampleSelective" parameterType="map">
     update comment
     <set>
@@ -365,4 +397,10 @@
       agree = #{agree,jdbcType=INTEGER}
     where cid = #{cid,jdbcType=BIGINT}
   </update>
+  <update id="updateLikeCount">
+    update comment
+    set agree = (select count(*) from likes where connectid = #{cid,jdbcType=BIGINT} and type = 'comment')
+    where cid = #{cid,jdbcType=BIGINT}
+  </update>
+
 </mapper>

@@ -3,6 +3,7 @@ package com.travel.mapper;
 import com.travel.entity.Comment;
 import com.travel.entity.CommentExample;
 import com.travel.entity.Report;
+import com.travel.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -37,4 +38,10 @@ public interface CommentMapper {
     int updateByPrimaryKey(Comment record);
 
     void deleteAllCommentByUid(Long uid);
+
+    User getUserByUid(Long uid);
+
+//    int updateLikeCount(Long cid,String type);
+    public int updateLikeCount(@Param("cid") Long cid, @Param("type") String type);
+
 }

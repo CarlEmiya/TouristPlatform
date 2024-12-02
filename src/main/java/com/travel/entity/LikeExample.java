@@ -474,6 +474,7 @@ public class LikeExample {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
+
     }
 
     public static class Criteria extends GeneratedCriteria {

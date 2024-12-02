@@ -1,15 +1,12 @@
 package com.travel.service.impl;
 
-import com.travel.entity.CommentExample;
-import com.travel.entity.Like;
-import com.travel.entity.Report;
+import com.travel.entity.*;
 import com.travel.mapper.LikeMapper;
 import com.travel.mapper.ReportMapper;
 import com.travel.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.travel.mapper.CommentMapper;
-import com.travel.entity.Comment;
 
 import java.util.Date;
 import java.util.List;
@@ -56,39 +53,40 @@ public class CommentServiceImpl implements CommentService {
         criteria.andConnectidEqualTo(connectid);
         criteria.andUidEqualTo(uid);
         criteria.andTypeEqualTo(type);
+        criteria.andStatusEqualTo(1);
         return commentMapper.selectByExample(example);
     }
 
 
     @Override
     public int deleteCommentById(Long cid) {
-        Comment comment = commentMapper.selectByPrimaryKey(cid);
-        if (comment!= null) {
-            comment.setCid(cid);
-            comment.setDeleted(new Date());
-            comment.setStatus(3); // 设置为预删除状态
             try {
-                commentMapper.updateByPrimaryKey(comment);
+                commentMapper.deleteByPrimaryKey(cid);
                 return 1;
             } catch (Exception e) {
                 // 处理异常
                 e.printStackTrace();
                 return -1;
             }
-        } else {
-            // 评论不存在
-            return 0;
-        }
     }
+
 
 
 
 
     @Override
     public int likeComment(Long cid, Long uid) {
-        Like like = new Like(uid, cid, "comment",new Date(), true);
+        //随机生成lid，如果已存在，重新生成
+        Long lid = (long) (Math.random() * 1000000000);
+        while (likeMapper.selectByPrimaryKey(lid) != null) {
+            lid = (long) (Math.random() * 1000000000);
+        }
+        Like like = new Like(lid,uid, cid, "comment",new Date(), true);
         try {
             likeMapper.insertSelective(like);
+            Comment comment = commentMapper.selectByPrimaryKey(cid);
+            String type = "comment";
+            int result = commentMapper.updateLikeCount(cid,type);
             return 1;
         } catch (Exception e) {
             // 处理异常
@@ -115,6 +113,15 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * 举报评论
+     * @param reporter
+     * @param reported
+     * @param type
+     * @param category
+     * @param description
+     * @return
+     */
     @Override
     public int reportComment(Long reporter, Long reported, String type, String category,  String description) {
         //随机生成rid，如果已存在，重新生成
@@ -134,6 +141,11 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * 更新评论
+     * @param comment
+     * @return
+     */
     public int updateComment(Comment comment) {
         try {
             commentMapper.updateByPrimaryKeySelective(comment);
@@ -145,14 +157,19 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    public int deleteAllCommentByUid(Long uid) {
+    /**
+     * 删除用户的所有评论
+     * @param uid
+     * @return
+     */
+    public boolean deleteAllCommentByUid(Long uid) {
         try {
             commentMapper.deleteAllCommentByUid(uid);
-            return 1;
+            return true;
         } catch (Exception e) {
             // 处理异常
             e.printStackTrace();
-            return -1;
+            return false;
         }
     }
 
@@ -166,6 +183,44 @@ public class CommentServiceImpl implements CommentService {
             // 处理异常
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public User getUserByUid(Long uid) {
+        try {
+            return commentMapper.getUserByUid(uid);
+        } catch (Exception e) {
+            // 处理异常
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int unLikeComment(Long cid, Long uid) {
+        //随机生成lid，如果已存在，重新生成
+        Long lid = (long) (Math.random() * 1000000000);
+        while (likeMapper.selectByPrimaryKey(lid) != null) {
+            lid = (long) (Math.random() * 1000000000);
+        }
+
+//        Like like = new Like(lid,uid, cid, "comment",new Date(), true);
+        LikeExample like = new LikeExample();
+        LikeExample.Criteria criteria = like.createCriteria();
+        criteria.andConnectidEqualTo(cid);
+        criteria.andUidEqualTo(uid);
+        criteria.andTypeEqualTo("comment");
+
+
+        try {
+            likeMapper.deleteByExample(like);
+            Comment comment = commentMapper.selectByPrimaryKey(cid);
+            String type = "comment";
+            int result = commentMapper.updateLikeCount(cid,type);
+            return 1;
+        } catch (Exception e) {
+            // 处理异常
+            e.printStackTrace();
+            return -1;
         }
     }
 }

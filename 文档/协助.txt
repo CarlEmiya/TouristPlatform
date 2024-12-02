@@ -65,3 +65,22 @@ log4j2.xml
 13	处理中
 14	被驳回
 15	举报通过
+
+
+
+2024/12/2,1:35,在弄评论页面的基本功能编写，想法是按照controller逐个测试功能，目前按钮不全，功能不全，能看到有，
+后续需要加分页器，评论内容和类型不知道为啥是null，发布和举报都不能用，回复实现了@某人，
+对于功能要求的描述也不够详细，放在协助.txt里了
+
+对于这个页面，我希望当我进入页面时，布局用flex布局，如果获取的评论列表为空，那么展示一个图片
+static/img/Comment/nullComment.png，如果有内容，那么就按照如图所示的样式去处理，👍是一个按钮，
+点了之后触发点赞事件，原本是灰的中空的，点赞后本按钮用黄色涂满（点亮），👍右侧是点赞数目，再右面是回复按钮，
+点了之后，自动进入发布评论区域，并在开头自动填写@被回复的人，格式为：“@被回复的人：回复内容”；
+回复按钮后面是举报按钮，点了弹出模拟框，要求填写举报分类和举报描述，其中举报分类是一个下拉列表，
+只有我不喜欢、虚假信息、侵犯权益、色情低俗、网络暴力、政治敏感、违法犯罪、其他，
+在实际值上，分别对应dislike,FalseInformation,Infringement,SexualLewd,CyberBullying,politicallySensitive,delinquency,else；
+举报描述是一个富文本编辑器WangEditor，可以带上图片等文件，整个内容作为div进行内容转化
+const editor = createEditor({ content }) // content 即为 JSON 内容
+
+const reason= editor.getText()
+将reason传到controller；发布评论也是用wangEditor作为富文本编辑器，将整个内容作为div进行转化；

@@ -34,4 +34,6 @@ public interface UserMapper {
     int updateStatusByPrimaryKey(Long uid, int status);
 
     int enableUser(Long uid);
+
+    List<User> getUsersByUids(@Param("uids") List<Long> uids);
 }

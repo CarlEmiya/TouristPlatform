@@ -76,7 +76,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from like
+    from likes
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,27 +87,27 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="LikeResultMap">
     select 
     <include refid="Base_Column_List" />
-    from like
+    from likes
     where lid = #{lid,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from like
+    delete from likes
     where lid = #{lid,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.travel.entity.LikeExample">
-    delete from like
+    delete from likes
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.travel.entity.Like">
-    insert into like (lid, uid, connectid, 
+    insert into likes (lid, uid, connectid, 
       type, created, status)
     values (#{lid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, 
       #{type,jdbcType=CHAR}, #{created,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.travel.entity.Like">
-    insert into like
+    insert into likes
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="lid != null">
         lid,
@@ -150,13 +150,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.travel.entity.LikeExample" resultType="java.lang.Long">
-    select count(*) from like
+    select count(*) from likes
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update like
+    update likes
     <set>
       <if test="record.lid != null">
         lid = #{record.lid,jdbcType=BIGINT},
@@ -182,7 +182,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update like
+    update likes
     set lid = #{record.lid,jdbcType=BIGINT},
       uid = #{record.uid,jdbcType=BIGINT},
       connectid = #{record.connectid,jdbcType=BIGINT},
@@ -194,7 +194,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.travel.entity.Like">
-    update like
+    update likes
     <set>
       <if test="uid != null">
         uid = #{uid,jdbcType=BIGINT},
@@ -215,7 +215,7 @@
     where lid = #{lid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.travel.entity.Like">
-    update like
+    update likes
     set uid = #{uid,jdbcType=BIGINT},
       connectid = #{connectid,jdbcType=BIGINT},
       type = #{type,jdbcType=CHAR},
