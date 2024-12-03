@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.mapper.TravelActivityMapper">
+  <resultMap id="TravelActivityResultMap" type="com.travel.entity.TravelActivity">
+    <id column="aid" jdbcType="BIGINT" property="aid" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="min" jdbcType="INTEGER" property="min" />
+    <result column="required" jdbcType="INTEGER" property="required" />
+    <result column="current" jdbcType="INTEGER" property="current" />
+    <result column="start" jdbcType="TIMESTAMP" property="start" />
+    <result column="end" jdbcType="TIMESTAMP" property="end" />
+    <result column="cost" jdbcType="DECIMAL" property="cost" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="deleted" jdbcType="DATE" property="deleted" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
+    <result column="created" jdbcType="DATE" property="created" />
+    <result column="rate" jdbcType="DOUBLE" property="rate" />
+    <result column="agree" jdbcType="INTEGER" property="agree" />
+  </resultMap>
+  <resultMap extends="TravelActivityResultMap" id="ResultMapWithBLOBs" type="com.travel.entity.TravelActivity">
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+    <result column="label" jdbcType="LONGVARCHAR" property="label" />
+    <result column="reason" jdbcType="LONGVARCHAR" property="reason" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    aid, uid, min, required, current, start, end, cost, location, deleted, period, status,
+    deadline, created, rate, agree
+  </sql>
+  <sql id="Blob_Column_List">
+    title, description, label, reason
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.travel.entity.TravelActivityExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.travel.entity.TravelActivityExample" resultMap="TravelActivityResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from travel_activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_activity
+    where aid = #{aid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from travel_activity
+    where aid = #{aid,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.travel.entity.TravelActivityExample">
+    delete from travel_activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.travel.entity.TravelActivity">
+    insert into travel_activity (aid, uid, min,
+                                 required, current, start,
+                                 end, cost, location,
+                                 deleted, period, status,
+                                 deadline, created, rate,
+                                 agree, title, description,
+                                 label, reason)
+    values (#{aid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{min,jdbcType=INTEGER},
+            #{required,jdbcType=INTEGER}, #{current,jdbcType=INTEGER}, #{start,jdbcType=TIMESTAMP},
+            #{end,jdbcType=TIMESTAMP}, #{cost,jdbcType=DECIMAL}, #{location,jdbcType=VARCHAR},
+            #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+            #{deadline,jdbcType=TIMESTAMP}, #{created,jdbcType=DATE}, #{rate,jdbcType=DOUBLE},
+            #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR},
+            #{label,jdbcType=LONGVARCHAR}, #{reason,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.travel.entity.TravelActivity">
+    insert into travel_activity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        aid,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="min != null">
+        min,
+      </if>
+      <if test="required != null">
+        required,
+      </if>
+      <if test="current != null">
+        current,
+      </if>
+      <if test="start != null">
+        start,
+      </if>
+      <if test="end != null">
+        end,
+      </if>
+      <if test="cost != null">
+        cost,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="deadline != null">
+        deadline,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+      <if test="agree != null">
+        agree,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="label != null">
+        label,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        #{aid,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="min != null">
+        #{min,jdbcType=INTEGER},
+      </if>
+      <if test="required != null">
+        #{required,jdbcType=INTEGER},
+      </if>
+      <if test="current != null">
+        #{current,jdbcType=INTEGER},
+      </if>
+      <if test="start != null">
+        #{start,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end != null">
+        #{end,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cost != null">
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DATE},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null">
+        #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=DATE},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="agree != null">
+        #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null">
+        #{label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.travel.entity.TravelActivityExample" resultType="java.lang.Long">
+    select count(*) from travel_activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update travel_activity
+    <set>
+      <if test="record.aid != null">
+        aid = #{record.aid,jdbcType=BIGINT},
+      </if>
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=BIGINT},
+      </if>
+      <if test="record.min != null">
+        min = #{record.min,jdbcType=INTEGER},
+      </if>
+      <if test="record.required != null">
+        required = #{record.required,jdbcType=INTEGER},
+      </if>
+      <if test="record.current != null">
+        current = #{record.current,jdbcType=INTEGER},
+      </if>
+      <if test="record.start != null">
+        start = #{record.start,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.end != null">
+        end = #{record.end,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cost != null">
+        cost = #{record.cost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.location != null">
+        location = #{record.location,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=DATE},
+      </if>
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.deadline != null">
+        deadline = #{record.deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=DATE},
+      </if>
+      <if test="record.rate != null">
+        rate = #{record.rate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.agree != null">
+        agree = #{record.agree,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.label != null">
+        label = #{record.label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update travel_activity
+    set aid = #{record.aid,jdbcType=BIGINT},
+    uid = #{record.uid,jdbcType=BIGINT},
+    min = #{record.min,jdbcType=INTEGER},
+    required = #{record.required,jdbcType=INTEGER},
+    current = #{record.current,jdbcType=INTEGER},
+    start = #{record.start,jdbcType=TIMESTAMP},
+    end = #{record.end,jdbcType=TIMESTAMP},
+    cost = #{record.cost,jdbcType=DECIMAL},
+    location = #{record.location,jdbcType=VARCHAR},
+    deleted = #{record.deleted,jdbcType=DATE},
+    period = #{record.period,jdbcType=INTEGER},
+    status = #{record.status,jdbcType=INTEGER},
+    deadline = #{record.deadline,jdbcType=TIMESTAMP},
+    created = #{record.created,jdbcType=DATE},
+    rate = #{record.rate,jdbcType=DOUBLE},
+    agree = #{record.agree,jdbcType=INTEGER},
+    title = #{record.title,jdbcType=LONGVARCHAR},
+    description = #{record.description,jdbcType=LONGVARCHAR},
+    label = #{record.label,jdbcType=LONGVARCHAR},
+    reason = #{record.reason,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update travel_activity
+    set aid = #{record.aid,jdbcType=BIGINT},
+    uid = #{record.uid,jdbcType=BIGINT},
+    min = #{record.min,jdbcType=INTEGER},
+    required = #{record.required,jdbcType=INTEGER},
+    current = #{record.current,jdbcType=INTEGER},
+    start = #{record.start,jdbcType=TIMESTAMP},
+    end = #{record.end,jdbcType=TIMESTAMP},
+    cost = #{record.cost,jdbcType=DECIMAL},
+    location = #{record.location,jdbcType=VARCHAR},
+    deleted = #{record.deleted,jdbcType=DATE},
+    period = #{record.period,jdbcType=INTEGER},
+    status = #{record.status,jdbcType=INTEGER},
+    deadline = #{record.deadline,jdbcType=TIMESTAMP},
+    created = #{record.created,jdbcType=DATE},
+    rate = #{record.rate,jdbcType=DOUBLE},
+    agree = #{record.agree,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.travel.entity.TravelActivity">
+    update travel_activity
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="min != null">
+        min = #{min,jdbcType=INTEGER},
+      </if>
+      <if test="required != null">
+        required = #{required,jdbcType=INTEGER},
+      </if>
+      <if test="current != null">
+        current = #{current,jdbcType=INTEGER},
+      </if>
+      <if test="start != null">
+        start = #{start,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end != null">
+        end = #{end,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cost != null">
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=DATE},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null">
+        deadline = #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=DATE},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="agree != null">
+        agree = #{agree,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="label != null">
+        label = #{label,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.travel.entity.TravelActivity">
+    update travel_activity
+    set uid = #{uid,jdbcType=BIGINT},
+        min = #{min,jdbcType=INTEGER},
+        required = #{required,jdbcType=INTEGER},
+        current = #{current,jdbcType=INTEGER},
+        start = #{start,jdbcType=TIMESTAMP},
+        end = #{end,jdbcType=TIMESTAMP},
+        cost = #{cost,jdbcType=DECIMAL},
+        location = #{location,jdbcType=VARCHAR},
+        deleted = #{deleted,jdbcType=DATE},
+        period = #{period,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        deadline = #{deadline,jdbcType=TIMESTAMP},
+        created = #{created,jdbcType=DATE},
+        rate = #{rate,jdbcType=DOUBLE},
+        agree = #{agree,jdbcType=INTEGER},
+        title = #{title,jdbcType=LONGVARCHAR},
+        description = #{description,jdbcType=LONGVARCHAR},
+        label = #{label,jdbcType=LONGVARCHAR},
+        reason = #{reason,jdbcType=LONGVARCHAR}
+    where aid = #{aid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.travel.entity.TravelActivity">
+    update travel_activity
+    set uid = #{uid,jdbcType=BIGINT},
+        min = #{min,jdbcType=INTEGER},
+        required = #{required,jdbcType=INTEGER},
+        current = #{current,jdbcType=INTEGER},
+        start = #{start,jdbcType=TIMESTAMP},
+        end = #{end,jdbcType=TIMESTAMP},
+        cost = #{cost,jdbcType=DECIMAL},
+        location = #{location,jdbcType=VARCHAR},
+        deleted = #{deleted,jdbcType=DATE},
+        period = #{period,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        deadline = #{deadline,jdbcType=TIMESTAMP},
+        created = #{created,jdbcType=DATE},
+        rate = #{rate,jdbcType=DOUBLE},
+        agree = #{agree,jdbcType=INTEGER}
+    where aid = #{aid,jdbcType=BIGINT}
+  </update>
+</mapper>
