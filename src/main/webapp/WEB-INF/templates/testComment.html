@@ -106,10 +106,16 @@
             <div id="noComment" class="no-comment">
                 <img src="static/img/Comment/nullComment.png" alt="No Comments">
             </div>
-
-            <!-- 评论项 -->
         </div>
+        <div id="pagination">
+            <ul class="pagination"></ul>
+        </div>
+
     </div>
+
+
+
+
     <!-- 发布评论 -->
     <div class="mb-3">
         <h4>发布评论</h4>
@@ -183,9 +189,10 @@
 
 
 <script>
-
-
-
+    const currentUserId = $("#LoginUid").val();
+    // 当前页码和每页记录数
+    let currentPage = 1;
+    const pageSize = 5;
 
     function formatDate(dateString) {
         const date = new Date(dateString); // 将时间字符串转换为 Date 对象
@@ -199,8 +206,15 @@
     function formatCity(city) {
         // 截取城市前两位
         return city.substring(0, 2);
+    }
 
-        return `${year}-${month}-${day}`;
+    function formatRate(rate) {
+        // console.log("评分：", rate);
+        // 格式化评分1-10分
+        if (rate >= 1 && rate <= 10) {
+            //得到json，返回原样的text字符串
+            return rate;
+        }
     }
 
     // 删除单条评论
@@ -277,7 +291,7 @@
                     if (result === 1) {
                         // 更新成功后刷新评论列表或修改DOM
                         alert('评论已更新');
-                        loadComments(); // 重新加载评论
+                        window.location.reload();
                         $('#editCommentModal').modal('hide'); // 关闭模态框
                     } else {
                         alert('更新失败');
@@ -289,12 +303,144 @@
         };
     }
 
+    function updatePagination(pageInfo) {
+        const pagination = $("#pagination ul.pagination");
+        pagination.empty();
+
+        const { pageNum, pages, hasPreviousPage, hasNextPage, navigateFirstPage, navigateLastPage, navigatepageNums } = pageInfo;
+
+        console.log("分页导航数据：", pageInfo);
+
+        // 添加 "首页" 按钮
+        if (pageNum > 1) {
+            pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadComments(currentUserId, 1)">首页</a></li>`);
+        } else {
+            pagination.append(`<li class="page-item disabled"><span class="page-link">首页</span></li>`);
+        }
+
+        // 添加 "上一页" 按钮
+        if (hasPreviousPage) {
+            pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadComments(currentUserId, ${pageNum - 1})">上一页</a></li>`);
+        } else {
+            pagination.append(`<li class="page-item disabled"><span class="page-link">上一页</span></li>`);
+        }
+
+        // 动态生成页码按钮，当前页前后最多显示3个页码
+        const maxPagesToShow = 3;
+        const startPage = Math.max(1, pageNum - maxPagesToShow);
+        const endPage = Math.min(pages, pageNum + maxPagesToShow);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === pageNum ? 'active' : '';
+            pagination.append(`<li class="page-item ${activeClass}"><a class="page-link" href="#" onclick="loadComments(currentUserId, ${i})">${i}</a></li>`);
+        }
+
+        // 添加 "下一页" 按钮
+        if (hasNextPage) {
+            pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadComments(currentUserId, ${pageNum + 1})">下一页</a></li>`);
+        } else {
+            pagination.append(`<li class="page-item disabled"><span class="page-link">下一页</span></li>`);
+        }
+
+        // 添加 "尾页" 按钮
+        if (pageNum < pages) {
+            pagination.append(`<li class="page-item"><a class="page-link" href="#" onclick="loadComments(currentUserId, ${pages})">尾页</a></li>`);
+        } else {
+            pagination.append(`<li class="page-item disabled"><span class="page-link">尾页</span></li>`);
+        }
+    }
+
+
+    // 加载评论列表
+    function loadComments(uid = currentUserId, pageNo = 1) {
+        console.log("加载评论：currentUserId：", currentUserId, "目标用户ID：", uid, "页码：", pageNo);
+        // 获取评论并批量获取用户信息
+        $.ajax({
+            url: "/comment/listByUid",
+            type: "GET",
+            data: { uid: uid, pageNo: pageNo, pageSize: pageSize },
+            success: function(response) {
+                const commentList = $("#commentList");
+                const noComment = $("#noComment");
+
+                commentList.empty();
+                const comments = response.list;
+
+                if (comments.length === 0) {
+                    noComment.show();
+                } else {
+                    noComment.hide();
+                    const userIds = comments.map(comment => comment.uid);
+                    console.log("用户ID：", userIds);
+
+                    // 获取用户信息并渲染评论
+                    $.ajax({
+                        url: "/comment/getUsers",
+                        type: "GET",
+                        data: { uids: userIds.join(",") },
+                        success: function(userMap) {
+                            console.log("分页数据：", response);
+
+                            comments.forEach(function(comment) {
+                                console.log("评论：", comment);
+                                const formattedDate = formatDate(comment.created);
+                                const user = userMap[comment.uid] || {};
+                                const rate = formatRate(comment.rate);
+                                console.log("评分：", rate);
+                                const likeClass = comment.agree > 0 ? 'like-button active' : 'like-button';
+
+                                let shortContent = comment.content.length > 50 ? comment.content.substring(0, 50) + '...' : comment.content;
+                                let fullContent = comment.content;
+
+                                const commentItem = `
+                                <div class="comment-item" id="comment-${comment.cid}" data-full-content="${fullContent}" th:if="${comment.status == 1}">
+                                    <div>
+                                        <img src="${user.picture || 'static/img/default.png'}" alt="头像">
+                                    </div>
+                                    <div class="username">${user.name || '匿名用户'}</div>
+                                    <span class="time">${formattedDate}</span>
+                                    <p class="location"> ${formatCity(user.city)} </p>
+                                    <div class="star-rating">
+<!--                                    显示评分-->
+                                        <span class="star">
+                                            ${rate}分
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <strong>评论内容：</strong>
+                                        <span id="commentContent-${comment.cid}" class="comment-content">
+                                            ${shortContent}
+                                        </span>
+                                        <button class="btn btn-sm btn-link" onclick="toggleComment(${comment.cid})">更多</button>
+                                    </div>
+                                    <button class="like-button ${likeClass}" onclick="likeComment(${comment.cid})">点赞</button>
+                                    <span id="agreeCount-${comment.cid}">${comment.agree}</span>
+                                    <button class="btn btn-sm btn-info" onclick="replyComment(${comment.cid}, '${comment.uid}', '${user.name}')">回复</button>
+                                    ${currentUserId == comment.uid
+                                    ? `
+                                            <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.cid})" th:if="${currentUserId == comment.uid || identify == 1 }">删除</button>
+                                            <button class="btn btn-sm btn-primary" onclick="editComment(${comment.cid})">编辑</button>
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>
+                                        `
+                                    : `<button class="btn btn-sm btn-warning" data-bs-toggle="reportModal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>`}
+                                </div>
+                            `;
+                                commentList.append(commentItem);
+                            });
+
+                            // 渲染分页导航栏（放在评论列表加载完成后）
+                            updatePagination(response);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
 
     $(document).ready(function() {
         // 模拟当前登录的用户ID
-        const currentUserId = $("#LoginUid").val();
-
 
         console.log("表单数据：", currentUserId);
         let editor = new wangEditor('#editor-container');
@@ -316,7 +462,7 @@
                     }),
                     success: function(response) {
                         alert("评论发布成功！");
-                        loadComments();
+                        window.location.reload();  // 刷新页面
                         editor.txt.clear();  // 清空编辑器内容
                     },
                     error: function() {
@@ -360,90 +506,16 @@
         });
 
 
-        // 加载评论列表
-        function loadComments(uid = currentUserId) {
-            console.log("加载评论：currentUserId：", currentUserId, "目标用户ID：", uid);
 
-            // 获取评论并批量获取用户信息
-            $.ajax({
-                url: "/comment/listByUid",
-                type: "GET",
-                data: { uid: uid }, // 加载指定uid的评论
-                success: function(response) {
-                    const commentList = $("#commentList");
-                    const noComment = $("#noComment");
-                    commentList.empty();
-                    if (response.length === 0) {
-                        noComment.show();
-                    } else {
-                        noComment.hide();
-                        const userIds = response.map(comment => comment.uid);
-                        console.log("用户ID：", userIds);
-                        $.ajax({
-                            url: "/comment/getUsers",
-                            type: "GET",
-                            data: { uids: userIds.join(",") },
-                            success: function(userMap) {
-                                response.forEach(function(comment) {
-                                    const formattedDate = formatDate(comment.created);
-                                    const user = userMap[comment.uid] || {};
-                                    const likeClass = comment.agree > 0 ? 'like-button active' : 'like-button';
 
-                                    // 控制评论内容是否超过50个字符
-                                    let shortContent = comment.content.length > 50 ? comment.content.substring(0, 50) + '...' : comment.content;
-                                    let fullContent = comment.content;
 
-                                    const commentItem = `
-                                    <div class="comment-item" id="comment-${comment.cid}" data-full-content="${fullContent}" th:if="${comment.status == 1}">
-                                        <div>
-                                            <img src="${user.picture || 'static/img/default.png'}" alt="头像">
-                                        </div>
-                                        <div class="username">${user.name || '匿名用户'}</div>
-                                        <span class="time">${formattedDate}</span>
-                                        <p class="location"> ${formatCity(user.city)} </p>
-                                        <div>
-                                            <strong>评论内容：</strong>
-                                            <span id="commentContent-${comment.cid}" class="comment-content">
-                                                ${shortContent}
-                                            </span>
-                                            <button class="btn btn-sm btn-link" onclick="toggleComment(${comment.cid})">更多</button>
-                                        </div>
-                                        <button class="like-button ${likeClass}" onclick="likeComment(${comment.cid})">点赞</button>
-                                        <span id="agreeCount-${comment.cid}">${comment.agree}</span>
-                                        <button class="btn btn-sm btn-info" onclick="replyComment(${comment.cid}, '${comment.uid}', '${user.name}')">回复</button>
-                                        <!-- 判断是否显示删除、编辑、举报按钮 -->
-                                        ${currentUserId == comment.uid
-                                        ? `
-                                            <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.cid})" th:if="${currentUserId == comment.uid || identify == 1 }">删除</button>
-                                            <button class="btn btn-sm btn-primary" onclick="editComment(${comment.cid})">编辑</button>
-<button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>
-`
-                                        : `<button class="btn btn-sm btn-warning" data-bs-toggle="reportModal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>`}
-                                    </div>
-                                `;
-                                    commentList.append(commentItem);
-                                });
-                                // 切换评论内容的显示（展开或收起）
-                                window.toggleComment = function(cid) {
-                                    const commentContent = document.getElementById(`commentContent-${cid}`);
-                                    const comment = document.getElementById(`comment-${cid}`);
 
-                                    const fullContent = comment.dataset.fullContent;
 
-                                    if (commentContent.textContent.includes('...')) {
-                                        commentContent.textContent = fullContent;
-                                        comment.querySelector('button').textContent = '收起';
-                                    } else {
-                                        commentContent.textContent = fullContent.substring(0, 50) + '...';
-                                        comment.querySelector('button').textContent = '更多';
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
+
+
+
+
+
 
 
         // 提交举报

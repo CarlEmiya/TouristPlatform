@@ -235,13 +235,10 @@
                     uid: uid,
                     newLevel: parseInt(newLevel)  // 将输入的等级转换为整数
                 }),
-
                 success: function(response) {
                     if (response === 1) {
                         alert("用户等级已成功更新！");
                         location.reload();
-                        // 更新用户信息或界面
-                        // 例如，刷新页面或更新界面中的等级
                     } else {
                         alert("更新等级失败，请稍后重试！");
                     }

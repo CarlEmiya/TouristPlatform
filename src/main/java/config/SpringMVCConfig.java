@@ -1,5 +1,6 @@
 package config;
 
+import com.github.pagehelper.PageInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = {"com.travel.controller"})
@@ -70,4 +73,14 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         messageSource.setBasename("properties.messages");
         return messageSource;
     }
+    @Bean
+    public PageInterceptor pageInterceptor() {
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        properties.setProperty("helperDialect", "mysql");
+        properties.setProperty("reasonable", "true");
+        pageInterceptor.setProperties(properties);
+        return pageInterceptor;
+    }
+
 }

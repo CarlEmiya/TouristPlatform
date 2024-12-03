@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 //@Controller
 @RestController
@@ -49,11 +51,39 @@ public class CommentController {
         Long connectid = (Long) requestData.get("connectid");
         Long uid = (Long) requestData.get("uid");
         String type = (String) requestData.get("type");
-
-
         List<Comment> comments = commentService.getCommentsByAssociatedIdAndUidandAssociatedType(connectid, uid, type);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+    /**
+     * 根据用户ID获取评论列表，支持分页
+     * @param uid
+     * @param pageNo
+     * @param pageSize
+     * @param session
+     * @return
+     */
+    // 根据用户ID获取评论列表，支持分页
+    @GetMapping("/listByUid")
+    public ResponseEntity<PageInfo<Comment>> getCommentsByUid(
+            @RequestParam Long uid,
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "5") int pageSize,
+            HttpSession session) {
+//        System.out.println("分页参数 pageNo：" + pageNo + "，pageSize：" + pageSize+"------------------");
+
+        // 启用分页
+        PageHelper.startPage(pageNo, pageSize);
+        List<Comment> comments = commentService.getCommentsByUid(uid);
+
+        // 包装分页信息
+        PageInfo<Comment> pageInfo = new PageInfo<>(comments);
+//        System.out.println("分页信息：" + pageInfo);
+
+        return new ResponseEntity<>(pageInfo, HttpStatus.OK);
+    }
+
+
 
 //根据comment的uid获取用户信息
     @GetMapping("/getUser")
@@ -74,18 +104,7 @@ public class CommentController {
     }
 
 
-    /**
-     * 根据用户ID获取评论列表
-     * @param uid
-     * @param session
-     * @return
-     */
-    @GetMapping("/listByUid")
-    public ResponseEntity<List<Comment>> getCommentsByUid(
-            @RequestParam Long uid, HttpSession session) {  // 使用 @RequestParam 获取查询参数
-        List<Comment> comments = commentService.getCommentsByUid(uid);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
+
 
 
     // 根据评论ID删除评论
