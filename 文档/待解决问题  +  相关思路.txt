@@ -4,6 +4,9 @@
 
 5.关于用户文件上传问题，用户编辑页面编辑完，点击提交之后，将整个页面用wangEditor编辑器编辑完,将整个页面存储在对应表的content字段中
 
+6.2024/12/4,评论功能基本实现，页面的分页器、评分都做了，但是编辑、发布、举报  这几个涉及wangEditor的文件上传，所以没实现，做了个壳子，
+
+7.关于修改等级之后，通知用户，UserController中，updateUserLevel方法，留了注释，但是没有实现，需要自己实现。
 关联知识：https://www.wangeditor.com/v5/content.html#%E8%8E%B7%E5%8F%96%E5%86%85%E5%AE%B9
 获取 HTML 和 Text
 使用 editor.getHtml() 获取 HTML 内容，可参考 demo。使用 editor.getText() 获取纯文本内容。

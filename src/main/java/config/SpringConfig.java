@@ -10,13 +10,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 //@PropertySource("classpath:com.travel.config.dbconfig.properties")
 @PropertySource("classpath:com/travel/config/dbconfig.properties")
 @Configuration
+@MapperScan(basePackages = {"com.travel.mapper"})
 @ComponentScan(basePackages = {"com.travel.service"})
 @MapperScan("com.travel.mapper")
+@EnableTransactionManagement
 public class SpringConfig {
 
     @Bean
@@ -29,19 +33,6 @@ public class SpringConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-
-        // 设置连接池参数
-//        dataSource.setInitialSize(5);
-//        dataSource.setMinIdle(5);
-//        dataSource.setMaxActive(20);
-//        dataSource.setMaxWait(60000);
-//        dataSource.setTimeBetweenEvictionRunsMillis(60000);
-//        dataSource.setMinEvictableIdleTimeMillis(300000);
-//        dataSource.setValidationQuery("SELECT 1");
-//        dataSource.setTestWhileIdle(true);
-//        dataSource.setTestOnBorrow(false);
-//        dataSource.setTestOnReturn(false);
-
         return dataSource;
     }
 
@@ -56,11 +47,22 @@ public class SpringConfig {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         sqlSessionFactoryBean.setDataSource(dataSource);
-//        sqlSessionFactoryBean.setTypeHandlers(new StringToJsonObject(gson()),new StringToJsonArray(gson()));
         return sqlSessionFactoryBean;
+
+
+
+//        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+//        sqlSessionFactoryBean.setDataSource(dataSource());
+//        factory.setTypeAliasesPackage("com.qdu.entity");
+//        return sqlSessionFactoryBean.getObject();
     }
+
+//    @Bean
+//    public DataSourceTransactionManager transactionManager() {
+//        // 实例事务管理器，指定以来的数据源
+//        return new DataSourceTransactionManager(dataSource());
+//    }
 
 
 }

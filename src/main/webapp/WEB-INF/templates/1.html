@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>wangEditor</title>
     <!-- 引入 wangEditor.min.css -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/wangEditor/3.1.1/css/wangEditor.min.css">
+    <base href="/TouristPlatform/src/main/webapp/WEB-INF/">
+    <link rel="stylesheet" href="static/css/wangEditor.min.css">
 </head>
 <body>
 <div id="div1">
@@ -12,7 +13,7 @@
 </div>
 <textarea id="text1" style="width:100%; height:200px;"></textarea>
 
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
 <!-- 引入 wangEditor.min.js -->
 <script type="text/javascript">
     const E = window.wangEditor
@@ -26,6 +27,24 @@
 
     // 第一步，初始化 textarea 的值
     $text1.val(editor.txt.html())
+
+
+    // 切换评论内容的显示（展开或收起）
+    const toggleComment = function(cid) {
+        const commentContent = document.getElementById('commentContent'+cid);
+        const comment = document.getElementById('commentContent'+cid);
+
+        const fullContent = comment.dataset.fullContent;
+
+        if (commentContent.textContent.includes('...')) {
+            commentContent.textContent = fullContent;
+            comment.querySelector('button').textContent = '收起';
+        } else {
+            commentContent.textContent = fullContent.substring(0, 50) + '...';
+            comment.querySelector('button').textContent = '更多';
+        }
+    }
+
 </script>
 </body>
 </html>

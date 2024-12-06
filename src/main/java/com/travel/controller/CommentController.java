@@ -70,7 +70,6 @@ public class CommentController {
             @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam(defaultValue = "5") int pageSize,
             HttpSession session) {
-//        System.out.println("分页参数 pageNo：" + pageNo + "，pageSize：" + pageSize+"------------------");
 
         // 启用分页
         PageHelper.startPage(pageNo, pageSize);
@@ -78,7 +77,6 @@ public class CommentController {
 
         // 包装分页信息
         PageInfo<Comment> pageInfo = new PageInfo<>(comments);
-//        System.out.println("分页信息：" + pageInfo);
 
         return new ResponseEntity<>(pageInfo, HttpStatus.OK);
     }
