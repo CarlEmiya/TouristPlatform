@@ -10,68 +10,112 @@
     <link rel="stylesheet" href="static/css/jquery-ui.min.css">
     <script src="static/js/wangEditor.min.js"></script>
     <style>
-        .comment-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
         .comment-item {
             display: flex;
-            flex-direction: row;
-            gap: 10px;
-            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
         }
 
-        .comment-item button {
-            margin-left: 10px;
-        }
-
-        .like-button {
-            color: gray;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .like-button.active {
-            color: yellow;
-        }
-
-        .comment-item img {
-            width: 100px;
-            height: auto;
-            margin-left: 15px;
-        }
-
-        .no-comment {
+        .comment-header {
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 200px;
-        }
-
-        .modal-body input, .modal-body select, .modal-body textarea {
-            width: 100%;
+            gap: 10px;
+            font-size: 16px;
             margin-bottom: 10px;
         }
 
-        .comment {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
+        .user-avatar {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
         }
+
         .username {
             font-weight: bold;
         }
+
+        .comment-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .comment-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .time {
             color: #888;
             font-size: 0.9em;
         }
-        .likes {
+
+        .location {
             color: #888;
             font-size: 0.9em;
         }
 
+        .star-rating {
+            color: #f90;
+            font-weight: bold;
+        }
+
+        .like-button {
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .like-button.active {
+            color: gold;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+
+        .btn-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+            color: black;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border: none;
+            color: white;
+        }
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -246,7 +290,7 @@
     function ReportComment(cid) {
         // 保存评论 ID
         currentCid = cid;
-        console.log("举报评论ID:", currentCid); // 可用此行调试，确认 CID 已经传入
+        // console.log("举报评论ID:", currentCid); // 可用此行调试，确认 CID 已经传入
 
         // 初始化 WangEditor 编辑器
         const reportEditor = new wangEditor('#reportEditor');
@@ -309,7 +353,7 @@
 
         const { pageNum, pages, hasPreviousPage, hasNextPage, navigateFirstPage, navigateLastPage, navigatepageNums } = pageInfo;
 
-        console.log("分页导航数据：", pageInfo);
+        // console.log("分页导航数据：", pageInfo);
 
         // 添加 "首页" 按钮
         if (pageNum > 1) {
@@ -351,10 +395,106 @@
     }
 
 
+    function toggleComment(cid) {
+        const contentSpan = document.querySelector(`#commentContent-${cid}`);
+        const moreButton = document.querySelector(`#moreButton-${cid}`);
+        const fullContent = document.querySelector(`#comment-${cid}`).getAttribute('data-full-content');
+
+        // 判断当前是否为短文本显示
+        const isShort = moreButton.textContent === '更多';
+
+        if (isShort) {
+            // 展开全文
+            contentSpan.textContent = fullContent;
+            moreButton.textContent = '收缩';
+        } else {
+            // 收缩为前50个字符
+            contentSpan.textContent = fullContent.substring(0, 50) + '...';
+            moreButton.textContent = '更多';
+        }
+    }
+
+
+    // 点赞/取消点赞评论
+    const likeComment = function(cid) {
+        // console.log("来自点赞：点赞评论：", cid);
+        // console.log("来自点赞：当前用户ID：", currentUserId);
+
+        // 获取按钮和点赞数的元素
+        const likeButton = $(`#comment-${cid} .like-button`);
+        const agreeCount = $(`#agreeCount-${cid}`);
+
+        // 判断按钮是否已经是 active 状态
+        const isLiked = likeButton.hasClass('active');
+
+        if (isLiked) {
+            // 取消点赞操作
+            // console.log("取消点赞");
+
+            // 发送取消点赞请求
+            $.ajax({
+                url: "/comment/unlike", // 假设有取消点赞的接口
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    cid: Number(cid), // 强制转换为数字
+                    uid: Number(currentUserId) // 强制转换为数字
+                }),
+                success: function(response) {
+                    // 更新UI：按钮变灰，点赞数减1
+                    likeButton.removeClass('active'); // 移除 active 类
+                    agreeCount.text(parseInt(agreeCount.text()) - 1); // 点赞数减1
+                },
+                error: function(xhr, status, error) {
+                    console.error("取消点赞失败：", xhr.responseText || error);
+                    alert("取消点赞失败，请重试！");
+                }
+            });
+        } else {
+            // 点赞操作
+            // console.log("点赞");
+            // 发送点赞请求
+            $.ajax({
+                url: "/comment/like",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    cid: Number(cid), // 强制转换为数字
+                    uid: Number(currentUserId) // 强制转换为数字
+                }),
+                success: function(response) {
+                    // 更新UI：按钮变为活跃状态，点赞数加1
+                    likeButton.addClass('active'); // 添加 active 类
+                    agreeCount.text(parseInt(agreeCount.text()) + 1); // 点赞数加1
+                },
+                error: function(xhr, status, error) {
+                    console.error("点赞失败：", xhr.responseText || error);
+                    alert("点赞失败，请重试！");
+                }
+            });
+        }
+    };
+
+
+    // 回复评论
+    const replyComment = function(cid, uid, name) {
+        // 编辑器内容中预填充回复文本
+        const replyContent = `@${name}：`;
+        editor.txt.html(replyContent);  // 在编辑器中显示回复内容
+
+        // 确保 #commentContent 元素存在并且有有效的 offset()
+        const commentContent = $(`#commentContent-${cid}`);
+        if (commentContent.length > 0) {
+            // 使用动画滚动到评论内容
+            $('html, body').animate({ scrollTop: commentContent.offset().top }, 500);
+        } else {
+            console.error('找不到评论内容元素');
+        }
+    };
+
+
     // 加载评论列表
     function loadComments(uid = currentUserId, pageNo = 1) {
-        console.log("加载评论：currentUserId：", currentUserId, "目标用户ID：", uid, "页码：", pageNo);
-        // 获取评论并批量获取用户信息
         $.ajax({
             url: "/comment/listByUid",
             type: "GET",
@@ -371,7 +511,6 @@
                 } else {
                     noComment.hide();
                     const userIds = comments.map(comment => comment.uid);
-                    console.log("用户ID：", userIds);
 
                     // 获取用户信息并渲染评论
                     $.ajax({
@@ -379,56 +518,49 @@
                         type: "GET",
                         data: { uids: userIds.join(",") },
                         success: function(userMap) {
-                            console.log("分页数据：", response);
-
                             comments.forEach(function(comment) {
-                                console.log("评论：", comment);
+                                const user = userMap[comment.uid] || { name: "匿名用户", picture: "/static/img/default.png", city: "" };
                                 const formattedDate = formatDate(comment.created);
-                                const user = userMap[comment.uid] || {};
                                 const rate = formatRate(comment.rate);
-                                console.log("评分：", rate);
                                 const likeClass = comment.agree > 0 ? 'like-button active' : 'like-button';
 
-                                let shortContent = comment.content.length > 50 ? comment.content.substring(0, 50) + '...' : comment.content;
-                                let fullContent = comment.content;
+                                const shortContent = comment.content.length > 200 ? comment.content.substring(0, 200) + '...' : comment.content;
+                                const fullContent = comment.content;
 
                                 const commentItem = `
-                                <div class="comment-item" id="comment-${comment.cid}" data-full-content="${fullContent}" th:if="${comment.status == 1}">
-                                    <div>
-                                        <img src="${user.picture || 'static/img/default.png'}" alt="头像">
-                                    </div>
-                                    <div class="username">${user.name || '匿名用户'}</div>
-                                    <span class="time">${formattedDate}</span>
-                                    <p class="location"> ${formatCity(user.city)} </p>
-                                    <div class="star-rating">
-<!--                                    显示评分-->
-                                        <span class="star">
-                                            ${rate}分
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <strong>评论内容：</strong>
-                                        <span id="commentContent-${comment.cid}" class="comment-content">
-                                            ${shortContent}
-                                        </span>
-                                        <button class="btn btn-sm btn-link" onclick="toggleComment(${comment.cid})">更多</button>
-                                    </div>
-                                    <button class="like-button ${likeClass}" onclick="likeComment(${comment.cid})">点赞</button>
-                                    <span id="agreeCount-${comment.cid}">${comment.agree}</span>
-                                    <button class="btn btn-sm btn-info" onclick="replyComment(${comment.cid}, '${comment.uid}', '${user.name}')">回复</button>
-                                    ${currentUserId == comment.uid
-                                    ? `
-                                            <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.cid})" th:if="${currentUserId == comment.uid || identify == 1 }">删除</button>
-                                            <button class="btn btn-sm btn-primary" onclick="editComment(${comment.cid})">编辑</button>
-                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>
-                                        `
-                                    : `<button class="btn btn-sm btn-warning" data-bs-toggle="reportModal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>`}
-                                </div>
+<div class="comment-item" id="comment-${comment.cid}" data-full-content="${fullContent}">
+    <div class="comment-header" style="display: flex; align-items: center;">
+        <img class="user-avatar" src="${user.picture}" alt="头像" />
+        <span class="username">${user.name}</span>
+    </div>
+    <div class="comment-body" style="display: flex; align-items: center; gap: 20px; margin-top: 10px;">
+        <div class="comment-text" style="flex-grow: 1;">
+            <div>
+                <span id="commentContent-${comment.cid}" class="comment-content">${shortContent}</span>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-link" id="moreButton-${comment.cid}" onclick="toggleComment(${comment.cid})">更多</button>
+            </div>
+        </div>
+    </div>
+            <div class="comment-footer" style="display: flex; align-items: center; gap: 10px;">
+                <span class="time">${formattedDate}</span>
+                <p class="location">${user.city || ''}</p>
+                <span class="star-rating">${rate}分</span>
+                <button class="like-button ${likeClass}" onclick="likeComment(${comment.cid})">点赞</button>
+                <span id="agreeCount-${comment.cid}">${comment.agree}</span>
+                <button class="btn btn-sm btn-info" onclick="replyComment(${comment.cid}, '${comment.uid}', '${user.name}')">回复</button>
+                ${currentUserId == comment.uid ? `
+                    <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.cid})">删除</button>
+                    <button class="btn btn-sm btn-primary" onclick="editComment(${comment.cid})">编辑</button>
+                ` : ''}
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="ReportComment(${comment.cid})">举报</button>
+            </div>
+
+</div>
                             `;
                                 commentList.append(commentItem);
                             });
-
-                            // 渲染分页导航栏（放在评论列表加载完成后）
                             updatePagination(response);
                         }
                     });
@@ -439,10 +571,11 @@
 
 
 
+
     $(document).ready(function() {
         // 模拟当前登录的用户ID
 
-        console.log("表单数据：", currentUserId);
+        // console.log("表单数据：", currentUserId);
         let editor = new wangEditor('#editor-container');
         editor.create();
 
@@ -547,80 +680,7 @@
         };
 
 
-// 点赞/取消点赞评论
-        window.likeComment = function(cid) {
-            console.log("来自点赞：点赞评论：", cid);
-            console.log("来自点赞：当前用户ID：", currentUserId);
 
-            // 获取按钮和点赞数的元素
-            const likeButton = $(`#comment-${cid} .like-button`);
-            const agreeCount = $(`#agreeCount-${cid}`);
-
-            // 判断按钮是否已经是 active 状态
-            const isLiked = likeButton.hasClass('active');
-
-            if (isLiked) {
-                // 取消点赞操作
-                console.log("取消点赞");
-
-                // 发送取消点赞请求
-                $.ajax({
-                    url: "/comment/unlike", // 假设有取消点赞的接口
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        cid: Number(cid), // 强制转换为数字
-                        uid: Number(currentUserId) // 强制转换为数字
-                    }),
-                    success: function(response) {
-                        // 更新UI：按钮变灰，点赞数减1
-                        likeButton.removeClass('active'); // 移除 active 类
-                        agreeCount.text(parseInt(agreeCount.text()) - 1); // 点赞数减1
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("取消点赞失败：", xhr.responseText || error);
-                        alert("取消点赞失败，请重试！");
-                    }
-                });
-            } else {
-                // 点赞操作
-                console.log("点赞");
-                // 发送点赞请求
-                $.ajax({
-                    url: "/comment/like",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        cid: Number(cid), // 强制转换为数字
-                        uid: Number(currentUserId) // 强制转换为数字
-                    }),
-                    success: function(response) {
-                        // 更新UI：按钮变为活跃状态，点赞数加1
-                        likeButton.addClass('active'); // 添加 active 类
-                        agreeCount.text(parseInt(agreeCount.text()) + 1); // 点赞数加1
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("点赞失败：", xhr.responseText || error);
-                        alert("点赞失败，请重试！");
-                    }
-                });
-            }
-        };
-        // 回复评论
-        window.replyComment = function(cid, uid, name) {
-            // 编辑器内容中预填充回复文本
-            const replyContent = `@${name}：`;
-            editor.txt.html(replyContent);  // 在编辑器中显示回复内容
-
-            // 确保 #commentContent 元素存在并且有有效的 offset()
-            const commentContent = $(`#commentContent-${cid}`);
-            if (commentContent.length > 0) {
-                // 使用动画滚动到评论内容
-                $('html, body').animate({ scrollTop: commentContent.offset().top }, 500);
-            } else {
-                console.error('找不到评论内容元素');
-            }
-        };
 
 
 
