@@ -3,54 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    设置base为D:\A课本\学习\大三下Java项目\TouristPlatform\src\main\webapp-->
+    <base href="../../">
     <title>评论区</title>
+    <link
+            href="/static/css/WangEditorStyle.css"
+            rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
+        #editor—wrapper {
+            border: 1px solid #ccc;
+            z-index: 100; /* 按需定义 */
         }
-        .comment {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
+        #toolbar-container {
+            border-bottom: 1px solid #ccc;
         }
-        .username {
-            font-weight: bold;
-        }
-        .time {
-            color: #888;
-            font-size: 0.9em;
-        }
-        .likes {
-            color: #888;
-            font-size: 0.9em;
+        #editor-container {
+            height: 500px;
         }
     </style>
+    <script src="/static/js/WangEditorIndex.js"></script>
+    <script>
+        const { createEditor, createToolbar } = window.wangEditor
+
+        const editorConfig = {
+            placeholder: 'Type here...',
+            onChange(editor) {
+                const html = editor.getHtml()
+                console.log('editor content', html)
+                // 也可以同步到 <textarea>
+            },
+        }
+
+        const editor = createEditor({
+            selector: '#editor-container',
+            html: '<p><br></p>',
+            config: editorConfig,
+            mode: 'default', // or 'simple'
+        })
+
+        const toolbarConfig = {}
+
+        const toolbar = createToolbar({
+            editor,
+            selector: '#toolbar-container',
+            config: toolbarConfig,
+            mode: 'default', // or 'simple'
+        })
+    </script>
 </head>
 <body>
 
-<div class="comment">
-<!--    展示头像-->
-    <div><img src="static/img/default.png" alt="头像"></div>
-    <div class="username">飞辉挥</div>
-    <div class="time">2024-11-10 02:22</div>
-    <div>用了就发现，单纯用视频的真的没啥技术含量，还是场景互动性强</div>
-    <div class="likes">👍 325</div>
+<div id="editor—wrapper">
+    <div id="toolbar-container"><!-- 工具栏 --></div>
+    <div id="editor-container"><!-- 编辑器 --></div>
 </div>
-
-<div class="comment">
-    <div class="username">Hope麻匪</div>
-    <div class="time">2024-11-10 03:23</div>
-    <div>场景这东西唯一的缺点就是略加损耗一些电脑性能</div>
-    <div class="likes">👍 61</div>
-</div>
-
-<div class="comment">
-    <div class="username">annruos</div>
-    <div class="time">2024-11-10 19:35</div>
-    <div>你这层评论真的是完美的应征那句“只是生活能自理就被当成正常人”，简单单单视频两个字就能引发下到不识字上到道德的帽子👍，棒！</div>
-    <div class="likes">👍 115</div>
-</div>
-
 </body>
 </html>

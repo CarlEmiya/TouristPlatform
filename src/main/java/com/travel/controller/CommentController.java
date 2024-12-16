@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -47,12 +48,29 @@ public class CommentController {
     // 根据关联对象ID、用户ID和关联对象类型获取评论列表
     @GetMapping("/list")
     public ResponseEntity<List<Comment>> getCommentsByAssociatedIdAndUidandAssociatedType(
-            @RequestBody Map<String, Object> requestData, HttpSession session) {
-        Long connectid = (Long) requestData.get("connectid");
-        Long uid = (Long) requestData.get("uid");
-        String type = (String) requestData.get("type");
-        List<Comment> comments = commentService.getCommentsByAssociatedIdAndUidandAssociatedType(connectid, uid, type);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+            @RequestParam Long connectid,
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "comment") String type,
+            Model model,
+            HttpSession session)
+    {
+        try {
+            // 启用分页
+            PageHelper.startPage(pageNo, pageSize);
+            List<Comment> comments = commentService.getCommentsByAssociatedIdandAssociatedType(connectid, type);
+
+            // 包装分页信息
+            PageInfo<Comment> pageInfo = new PageInfo<>(comments);
+            model.addAttribute("connectId", connectid);
+            model.addAttribute("pageNo", pageNo);
+            model.addAttribute("pageSize", pageSize);
+            model.addAttribute("connectType", type);
+            return new ResponseEntity<>(comments, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -69,15 +87,21 @@ public class CommentController {
             @RequestParam Long uid,
             @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam(defaultValue = "5") int pageSize,
-            HttpSession session) {
+            HttpSession session,
+            Model model) {
 
         // 启用分页
         PageHelper.startPage(pageNo, pageSize);
         List<Comment> comments = commentService.getCommentsByUid(uid);
 
+        String connectType = "User";
+
         // 包装分页信息
         PageInfo<Comment> pageInfo = new PageInfo<>(comments);
-
+        model.addAttribute("connectId", uid);
+        model.addAttribute("pageNo", pageNo);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("connectType", connectType);
         return new ResponseEntity<>(pageInfo, HttpStatus.OK);
     }
 

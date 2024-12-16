@@ -14,6 +14,7 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @Configuration
@@ -33,6 +34,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         registry.addViewController("/testComment").setViewName("testComment");
         registry.addViewController("/comment").setViewName("testComment");
         registry.addViewController("/userInfo").setViewName("UserInfo");
+//        registry.addViewController("/fragments/commentList").setViewName("fragments/commentList");
     }
 
     @Bean
@@ -58,7 +60,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setCharacterEncoding("UTF-8");
+        viewResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         return viewResolver;
     }
 

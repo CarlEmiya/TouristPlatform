@@ -24,7 +24,6 @@ const text = editor.getText()
 
 
 6.UserInfo.html页面
-描述加载不出来
 生日那个日历，最好默认值是当前生日，但是做不到
 恢复本账号  按钮，值是正确的，就是类型不知道，值是1，但是if (uid == 1)  和 (uid == "1") 都用不了，就很诡异
 
@@ -38,6 +37,12 @@ UserController中，updateUserLevel方法，留了注释，但是没有实现，
 9.需帮助的问题：
 从数据库拿来的最后两个项是null
 
+10.将评论列表做成thymeleaf模板之后，要做的事：
+   1.将 判断长短决定出不出现“展开：
+                       <button class="btn btn-sm btn-link" id="moreButton-${comment.cid}"
+                      th:if="${#strings.length(comment.content) > CommentMaxLength}"
+                      th:text="'展开'" onclick="toggleComment(${comment.cid})"></button>
+    2.
 实现：
 用户上传文件：
 1.用户点击上传文件按钮，弹出文件选择框，选择文件。

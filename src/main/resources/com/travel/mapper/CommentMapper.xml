@@ -11,6 +11,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="rate" jdbcType="DOUBLE" property="rate" />
     <result column="agree" jdbcType="INTEGER" property="agree" />
+    <association property="user" javaType="com.travel.entity.User" resultMap="UserResultMap" />
   </resultMap>
   <resultMap extends="CommentResultMap" id="ResultMapWithBLOBs" type="com.travel.entity.Comment">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
@@ -104,6 +105,8 @@
   <sql id="Blob_Column_List">
     content, type
   </sql>
+
+
   <select id="selectByExampleWithBLOBs" parameterType="com.travel.entity.CommentExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
@@ -120,6 +123,8 @@
       order by ${orderByClause}
     </if>
   </select>
+
+
   <select id="selectByExample" parameterType="com.travel.entity.CommentExample" resultMap="CommentResultMap">
     select
     <if test="distinct">
@@ -135,7 +140,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -161,14 +166,14 @@
 
 
   <insert id="insert" parameterType="com.travel.entity.Comment">
-    insert into comment (cid, connectid, uid, 
-      created, deleted, period, 
-      status, rate, agree, 
-      content, type)
-    values (#{cid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, 
-      #{created,jdbcType=DATE}, #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER}, 
-      #{content,jdbcType=LONGVARCHAR}, #{type,jdbcType=LONGVARCHAR})
+    insert into comment (cid, connectid, uid,
+                         created, deleted, period,
+                         status, rate, agree,
+                         content, type)
+    values (#{cid,jdbcType=BIGINT}, #{connectid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT},
+            #{created,jdbcType=DATE}, #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER},
+            #{status,jdbcType=INTEGER}, #{rate,jdbcType=DOUBLE}, #{agree,jdbcType=INTEGER},
+            #{content,jdbcType=LONGVARCHAR}, #{type,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.travel.entity.Comment">
     insert into comment
@@ -306,16 +311,16 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update comment
     set cid = #{record.cid,jdbcType=BIGINT},
-      connectid = #{record.connectid,jdbcType=BIGINT},
-      uid = #{record.uid,jdbcType=BIGINT},
-      created = #{record.created,jdbcType=DATE},
-      deleted = #{record.deleted,jdbcType=DATE},
-      period = #{record.period,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=INTEGER},
-      rate = #{record.rate,jdbcType=DOUBLE},
-      agree = #{record.agree,jdbcType=INTEGER},
-      content = #{record.content,jdbcType=LONGVARCHAR},
-      type = #{record.type,jdbcType=LONGVARCHAR}
+    connectid = #{record.connectid,jdbcType=BIGINT},
+    uid = #{record.uid,jdbcType=BIGINT},
+    created = #{record.created,jdbcType=DATE},
+    deleted = #{record.deleted,jdbcType=DATE},
+    period = #{record.period,jdbcType=INTEGER},
+    status = #{record.status,jdbcType=INTEGER},
+    rate = #{record.rate,jdbcType=DOUBLE},
+    agree = #{record.agree,jdbcType=INTEGER},
+    content = #{record.content,jdbcType=LONGVARCHAR},
+    type = #{record.type,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -323,14 +328,14 @@
   <update id="updateByExample" parameterType="map">
     update comment
     set cid = #{record.cid,jdbcType=BIGINT},
-      connectid = #{record.connectid,jdbcType=BIGINT},
-      uid = #{record.uid,jdbcType=BIGINT},
-      created = #{record.created,jdbcType=DATE},
-      deleted = #{record.deleted,jdbcType=DATE},
-      period = #{record.period,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=INTEGER},
-      rate = #{record.rate,jdbcType=DOUBLE},
-      agree = #{record.agree,jdbcType=INTEGER}
+    connectid = #{record.connectid,jdbcType=BIGINT},
+    uid = #{record.uid,jdbcType=BIGINT},
+    created = #{record.created,jdbcType=DATE},
+    deleted = #{record.deleted,jdbcType=DATE},
+    period = #{record.period,jdbcType=INTEGER},
+    status = #{record.status,jdbcType=INTEGER},
+    rate = #{record.rate,jdbcType=DOUBLE},
+    agree = #{record.agree,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -374,27 +379,27 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.travel.entity.Comment">
     update comment
     set connectid = #{connectid,jdbcType=BIGINT},
-      uid = #{uid,jdbcType=BIGINT},
-      created = #{created,jdbcType=DATE},
-      deleted = #{deleted,jdbcType=DATE},
-      period = #{period,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      rate = #{rate,jdbcType=DOUBLE},
-      agree = #{agree,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR},
-      type = #{type,jdbcType=LONGVARCHAR}
+        uid = #{uid,jdbcType=BIGINT},
+        created = #{created,jdbcType=DATE},
+        deleted = #{deleted,jdbcType=DATE},
+        period = #{period,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        rate = #{rate,jdbcType=DOUBLE},
+        agree = #{agree,jdbcType=INTEGER},
+        content = #{content,jdbcType=LONGVARCHAR},
+        type = #{type,jdbcType=LONGVARCHAR}
     where cid = #{cid,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.travel.entity.Comment">
     update comment
     set connectid = #{connectid,jdbcType=BIGINT},
-      uid = #{uid,jdbcType=BIGINT},
-      created = #{created,jdbcType=DATE},
-      deleted = #{deleted,jdbcType=DATE},
-      period = #{period,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      rate = #{rate,jdbcType=DOUBLE},
-      agree = #{agree,jdbcType=INTEGER}
+        uid = #{uid,jdbcType=BIGINT},
+        created = #{created,jdbcType=DATE},
+        deleted = #{deleted,jdbcType=DATE},
+        period = #{period,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        rate = #{rate,jdbcType=DOUBLE},
+        agree = #{agree,jdbcType=INTEGER}
     where cid = #{cid,jdbcType=BIGINT}
   </update>
   <update id="updateLikeCount">

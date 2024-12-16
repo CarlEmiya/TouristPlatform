@@ -4,10 +4,13 @@ import com.travel.entity.Comment;
 import com.travel.entity.CommentExample;
 import com.travel.entity.Report;
 import com.travel.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-
+@Mapper
 public interface CommentMapper {
     long countByExample(CommentExample example);
 
@@ -41,7 +44,7 @@ public interface CommentMapper {
 
     User getUserByUid(Long uid);
 
-//    int updateLikeCount(Long cid,String type);
+    //    int updateLikeCount(Long cid,String type);
     public int updateLikeCount(@Param("cid") Long cid, @Param("type") String type);
 
 }

@@ -28,6 +28,48 @@ public class Comment implements Serializable {
 
     private String type;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Comment(Long cid, Long connectid, Long uid, Date created, Date deleted, Integer period, Integer status, Double rate, Integer agree, String content, String type, User user) {
+        this.cid = cid;
+        this.connectid = connectid;
+        this.uid = uid;
+        this.created = created;
+        this.deleted = deleted;
+        this.period = period;
+        this.status = status;
+        this.rate = rate;
+        this.agree = agree;
+        this.content = content;
+        this.type = type;
+        this.user = user;
+    }
+
+    public Comment() {
+    }
+
+    public Comment(Long cid, Long connectid, Long uid, Date created, Date deleted, Integer period, Integer status, Double rate, Integer agree, String content, String type) {
+        this.cid = cid;
+        this.connectid = connectid;
+        this.uid = uid;
+        this.created = created;
+        this.deleted = deleted;
+        this.period = period;
+        this.status = status;
+        this.rate = rate;
+        this.agree = agree;
+        this.content = content;
+        this.type = type;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Long getCid() {

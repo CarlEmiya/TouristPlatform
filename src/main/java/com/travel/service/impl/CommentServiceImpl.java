@@ -223,4 +223,14 @@ public class CommentServiceImpl implements CommentService {
             return -1;
         }
     }
+
+    public List<Comment> getCommentsByAssociatedIdandAssociatedType(Long connectid, String type) {
+        CommentExample example = new CommentExample();
+        CommentExample.Criteria criteria = example.createCriteria();
+
+        criteria.andConnectidEqualTo(connectid);
+        criteria.andTypeEqualTo(type);
+        criteria.andStatusEqualTo(1);
+        return commentMapper.selectByExample(example);
+    }
 }
