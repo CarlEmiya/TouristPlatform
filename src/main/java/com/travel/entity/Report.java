@@ -15,6 +15,7 @@ public class Report implements Serializable {
     private String type;
 
     private String category;
+
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date created;
 
@@ -25,6 +26,8 @@ public class Report implements Serializable {
     private Date handled;
 
     private String description;
+
+    private String firstFilePath;
 
     private static final long serialVersionUID = 1L;
 
@@ -48,6 +51,13 @@ public class Report implements Serializable {
         this.handler = handler;
         this.handled = handled;
         this.description = description;
+    }
+
+    public Report(Long rid, int status, String handler, Date handled) {
+        this.rid = rid;
+        this.status = status;
+        this.handler = handler;
+        this.handled = handled;
     }
 
     public Long getRid() {
@@ -149,5 +159,13 @@ public class Report implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
+    }
+
+    public void setFirstFilePath(String virtualPath) {
+        this.firstFilePath = virtualPath;
+    }
+
+    public String getFirstFilePath() {
+        return firstFilePath;
     }
 }

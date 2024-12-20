@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布活动</title>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <script src="/static/js/bootstrap.min.js"></script>
+    <base th:href="@{/}">
+    <style>
+        .tag-button {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .tag-button:hover {
+            background-color: #dcdcdc;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- 编辑按钮 -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+    发布活动
+</button>
+<!-- 模态框，用于编辑活动 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"  style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">编辑活动</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form id="editActivityForm" method="post" th:action="@{/travelActivity/publish}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- 活动信息编辑框 -->
+                    <input type="hidden" name="uid" id="uid" th:value="${session.currentUser.uid}" />
+                    <div class="form-group">
+                        <label for="title">活动标题</label>
+                        <input type="text" id="title" name="title" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">活动描述</label>
+                        <textarea id="description" name="description" class="form-control" rows="3" th:text="${activity.description}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">活动地点</label>
+                        <input type="text" id="location" name="location" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="cost">活动成本</label>
+                        <input type="number" id="cost" name="cost" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="start">活动开始时间</label>
+                        <input type="datetime-local" id="start" name="start" class="form-control" th:value="${#dates.format(activity.start, 'yyyy-MM-dd HH:mm:ss')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="end">活动结束时间</label>
+                        <input type="datetime-local" id="end" name="end" class="form-control" th:value="${#dates.format(activity.end, 'yyyy-MM-dd HH:mm:ss')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="deadline">报名截止时间</label>
+                        <input type="datetime-local" id="deadline" name="deadline" class="form-control" th:value="${#dates.format(activity.deadline, 'yyyy-MM-dd HH:mm:ss')}">
+                    </div>
+
+                    <!--                            选择器为了status-->
+                    <div class="form-group">
+                        <label for="status">活动状态</label>
+                        <select id="status" name="status" class="form-control" >
+                            <option value="1">未开始</option>
+                            <option value="2">隐藏，隐私</option>
+                            <option value="3">预删除</option>
+                            <option value="4">组团中</option>
+                            <option value="5">已成团</option>
+                            <option value="6">活动进行中</option>
+                            <option value="7">已取消</option>
+                            <option value="16">已结束</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="required">要求参与人数</label>
+                        <input type="number" id="required" name="required" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="min">要求最小等级</label>
+                        <input type="number" id="min" name="min" class="form-control">
+                    </div>
+                    <!-- 隐藏字段存储标签 -->
+                    <input type="hidden" id="tagsInput" name="tags" th:value="${tags}">
+
+                    <p><strong>标签：</strong>
+                        <!-- 显示已有标签 -->
+                        <span id="tagsContainer"></span>
+                        <!-- 标签输入框 -->
+                        <input type="text" id="newTagInput" class="form-control" placeholder="添加新标签" />
+                        <!-- 提交按钮 -->
+                        <button type="button" id="addTagBtn" class="btn btn-primary">添加标签</button>
+                    </p>
+
+
+
+
+                    <!-- 文件展示区 -->
+                    <div class="form-group">
+                        <div id="file-preview-container">
+                            <ul>
+                                <li th:each="file : ${files}" style=" position: relative;">
+                                    <div class="file-preview">
+                                        <img th:src="@{${file.path}}" alt="活动图片" th:alt="${file.fid}" width="100" height="100">
+                                        <!-- 删除按钮 -->
+                                        <button type="button" class="btn btn-danger btn-sm delete-file-btn"
+                                                th:data-file-id="${file.fid}" th:data-file-path="${file.path}">×</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label for="activityImageUpload">上传文件</label>
+                            <input type="file" id="activityImageUpload" name="activityImage" class="form-control-file" accept="image/*" multiple>
+                        </div>
+                    </div>
+
+                    <!-- 隐藏字段存储删除的文件ID -->
+                    <input type="hidden" id="deletedFileIds" name="deletedFileIds">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" id="saveButton" class="btn btn-primary">保存修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+// 存储所有标签的数组
+        var tags = [];
+
+// 从隐藏字段读取初始标签
+        function loadTagsFromInput() {
+            var tagsInputValue = $('#tagsInput').val(); // 获取隐藏字段的值
+            if (tagsInputValue) {
+                tags = tagsInputValue.split(','); // 将逗号分隔的标签字符串转为数组
+            }
+            renderTags(); // 渲染标签显示
+        }
+
+// 初始化已有标签
+        loadTagsFromInput(); // 加载隐藏字段中的标签
+
+// 监听回车键和点击“添加标签”按钮
+        $('#newTagInput').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                addTag();
+            }
+        });
+
+        $('#addTagBtn').on('click', function() {
+            addTag();
+        });
+
+// 添加标签到 tags 数组，并更新显示
+        function addTag() {
+            var newTag = $('#newTagInput').val().trim();
+            if (newTag && tags.indexOf(newTag) === -1) {  // 确保标签不为空且没有重复
+                tags.push(newTag);  // 添加标签到数组
+                renderTags();  // 更新标签显示
+                $('#newTagInput').val('');  // 清空输入框
+                updateTagsInput();  // 更新隐藏字段的值
+            } else {
+                alert('标签不能为空或已存在');
+            }
+        }
+
+// 渲染标签显示
+        function renderTags() {
+            $('#tagsContainer').empty();  // 清空当前标签显示
+            console.log('渲染标签：', tags);
+            tags.forEach(function(tag) {
+                // 为每个标签生成HTML
+                $('#tagsContainer').append(
+                    '<span class="tag-item">' + tag +
+                    ' <button type="button" class="btn btn-danger btn-sm delete-tag-btn" data-tag="' + tag + '">×</button></span>'
+                );
+            });
+        }
+
+// 删除标签
+        $('#tagsContainer').on('click', '.delete-tag-btn', function() {
+            var tagToDelete = $(this).data('tag');  // 获取要删除的标签
+            // 如果是数字，则需要转换成字符串
+            if (typeof tagToDelete === 'number') {
+                tagToDelete = tagToDelete.toString();
+            }
+            console.log('删除标签：' + tagToDelete);
+            tags = tags.filter(function(tag) { return tag !== tagToDelete; });  // 从数组中删除标签
+            renderTags();  // 更新标签显示
+            updateTagsInput();  // 更新隐藏字段中的标签值
+        });
+
+// 更新隐藏字段中的标签值
+        function updateTagsInput() {
+            $('#tagsInput').val(tags.join(','));  // 将标签数组转换成以逗号分隔的字符串
+        }
+
+// 表单提交时，标签作为字符串列表传递
+        $('#editActivityForm').on('submit', function(event) {
+            // 在表单提交前，确保标签数组已经更新
+            updateTagsInput();  // 更新隐藏字段的值
+        });
+
+
+        // 监听日期输入变化
+        $(document).ready(function() {
+            // 获取所有日期字段
+            var startInput = $("#start");
+            var endInput = $("#end");
+            var deadlineInput = $("#deadline");
+
+            // 添加输入变化监听器
+            startInput.on("input", validateDates);
+            endInput.on("input", validateDates);
+            deadlineInput.on("input", validateDates);
+
+            // 保存按钮点击事件
+            $("#saveButton").on("click", function(event) {
+                event.preventDefault();  // 阻止表单的默认提交行为
+
+                // 校验所有日期字段
+                if (!validateDates()) {
+                    alert("请确保日期输入正确！");  // 日期不合法时显示提示
+                    return;
+                }
+
+                var formData = new FormData();
+                // 从所有的输入字段获取数据并append到formData中
+                formData.append("uid", $("#uid").val());
+                formData.append("title", $("#title").val());
+                formData.append("description", $("#description").val());
+                formData.append("start", $("#start").val());
+                formData.append("end", $("#end").val());
+                formData.append("min", $("#min").val());
+                formData.append("deadline", $("#deadline").val());
+                formData.append("location", $("#location").val());
+                formData.append("cost", $("#cost").val());
+                formData.append("required", $("#required").val());
+                formData.append("tags", $("#tagsInput").val());
+                formData.append("status", $("#status").val());
+
+                // 获取并追加上传的文件
+                var files = $("#activityImageUpload")[0].files;
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("activityImage", files[i]);
+                }
+
+                // 获取并追加删除的文件ID
+                var deletedFileIds = $("#deletedFileIds").val();
+                if (deletedFileIds) {
+                    formData.append("deletedFileIds", deletedFileIds);
+                }
+
+                // 发送Ajax请求更新活动
+                $.ajax({
+                    url: "/travelActivity/publish",  // 后端URL
+                    type: "post",  // 使用POST方法
+                    data: formData,
+                    processData: false,  // 不处理数据
+                    contentType: false,  // 不设置Content-Type，由浏览器自动设置
+                    success: function(response) {
+                        console.log("活动更新成功！", response);
+                        // 可以执行其他操作，如刷新页面或更新部分内容
+                        $('#editModal').css('display', 'none');
+                        location.reload();  // 刷新页面以更新活动信息
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("更新失败！", error);
+                        alert("更新失败！");
+                    }
+                });
+            });
+
+            // 校验函数
+            function validateDates() {
+                var startTime = new Date(startInput.val());
+                var endTime = new Date(endInput.val());
+                var deadlineTime = new Date(deadlineInput.val());
+                var min = $("#min").val();
+                var title = $("#title").val();
+                var required = $("#required").val();
+                var cost = $("#cost").val();
+                var location = $("#location").val();
+                var description = $("#description").val();
+                var status = $("#status").val();
+                var tags = $("#tagsInput").val();
+
+                // 各个input都必须填写，不能有空值，min最小是0，max最大是4
+                if (!startTime || !endTime || !deadlineTime || !min || !title || !required || !cost || !location || !description || !status || !tags) {
+                    alert("请填写所有必填项！");
+                    return false;
+                } else if (min < 0 || min > 4) {
+                    alert("最小等级必须在0-4之间！");
+                    return false;
+                } else if (required < 1) {
+                    alert("要求参与人数必须大于等于1！");
+                    return false;
+                } else if (cost < 0) {
+                    alert("活动成本必须大于等于0！");
+                    return false;
+                } else {
+                    startInput[0].setCustomValidity("");  // 清除错误
+                    endInput[0].setCustomValidity("");  // 清除错误
+                    deadlineInput[0].setCustomValidity("");  // 清除错误
+                }
+                // 检查end不能早于start
+                if (endTime < startTime) {
+                    endInput[0].setCustomValidity("活动结束时间不能早于开始时间");
+                    endInput[0].reportValidity();
+                    return false;
+                } else {
+                    endInput[0].setCustomValidity("");  // 清除错误
+                }
+
+                // 检查deadline应该晚于start但早于end
+                if (deadlineTime < startTime) {
+                    deadlineInput[0].setCustomValidity("报名截止时间必须晚于活动开始时间");
+                    deadlineInput[0].reportValidity();
+                    return false;
+                } else if (deadlineTime > endTime) {
+                    deadlineInput[0].setCustomValidity("报名截止时间不能晚于活动结束时间");
+                    deadlineInput[0].reportValidity();
+                    return false;
+                } else {
+                    deadlineInput[0].setCustomValidity("");  // 清除错误
+                }
+
+                return true;  // 所有检查通过
+            }
+        });
+
+
+
+
+    });
+</script>
+</body>
+</html>

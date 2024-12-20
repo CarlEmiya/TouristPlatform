@@ -1,0 +1,171 @@
+.comment-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.comment-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.comment-text {
+    font-size: 14px;
+    flex-grow: 1;
+    div{
+        text-align: left;
+        width: 1100px;
+    }
+}
+
+.comment-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.location {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.star-rating {
+    color: #f90;
+    font-weight: bold;
+}
+
+.like-button {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.like-button.active {
+    color: gold;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 5px 10px;
+    font-size: 0.9em;
+}
+
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: black;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+}
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: transparent;
+}
+
+
+/* 容器样式，让所有图片保持在同一行 */
+.comment-files {
+    /*限制在同一行*/
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 图片样式 */
+.file-item img {
+    max-width: 150px; /* 限制图片最大宽度 */
+    max-height: 150px; /* 限制图片最大高度 */
+    object-fit: cover; /* 保持图片的比例 */
+    transition: transform 0.3s ease; /* 平滑过渡效果 */
+}
+
+/* 鼠标悬浮时的放大效果 */
+.file-item img:hover {
+    transform: scale(1.2); /* 放大图片 */
+}
+
+/*!* 处理文件项对齐 *!*/
+/*.file-item {*/
+/*    display: inline-block;*/
+/*    text-align: center;*/
+/*}*/
+
+
+.file-item {
+    position: relative; /* 使文件项容器成为定位上下文 */
+    padding-right: 30px;  /* 预留空间给删除按钮 */
+    margin-bottom: 10px;  /* 每个文件项之间的间隔 */
+}
+
+.delete-file-btn {
+    position: absolute;
+    top: 5px;
+    background: none;
+    border: none;
+    color: red;
+    font-size: 10px;
+    cursor: pointer;
+    z-index: 10;  /* 确保删除按钮在最上层 */
+}
+
+.delete-file-btn:hover {
+    color: darkred;
+}
+
+

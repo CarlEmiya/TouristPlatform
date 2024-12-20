@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<!--<html lang="en">-->
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>评论管理</title>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+<h1>评论管理</h1>
+
+<!-- 选择评论类型的按钮和下拉菜单 -->
+<button id="commentTypeBtn">选择评论类型</button>
+<select id="commentType" style="display: none;">
+    <option value="User">User</option>
+    <option value="Activity">Activity</option>
+    <option value="Diary">Diary</option>
+    <option value="Comment">Comment</option>
+</select>
+        <!-- 显示当前选中的评论类型 -->
+        <div id="selectedType">默认选中的评论类型: User</div>
+
+        <!-- 输入connectId的框，初始时隐藏 -->
+        <input type="text" id="connectIdInput" placeholder="请输入connectId" style="display: none;"/>
+
+        <!-- 加载评论按钮 -->
+        <button id="loadCommentsBtn">加载评论</button>
+        <!-- 用于加载评论的区域 -->
+        <div id="commentsContainer" >
+            <div th:replace="/fragments/commentList :: CompleteComment(connectId=${session.currentUser.uid}, pageNo=${1}, pageSize=${5}, ConnectType='User')" ></div>
+        </div>
+    </body>
+</html>

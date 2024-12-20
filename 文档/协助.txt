@@ -67,9 +67,51 @@ log4j2.xml
 15	举报通过
 
 
+活动的状态：
+status	解释
+1	正常
+2	隐藏，隐私
+3	预删除
+4	组团中
+5	已成团
+6	活动进行中
+7	已取消
+16	已结束
+
+设定是只有活动没开始，才能进行报名
+
+举报状态：
+12	待处理
+14	被驳回
+15	举报通过
+
+举报分类category：
+                            <option value="dislike">我不喜欢</option>
+                            <option value="FalseInformation">虚假信息</option>
+                            <option value="Infringement">侵犯权益</option>
+                            <option value="SexualLewd">色情低俗</option>
+                            <option value="CyberBullying">网络暴力</option>
+                            <option value="politicallySensitive">政治敏感</option>
+                            <option value="delinquency">违法犯罪</option>
+                            <option value="else">其他</option>
+
+type:
+                            <option value="Activity">活动</option>
+                            <option value="Comment">评论</option>
+                            <option value="User">用户</option>
+                            <option value="Diary">日志</option>
+
+
 identity:
    0用户，
    1管理员
+
+   用户状态：
+   1	正常
+   2	隐藏，隐私
+   0	被封禁
+   3	预删除
+
 
 
 

@@ -92,7 +92,7 @@ public class CommentController {
 
     // 根据关联对象ID、用户ID和关联对象类型获取评论列表
     @GetMapping("/list")
-    public ResponseEntity<List<Comment>> getCommentsByAssociatedIdAndUidandAssociatedType(
+    public ResponseEntity<Map<String, Object>> getCommentsByAssociatedIdAndUidandAssociatedType(
             @RequestParam Long connectid,
             @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam(defaultValue = "5") int pageSize,
@@ -102,16 +102,23 @@ public class CommentController {
     {
         try {
             // 启用分页
+            // 启用分页
             PageHelper.startPage(pageNo, pageSize);
-            List<Comment> comments = commentService.getCommentsByAssociatedIdandAssociatedType(connectid, type);
+            List<Comment> comments = commentService.getCommentsByConnectid(connectid,type);
 
+            //从comments中获取所有cid
+            List<Long> cids = comments.stream().map(Comment::getCid).collect(Collectors.toList());
             // 包装分页信息
             PageInfo<Comment> pageInfo = new PageInfo<>(comments);
             model.addAttribute("connectId", connectid);
             model.addAttribute("pageNo", pageNo);
             model.addAttribute("pageSize", pageSize);
             model.addAttribute("connectType", type);
-            return new ResponseEntity<>(comments, HttpStatus.OK);
+            System.out.println("cids: " + cids);
+            Map<String, Object> response = new HashMap<>();
+            response.put("pageInfo", pageInfo);
+            response.put("cids", cids);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -174,9 +181,6 @@ public class CommentController {
         Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUid, user -> user));
         return new ResponseEntity<>(userMap, HttpStatus.OK);
     }
-
-
-
 
 
 
@@ -272,7 +276,7 @@ public class CommentController {
         // 处理文件上传
         List<String> filePaths;
         try {
-            filePaths = fileService.uploadFiles(files, rid,"Comment");  // 调用文件上传方法
+            filePaths = fileService.uploadFiles(files, rid,"Report");  // 调用文件上传方法
         } catch (RuntimeException e) {
             return new ResponseEntity<>(-2, HttpStatus.INTERNAL_SERVER_ERROR);  // 文件上传失败
         }

@@ -214,8 +214,11 @@
     <select id="isRidExist" resultType="java.lang.Integer">
       select count(*) from report where rid = #{rid,jdbcType=BIGINT}
     </select>
+  <select id="selectAll" resultType="com.travel.entity.Report">
+    select * from report;
+  </select>
 
-    <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map">
     update report
     <set>
       <if test="record.rid != null">
@@ -341,5 +344,8 @@
       handler = #{handler,jdbcType=VARCHAR},
       handled = #{handled,jdbcType=DATE}
     where rid = #{rid,jdbcType=BIGINT}
+  </update>
+  <update id="handle">
+    update report set status = #{status}, handler = #{handler,jdbcType=VARCHAR}, handled = #{handled,jdbcType=DATE} where rid = #{rid,jdbcType=BIGINT}
   </update>
 </mapper>

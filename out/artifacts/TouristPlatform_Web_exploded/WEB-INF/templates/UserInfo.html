@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户信息</title>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* 输入框样式 */
+        .user-info-input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 100%;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            cursor: default;
+        }
+
+        .user-info-input-editable {
+            background-color: #fff;
+            cursor: text;
+        }
+
+        /* 头像样式 */
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        /* 按钮样式 */
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 弹出框样式 */
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .dialog label,
+        .dialog input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .dialog button {
+            background-color: #dc3545;
+            border-radius: 5px;
+            width: 80px;
+        }
+
+        .dialog button.cancel {
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div th:object="${session.currentUser}">
+    <div class="user-info">
+        <p>用户id：<span th:text="*{uid}"></span></p>
+        <p>姓名：<span th:text="*{name}"></span></p>
+        <p>密码：<span th:text="*{password}"></span></p>
+
+        <p>等级：<span th:text="*{level}"></span></p>
+        <p>创建时间：<span th:text="*{#dates.format(created, 'yyyy-MM-dd')}"></span></p>
+
+        <div th:switch="*{status}">
+<!--            根据不同状态，显示出不同样式，封禁中显示红色-->
+            状态：
+            <span th:case="0">封禁中</span>
+            <span th:case="1">正常</span>
+            <span th:case="2">隐藏中</span>
+            <span th:case="3">预删除中</span>
+            <span th:case="*">else</span>
+        </div>
+        <br>
+        <!-- 身份 -->
+        <div th:switch="*{identify}">
+            身份：
+            <span th:case="0" class="color-red">用户</span>
+            <span th:case="1" class="color-blue">管理员</span>
+            <span th:case="*" class="color-red">其他</span><br>
+        </div>
+
+        <!-- 删除时间和周期 -->
+        <div th:if="*{status == 3}">
+            <p>删除时间：<span th:text="*{#dates.format(deleted, 'yyyy-MM-dd')}"></span></p>
+            <p>保留周期：<span th:text="*{period}">天</span></p>
+        </div>
+
+
+
+        <p>头像：
+            <a href="#" id="avatarLink" data-connected-id="${session.currentUser.uid}">
+                <img th:src="*{picture}" alt="用户头像" class="user-avatar" />
+            </a>
+        </p>
+        <input type="file" id="avatarInput" style="display: none;" accept="image/*" />
+
+
+
+
+        <!-- 性别 -->
+        <p>性别：
+            <select th:if="*{gender == 'F'}">
+                <option value="F" selected>女</option>
+                <option value="M">男</option>
+            </select>
+            <select th:if="*{gender == 'M'}">
+                <option value="M" selected>男</option>
+                <option value="F">女</option>
+            </select>
+        </p>
+
+        <!-- 生日,用一个日期选择器来编辑，默认格式是mm-dd -->
+        <p>生日：<input type="date" name="start_time"  th:value="*{birth} " /></p>
+
+        <!-- 其他信息,身份证等用input标签来显示，可编辑 -->
+        <input type="hidden" th:value="*{uid}" id="LoginUid" />
+        <p>身份证号：<input type="text" th:value="*{idcard}" name="idcard" id="idcard" class="user-info-input" /></p>
+        <p>邮箱：<input type="text" th:value="*{email}"  name="email"  id="email" class="user-info-input"/></p>
+        <p>电话：<input type="text" th:value="*{phone}" name="phone" id="phone"  class="user-info-input" /></p>
+        <p>城市：<input type="text" th:value="*{city}"  name="city" id="city" class="user-info-input"/></p>
+        <p>职业：<input type="text" th:value="*{occupation}" name="occupation" id="occupation"  class="user-info-input"/></p>
+        <!-- 密保问题,用input标签来显示，可编辑 -->
+        <p>密保问题：<input type="text" th:value="*{question}" name="question" id="question" class="user-info-input" /></p>
+        <!-- 密保答案,用input标签来显示，可编辑 -->
+        <p>密保答案：<input type="text" th:value="*{answer}" name="answer" id="answer" class="user-info-input"  /></p>
+        <p>描述：<textarea th:text="*{description}" class="user-info-input" rows="4" cols="50"></textarea></p>
+        <!-- 操作按钮 -->
+        <button id="saveInfoBtn" onclick="saveInfo()">保存修改</button>
+        <button id="changePasswordBtn" onclick="showChangePasswordDialog()">修改密码</button>
+        <button id="statusBtn" onclick="showDisableConfirmDialog()">状态</button>
+        <button id="disableBtn" onclick="disableAccount()">禁用账号</button>
+        <button id="LevleBtn" onclick="updateLevel()">等级</button>
+        <button id="deleteAccountBtn" onclick="showDeleteAccountDialog()">删除账户</button>
+        <button id="hideAccountBtn" onclick="hideAccount()">隐藏本账号</button>
+<!--        跳转到testComment.html-->
+        <a href="/testComment">评论管理</a>
+        <a href="/travelActivity/list">活动列表</a>
+        <a href="/user/search">用户列表</a>
+        <a href="/report/list">举报列表</a>
+    </div>
+
+
+    <div id="feedbackModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">反馈消息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="feedbackMessage">这里是反馈信息</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 保存修改信息
+    function saveInfo() {
+        const formData = {
+            uid: $("#LoginUid").val(),
+            idcard: $("#idcard").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val(),
+            city: $("#city").val(),
+            occupation: $("#occupation").val(),
+            question: $("#question").val(),
+            answer: $("#answer").val(),
+        };
+        console.log("表单数据：", formData);
+
+        $.ajax({
+            url: "/user/updateInfo",
+            type: "POST",
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            success: function (response, result) {
+                console.log("操作成功：", result);
+                // 判断是否成功并使用 showFeedbackMessage 显示消息
+                if (result === "success") {
+                    showFeedbackMessage("操作成功！", "success");
+                } else {
+                    showFeedbackMessage("操作失败：" + result, "error");
+                }
+            },
+            error: function (xhr) {
+                // 处理请求错误并显示消息
+                showFeedbackMessage("操作失败：" + xhr.responseText, "error");
+            },
+        });
+    }
+
+
+    // 获取当前用户的UID，假设用户ID已经在页面上设置（例如：作为一个data属性或存在于session中）
+    let currentUserId = $("#LoginUid").val(); // 示例从 sessionStorage 中获取用户ID
+
+    // 禁用账号的功能
+    function disableAccount() {
+        let uid = $("#LoginUid").val(); // 获取当前要禁用的用户的UID
+        $.ajax({
+            url: '/user/disable',  // 控制器方法的URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ uid: uid }), // 将数据作为JSON发送
+            success: function(response) {
+                if (response === 1) {
+                    showFeedbackMessage("操作成功！", "success");
+                    // 更新用户信息或界面
+                    // 例如，刷新页面或更新界面中的用户状态
+                } else {
+                    showFeedbackMessage("操作失败：" + "error");
+                }
+            },
+            error: function() {
+                showFeedbackMessage("操作失败" , "error");
+            }
+        });
+    }
+
+    // 修改用户等级的功能
+    function updateLevel() {
+        let uid = $("#LoginUid").val(); // 获取当前要修改等级的用户UID
+        let newLevel = prompt("请输入新的等级："); // 获取新的等级，假设通过prompt获取
+        console.log("表单数据：", uid, newLevel);
+        if (newLevel && !isNaN(newLevel)) {
+            $.ajax({
+                url: '/user/updateLevel',  // 控制器方法的URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    uid: uid,
+                    newLevel: parseInt(newLevel)  // 将输入的等级转换为整数
+                }),
+                success: function(response) {
+                    if (response === 1) {
+                        showFeedbackMessage("操作成功！", "success");
+                    } else {
+                        showFeedbackMessage("操作失败：" + "error");
+                    }
+                },
+                error: function() {
+                    alert("更新等级时发生错误！");
+                }
+            });
+        } else {
+            alert("请输入有效的等级！");
+        }
+    }
+
+
+
+
+
+    // 显示修改密码对话框
+    function showChangePasswordDialog() {
+        const dialogHtml = `
+            <div id="changePasswordDialog" class="dialog">
+                <h3>修改密码</h3>
+                <label>原密码：<input type="password" id="oldPassword"></label>
+                <label>新密码：<input type="password" id="newPassword"></label>
+                <label>重复新密码：<input type="password" id="repeatNewPassword"></label>
+                <button onclick="changePassword()">提交</button>
+                <button class="cancel" onclick="closeDialog()">取消</button>
+            </div>`;
+        $("body").append(dialogHtml);
+        $("#changePasswordDialog").show();
+    }
+
+    // 修改密码
+    function changePassword() {
+        const oldPassword = $("#oldPassword").val();
+        const newPassword = $("#newPassword").val();
+        const repeatNewPassword = $("#repeatNewPassword").val();
+        const uid = $("#LoginUid").val();
+        if (newPassword !== repeatNewPassword) {
+            alert("新密码和重复密码不一致！");
+            return;
+        }
+        console.log("表单数据：", uid);
+        console.log("表单数据：", newPassword);
+
+        $.ajax({
+            url: "/user/updatePassword",
+            type: "POST",
+            data: JSON.stringify({ uid, newPassword }),
+            contentType: "application/json",
+            success: function () {
+                showFeedbackMessage("操作成功！", "success");
+            },
+            error: function (xhr) {
+                showFeedbackMessage("操作失败：" + xhr, "error");
+            },
+        });
+    }
+
+    $(document).ready(function() {
+        const uid = $("#LoginUid").val();
+
+        // 根据 uid 设置按钮文案和功能
+        if (uid == 0) {  // 假设 0 是禁用状态
+            $("#statusBtn").text("解除禁用").attr("onclick", "enableAccount()");
+        } else if (uid == 1) {  // 假设 1 是恢复状态
+            $("#statusBtn").text("禁用账号").attr("onclick", "showDisableConfirmDialog()");
+        } else {
+            // 如果 uid 是其他值，可以设置恢复功能
+            $("#statusBtn").text("恢复本账号").attr("onclick", "enableAccount()");
+        }
+    });
+
+    function showFeedbackMessage(message, status) {
+        // 设置模态框的消息内容
+        var feedbackElement = document.getElementById("feedbackMessage");
+        feedbackElement.innerText = message;
+
+        // 根据状态设置消息的样式
+        if (status == "success") {
+            feedbackElement.style.color = "green";
+        } else {
+            feedbackElement.style.color = "red";
+        }
+
+        // 显示模态框
+        document.getElementById('feedbackModal').style.display = 'block';
+        setTimeout("location.reload()", 30000);
+    }
+
+    // 显示禁用/恢复对话框
+    function showDisableConfirmDialog() {
+        const uid = $("#LoginUid").val();
+        if (uid === "1") { // 假设 1 是恢复状态
+            if (confirm("确认要禁用本账号吗？")) {
+                const formData = { uid: uid };
+                console.log("表单数据：", formData);
+                $.ajax({
+                    url: "/user/disable",
+                    type: "POST",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function () {
+                        showFeedbackMessage("操作成功！", "success");
+                    },
+                    error: function (xhr) {
+                        showFeedbackMessage("操作失败：" + xhr.responseText, "error");
+                    },
+                });
+            }
+        }
+    }
+
+    // 恢复账号功能
+    function enableAccount() {
+        const uid = $("#LoginUid").val();
+            if (confirm("确认要恢复本账号吗？")) {
+                const formData = { uid: uid, status: 1 };
+                $.ajax({
+                    url: "/user/enable",
+                    type: "POST",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function (result) {
+                        if (result === 1) {
+                            showFeedbackMessage("操作成功！", "success");
+                        } else {
+                            alert("恢复失败：" + result);
+                        }
+                    },
+                    error: function (xhr) {
+                        showFeedbackMessage("操作失败：" + xhr.responseText, "error");
+                    },
+                });
+
+        }
+    }
+
+
+    // 删除账户
+    function showDeleteAccountDialog() {
+        const password = prompt("请输入密码以确认删除账户：");
+        if (!password) return;
+        const period = prompt("请输入为您保留账户的天数：");
+        if (!period) return;
+
+        const confirm1 = confirm("确定要删除账号吗？");
+        if (!confirm1) return;
+        const confirm2 = confirm(confirm1 && "再次确认要删除账号吗？");
+        if (!confirm2) return;
+        const confirm3 = confirm(confirm2 && "最后确认，是否删除账号？");
+        if (!confirm3) return;
+        const formData = {
+            uid: $("#LoginUid").val(),
+            period: period
+        }
+        console.log("表单数据：", formData);
+        if (confirm3 && period > 0) {
+            $.ajax({
+                url: "/user/delete",
+                type: "POST",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
+
+                success: function (result) {
+                    if (result === 1) {
+                        showFeedbackMessage("操作成功！", "success");
+                    } else {
+                        showFeedbackMessage("操作失败：" + result, "error");
+                    }
+                },
+                error: function (xhr) {
+                    showFeedbackMessage("操作失败：" + xhr, "error");
+                },
+            });
+        }else if (confirm3 && period <= 0){
+            $.ajax({
+                url: "/user/deleteTotally",
+                type: "POST",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
+
+                success: function (result) {
+                    if (result === 1) {
+                        showFeedbackMessage("操作成功！", "success");
+                        window.location.href = "/";
+                    } else {
+                        showFeedbackMessage("操作失败：" + result, "error");
+                    }
+                },
+                error: function (xhr) {
+                    alert("删除失败：" + xhr.responseText);
+                },
+            });
+        }
+    }
+
+    // 隐藏账号
+    function hideAccount() {
+        const formData = {
+            uid: $("#LoginUid").val(),
+            status: 2
+        }
+        $.ajax({
+            url: "/user/upstatus",
+            type: "POST",
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            success: function () {
+                showFeedbackMessage("操作成功！", "success");
+            },
+            error: function (xhr) {
+                showFeedbackMessage("操作失败：" + xhr, "error");
+            },
+        });
+    }
+
+    // 关闭对话框
+    function closeDialog() {
+        $(".dialog").remove();
+    }
+
+    // 监听头像点击事件，触发文件选择框
+    $('#avatarLink').on('click', function(e) {
+        e.preventDefault();  // 阻止默认的超链接行为
+        $('#avatarInput').click();  // 模拟点击文件选择框
+    });
+
+    // 监听文件选择事件
+    $('#avatarInput').on('change', function() {
+        var file = this.files[0];  // 获取上传的第一个文件
+        var connectedId = $('#avatarLink').data('connected-id');  // 从 data-connected-id 属性获取当前用户ID
+        if (file) {
+            var formData = new FormData();  // 创建表单数据对象
+            console.log('上传的文件：', file);
+            // 确保正确调用 append 方法
+            formData.append('file', file);  // 确保字段名与后端接收的字段名一致
+            formData.append('connectedId', connectedId);  // 填入当前用户ID
+            formData.append('type', 'User');  // 假设上传的是头像
+
+            // 使用 Ajax 上传文件
+            $.ajax({
+                url: '/user/uploadAvatar',  // 后台上传头像的接口
+                type: 'POST',
+                data: formData,
+                processData: false,  // 不处理数据
+                contentType: false,  // 不设置内容类型
+                success: function(response) {
+                    // 展示反馈消息
+                    showFeedbackMessage(response.message, response.status);
+
+                    if (response.status === 'success') {
+                        // 更新头像显示
+                        $('img.user-avatar').attr('src', response.newPictureUrl);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('上传失败:', error);
+                    showFeedbackMessage('上传头像失败，请稍后重试。', 'error');
+                }
+            });
+        }
+    });
+
+
+
+
+
+</script>
+
+</body>
+</html>

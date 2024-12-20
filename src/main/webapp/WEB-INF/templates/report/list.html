@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>举报列表</title>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <style>
+        .description {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            /*-webkit-line-clamp: 2;  !* 限制显示2行 *!*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;  /* 确保文本会根据行数自动换行 */
+        }
+        .active {
+            background-color: blue;
+            color: white;
+        }
+
+        /* 如果需要自定义模态框的样式，可以添加以下CSS */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.5); /* 半透明背景 */
+        }
+
+        .modal-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-body {
+            padding: 10px 20px;
+        }
+
+        .close {
+            font-size: 1.5em;
+            color: #000;
+        }
+
+    </style>
+    <script>
+        // 处理封禁、删除、驳回操作
+        function handleAction(button, action) {
+            const rid = button.getAttribute('data-rid');
+            const type = button.getAttribute('data-type');
+            const handler = button.getAttribute('data-handler');
+
+            // 现在你可以使用这些动态数据
+            console.log("rid = " + rid);
+            console.log("type = " + type);
+            console.log("handler = " + handler);
+            console.log("action = " + action);
+
+            const formData = new FormData();
+            formData.append("rid", rid);
+            formData.append("type", type);
+            formData.append("handler", handler);
+            formData.append("action", action);
+
+            console.log("rid = " + rid);
+            console.log("type = " + type);
+            console.log("handler = " + handler);
+            console.log("action = " + action);
+
+            // 发送 AJAX 请求
+            fetch(`/report/handle`, {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())  // 将返回的数据解析为JSON
+                .then(data => {
+                    console.log("data = " + data);
+                    console.log("data.status = " + data.status);
+                    console.log("data.message = " + data.message);
+
+                    // 显示反馈消息
+                    showFeedbackMessage(data.message, data.status);
+                    // window.location.reload();
+                })
+                .catch(error => {
+                    console.error("请求错误:", error);
+                    showFeedbackMessage("处理请求时发生错误，请重试！", "error");
+                });
+        }
+
+
+
+
+        // 显示反馈消息的函数
+        function showFeedbackMessage(message, status) {
+            // 设置模态框的消息内容
+            var feedbackElement = document.getElementById("feedbackMessage");
+            feedbackElement.innerText = message;
+
+            // 根据状态设置消息的样式
+            if (status == "success") {
+                feedbackElement.style.color = "green";
+            } else {
+                feedbackElement.style.color = "red";
+            }
+
+            // 显示模态框
+            document.getElementById('feedbackModal').style.display = 'block';
+
+            // 2秒后自动关闭模态框
+            setTimeout(function() {
+                document.getElementById('feedbackModal').style.display = 'none';
+            }, 1800); // 2秒后关闭
+        }
+
+
+    </script>
+        </head>
+        <body>
+        <div className="container" th:if="${session.currentUser.identify == 1}">
+            <h1 class="my-4">举报列表</h1>
+
+            <!-- 查询条件表单 -->
+            <form th:action="@{/report/list}" method="get" class="form-inline mb-3">
+                <div className="form-group mr-2">
+                    <label for="rid">举报ID：</label>
+                    <input type="text" class="form-control" id="rid" name="rid" th:value="${SearchedRid}"
+                           placeholder="举报ID"/>
+                </div>
+                <div className="form-group mr-2">
+                    <label for="type">类型：</label>
+                    <select class="form-control" id="type" name="type">
+                        <option value="">全部</option>
+                        <option value="Activity" th:selected="${SearchedType == 'Activity'}">活动</option>
+                        <option value="Comment" th:selected="${SearchedType == 'Comment'}">评论</option>
+                        <option value="User" th:selected="${SearchedType== 'User'}">用户</option>
+                        <option value="Diary" th:selected="${SearchedType == 'Diary'}">日志</option>
+                    </select>
+                </div>
+                <div className="form-group mr-2">
+                    <label for="category">分类：</label>
+                    <select class="form-control" id="category" name="category">
+                        <option value="">全部</option>
+                        <option value="dislike" th:selected="${SearchedCategory == 'dislike'}">我不喜欢</option>
+                        <option value="FalseInformation"
+                                th:selected="${SearchedCategory== 'FalseInformation'}">虚假信息
+                        </option>
+                        <option value="Infringement" th:selected="${SearchedCategory == 'Infringement'}">侵犯权益
+                        </option>
+                        <option value="SexualLewd" th:selected="${SearchedCategory== 'SexualLewd'}">色情低俗</option>
+                        <option value="CyberBullying" th:selected="${SearchedCategory == 'CyberBullying'}">网络暴力
+                        </option>
+                        <option value="politicallySensitive"
+                                th:selected="${SearchedCategory== 'politicallySensitive'}">政治敏感
+                        </option>
+                        <option value="delinquency" th:selected="${SearchedCategory == 'delinquency'}">违法犯罪</option>
+                        <option value="else" th:selected="${SearchedCategory == 'else'}">其他</option>
+                    </select>
+                </div>
+                <div className="form-group mr-2">
+                    <label for="description">描述：</label>
+                    <input type="text" class="form-control" id="description" name="description"
+                           th:value="${SearchedDescription}" placeholder="描述"/>
+                </div>
+                <button type="submit" className="btn btn-primary">查询</button>
+            </form>
+
+            <!-- 显示分页和举报列表 -->
+            <div th:if="${reports == null or reports.size() == 0}">
+                <img src="/static/img/noReports.jpg" alt="404" class="img-fluid">
+            </div>
+
+
+
+
+
+            <div th:if="${reports != null and reports.size() > 0}">
+                <div th:each="report : ${reports}">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">举报ID: <span th:text="${report.rid}"></span></h5>
+                            <p class="card-text">类型: <span th:switch="${report.type}">
+                            <span th:case="Activity">活动</span>
+                            <span th:case="Comment">评论</span>
+                            <span th:case="User">用户</span>
+                            <span th:case="Diary">日志</span>
+                        </span></p>
+                            <p class="card-text">分类:
+                                <span th:switch="${report.category}">
+                                    <span th:case="'dislike'">我不喜欢</span>
+                                    <span th:case="'FalseInformation'">虚假信息</span>
+                                    <span th:case="'Infringement'">侵犯权益</span>
+                                    <span th:case="'SexualLewd'">色情低俗</span>
+                                    <span th:case="'CyberBullying'">网络暴力</span>
+                                    <span th:case="'politicallySensitive'">政治敏感</span>
+                                    <span th:case="'delinquency'">违法犯罪</span>
+                                    <span th:case = "'ContentViolation'" >不当内容</span>
+                                    <span th:case="'else'">其他</span>
+                                </span>
+                            </p>
+                            <div>描述：<div th:text="${report.description}"></div> </div>
+                            <p class="card-text">处理状态:
+                            <div th:switch="${report.status}">
+                                <span th:case="12" class="badge bg-success">未处理</span>
+                                <span th:case="14" class="badge bg-warning">已驳回</span>
+                                <span th:case="15" class="badge bg-secondary">处理完成</span>
+                            </div>
+                            </p>
+                            <div th:if="${report.getFirstFilePath() != null }">
+                                <img th:src="@{${report.getFirstFilePath()}}" class="img-fluid" alt="First Image">
+                            </div>
+                            <input type="hidden" id="action-rid-${report.rid}" value="${report.rid}">
+                            <input type="hidden" id="action-type-${report.rid}" value="${report.type}">
+                            <input type="hidden" id="action-handler-${report.rid}" value="${report.handler}">
+                            <button type="button" name="action-ban-${report.rid}" value="ban" class="btn btn-danger"
+                                    th:disabled="${report.status != 12}"
+                                    th:data-rid="${report.rid}" th:data-type="${report.type}" th:data-handler="${report.handler}"
+                                    onclick="handleAction(this, 'ban')"
+                                    th:if="${report.type!= 'Comment'}"
+                            >封禁</button>
+
+                            <button type="button" name="action-delete-${report.rid}" value="delete" class="btn btn-warning"
+                                    th:disabled="${report.status != 12}"
+                                    th:data-rid="${report.rid}" th:data-type="${report.type}" th:data-handler="${report.handler}"
+                                    onclick="handleAction(this, 'delete')">删除</button>
+
+                            <button type="button" name="action-reject-${report.rid}" value="reject" class="btn btn-secondary"
+                                    th:disabled="${report.status != 12}"
+                                    th:data-rid="${report.rid}" th:data-type="${report.type}" th:data-handler="${report.handler}"
+                                    onclick="handleAction(this, 'reject')">驳回</button>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <hr>
+                </div>
+
+
+                <!-- 分页信息 -->
+                <!-- 分页 -->
+                <div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item" th:classappend="${pageInfo.isHasPreviousPage} ? '' : ' disabled'">
+                                <a class="page-link" th:href="@{/report/list( pageNo=1,pageSize=${pageSize}, rid=${SearchedRid}, type=${SearchedType}, category=${SearchedCategory}, description=${SearchedDescription} )}">首页</a>
+                            </li>
+                            <li class="page-item" th:classappend="${pageInfo.isHasPreviousPage() ? '' : ' disabled'}">
+                                <a class="page-link" th:href="@{/report/list( pageNo=${pageInfo.getPrePage()},pageSize=${pageSize}, rid=${SearchedRid}, type=${SearchedType}, category=${SearchedCategory}, description=${SearchedDescription} )}">上一页</a>
+                            </li>
+
+                            <!-- 页码范围 -->
+                            <li th:each="i : ${#numbers.sequence(pageInfo.pageNum - 2, pageInfo.pageNum + 2)}"
+                                th:if="${i > 0 and i <= pageInfo.getPages()}">
+                                <a href="#" th:href="@{/report/list(pageNo=${i}, pageSize=${pageInfo.pageSize}, rid=${SearchedRid}, type=${SearchedType}, category=${SearchedCategory}, description=${SearchedDescription}  )}"
+                                   th:text="${i}"
+                                   th:class="${i == pageNo} ? 'active' : ''"></a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${pageInfo.isHasNextPage() ? '' : ' disabled'}">
+                                <a class="page-link" th:href="@{/report/list( pageNo=${pageInfo.getNextPage()},pageSize=${pageSize}, rid=${SearchedRid}, type=${SearchedType}, category=${SearchedCategory}, description=${SearchedDescription} )}">下一页</a>
+                            </li>
+                            <li class="page-item" th:classappend="${pageInfo.isHasNextPage() ? '' : ' disabled'}">
+                                <a class="page-link" th:href="@{/report/list( pageNo=${pageInfo.getPages()},pageSize=${pageSize}, rid=${SearchedRid}, type=${SearchedType}, category=${SearchedCategory}, description=${SearchedDescription} )}">尾页</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- 模态框 -->
+            <!-- 模态框的HTML结构 -->
+            <div id="feedbackModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">反馈消息</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="feedbackMessage">这里是反馈信息</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${session.currentUser.identify ==0}">
+            <div >你无权查看此页面</div>
+            <a href="/">返回首页</a>
+        </div>
+        </body>
+<script>
+</script>
+        </html>

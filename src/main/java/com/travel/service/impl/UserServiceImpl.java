@@ -18,6 +18,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    public boolean isAidExist(Long uid) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        criteria.andUidEqualTo(uid);
+        try {
+            List<User> users = userMapper.selectByExample(example);
+            return !users.isEmpty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     @Override
     public int addUser(User user) {
         try {
@@ -138,7 +151,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int disableUser(Long uid) {
         try {
-            return updateUserStatus(uid, 0);
+            User user = userMapper.selectByPrimaryKey(uid);
+            if (user!= null) {
+                user.setStatus(0);
+                return updateUser(user);
+            }else{
+                return 1;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -214,4 +233,31 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+    // 获取所有用户
+    public List<User> getAllUsers() {
+        return userMapper.findAll();
+    }
+
+    public User getUsersByUid(Long uid) {
+        try {
+            return userMapper.selectByPrimaryKey(uid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<User> getUsersByName(String name) {
+        try {
+            UserExample example = new UserExample();
+            UserExample.Criteria criteria = example.createCriteria();
+            criteria.andNameLike("%" + name + "%");
+            return userMapper.selectByExample(example);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

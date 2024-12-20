@@ -707,6 +707,10 @@ public class ReportExample {
         protected Criteria() {
             super();
         }
+
+        public void andDescriptionLike(String s) {
+            addCriterion("description like", s, "description");
+        }
     }
 
     public static class Criterion {

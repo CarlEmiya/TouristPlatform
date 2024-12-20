@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理</title>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .pagination {
+             display: inline-block;
+            }
+        .pagination li {
+                display: inline;
+                margin-left: 10px;
+            }
+
+           .pagination li a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+           .pagination li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+           .pagination li a:hover:not(.active) {background-color: #ddd;}
+           active {
+                background-color: #4CAF50;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+
+
+<div id="feedbackModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">反馈消息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="feedbackMessage">这里是反馈信息</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-5" th:if="${session.currentUser.identify == 1}">
+<!--<div class="container mt-5">-->
+    <h2>用户管理</h2>
+    <button class="btn btn-primary" onclick="showAddAdminModal()">添加管理员</button>
+
+    <form action="/user/search" method="get" class="form-inline">
+        <div class="form-group">
+            <label for="uid">UID</label>
+            <input type="text" id="userId" name="userId" class="form-control"  placeholder="Search by UID">
+        </div>
+        <div class="form-group ml-2">
+            <label for="name">Name</label>
+            <input type="text" id="UserName" name="UserName" class="form-control"  placeholder="Search by Name">
+        </div>
+        <button type="submit" class="btn btn-primary ml-2">搜索</button>
+        <a href="/user/search" class="btn btn-secondary ml-2" th:if="${uid != null || name != null}">取消搜索</a>
+    </form>
+
+<!--    返回userInfo.html页面-->
+    <a href="/index" class="btn btn-secondary">返回首页</a>
+    <!-- 用户列表展示 -->
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>用户ID</th>
+            <th>用户名</th>
+            <th>安全问题</th>
+            <th>安全答案</th>
+            <th>状态</th>
+            <th>等级</th>
+            <th>身份</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.uid}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.question}"></td>
+            <td th:text="${user.answer}"></td>
+            <td th:switch="${user.status}">
+                <span th:case="'1'">正常</span>
+                <span th:case="'2'">隐藏，隐私</span>
+                <span th:case="'0'">封禁</span>
+                <span th:case="'3'">预删除</span>
+                <span th:case="*">else</span>
+            </td>
+            <td th:text="${user.level}" id="level-[[${user.uid}]]"></td>
+            <td th:text="${user.identify == 1 ? '管理员' : '普通用户'}"></td>
+            <td>
+                <button class="btn btn-warning" th:onclick="'showModal(' + ${user.uid} + ')'" >修改等级</button>
+                <button class="btn btn-danger" th:onclick="'deleteUser(' + ${user.uid} + ')'" >删除</button>
+                <button class="btn btn-secondary" th:onclick="'toggleUserStatus(' + ${user.uid} + ', \'' + ${user.status} + '\')'">
+                    <span th:text="${user.status == 0 ? '启用' : '封禁'}"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 分页控制 -->
+    <div class="pagination">
+        <ul class="pagination">
+            <li class="page-item" th:class="${pageInfo.pageNum == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/user/search?pageNo=1&uid=' + ${uid} + '&name=' + ${name}}">首页</a>
+            </li>
+            <li class="page-item" th:class="${pageInfo.pageNum == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/user/search?pageNo=' + ${pageInfo.pageNum - 1} + '&uid=' + ${uid} + '&name=' + ${name}}">上一页</a>
+            </li>
+
+            <li class="page-item" th:class="${pageInfo.pageNum == i ? 'active' : ''}" th:each="i : ${#numbers.sequence(1, pageInfo.pages)}">
+                <a class="page-link" th:href="@{'/user/search?pageNo=' + ${i} + '&uid=' + ${uid} + '&name=' + ${name}}" th:text="${i}"></a>
+            </li>
+
+            <li class="page-item" th:class="${pageInfo.pageNum == pageInfo.pages ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/user/search?pageNo=' + ${pageInfo.pageNum + 1} + '&uid=' + ${uid} + '&name=' + ${name}}">下一页</a>
+            </li>
+            <li class="page-item" th:class="${pageInfo.pageNum == pageInfo.pages ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/user/search?pageNo=' + ${pageInfo.pages} + '&uid=' + ${uid} + '&name=' + ${name}}">尾页</a>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+    <!-- 添加管理员弹窗 -->
+    <!-- 添加管理员模态框 -->
+    <!-- 添加管理员模态框 -->
+    <div id="addAdminModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; padding: 20px; background-color: white; border: 1px solid #ccc; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+        <div>
+            <h5>添加管理员</h5>
+            <button type="button" onclick="closeAddAdminModal()" style="float:right;">&times;</button>
+        </div>
+        <form id="addAdminForm">
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" class="form-control" id="name" placeholder="请输入姓名" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" id="password" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" class="form-control" id="email" placeholder="请输入邮箱" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">电话</label>
+                <input type="tel" class="form-control" id="phone" placeholder="请输入电话" required>
+            </div>
+        </form>
+        <div>
+            <button type="button" class="btn btn-secondary" onclick="closeAddAdminModal()">取消</button>
+            <button type="button" class="btn btn-primary" onclick="submitRegisterForm()">添加</button>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- 修改等级弹窗 -->
+    <!-- 模态框 -->
+    <div class="modal" id="levelModal" tabindex="-1" role="dialog" style="display:none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">修改用户等级</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="levelForm">
+                        <div class="form-group">
+                            <label for="uid">用户 ID</label>
+                            <input type="text" id="uid" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="newLevel">新等级 (0 - 4)</label>
+                            <input type="number" id="newLevel" class="form-control" min="0" max="4" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="saveLevel()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5" th:if="${session.currentUser.identify != 1}">
+    <h2>你没有权限访问此页面</h2>
+</div>
+
+<script>
+
+
+
+    // 显示模态框并填充uid
+    function showModal(uid) {
+        document.getElementById('uid').value = uid; // 填充用户ID
+        document.getElementById('newLevel').value = ''; // 清空新等级
+        document.getElementById('levelModal').style.display = 'block'; // 显示模态框
+    }
+
+    // 关闭模态框
+    function closeModal() {
+        document.getElementById('levelModal').style.display = 'none'; // 隐藏模态框
+    }
+
+    function showFeedbackMessage(message, status) {
+        // 设置模态框的消息内容
+        var feedbackElement = document.getElementById("feedbackMessage");
+        feedbackElement.innerText = message;
+
+        // 根据状态设置消息的样式
+        if (status == "success") {
+            feedbackElement.style.color = "green";
+        } else {
+            feedbackElement.style.color = "red";
+        }
+
+        // 显示模态框
+        document.getElementById('feedbackModal').style.display = 'block';
+        setTimeout("location.reload()", 1500);
+    }
+
+
+    // 保存新等级
+    function saveLevel() {
+        const uid = document.getElementById('uid').value;
+        const newLevel = document.getElementById('newLevel').value;
+
+        if (newLevel < 0 || newLevel > 4) {
+            alert('等级必须在 0 到 4 之间');
+            return;
+        }
+
+        // 执行 AJAX 更新用户等级
+        $.ajax({
+            type: "POST",
+            url: "/user/updateLevel",
+            data: JSON.stringify({ uid: uid, newLevel: newLevel }),
+            contentType: "application/json",
+            success: function () {
+                // 关闭id是"levelModal"的模态框
+                document.getElementById('levelModal').style.display = 'none';
+                showFeedbackMessage("操作成功！", "success");
+            },
+            error: function () {
+                showFeedbackMessage("操作失败" , "error");
+            }
+        });
+    }
+
+
+
+
+    // 更新用户等级
+    function updateUserLevel(uid) {
+        const newLevel = document.getElementById('level-' + uid).value;
+        $.ajax({
+            type: "POST",
+            url: "/user/updateLevel",
+            data: JSON.stringify({ uid: uid, newLevel: newLevel }),
+            contentType: "application/json",
+            success: function () {
+                showFeedbackMessage("操作成功！", "success");
+
+            },
+            error: function () {
+                showFeedbackMessage("操作失败" , "error");
+            }
+        });
+    }
+
+    // 删除用户
+    function deleteUser(uid) {
+        if (confirm("确定删除该用户吗？")) {
+            $.ajax({
+                type: "POST",
+                url: "/user/deleteTotally",
+                data: JSON.stringify({ uid: uid }),
+                contentType: "application/json",
+                success: function () {
+                    showFeedbackMessage("操作成功！", "success");
+                },
+                error: function () {
+                    showFeedbackMessage("操作失败" , "error");
+                }
+            });
+        }
+    }
+
+    // 封禁/启用用户
+    function toggleUserStatus(uid, currentStatus) {
+        const action = currentStatus === '0' ? '/user/enable' : '/user/disable';
+        console.log("action: "+action);
+        console.log("currentStatus: "+currentStatus);
+        $.ajax({
+            type: "POST",
+            url: action,
+            data: JSON.stringify({ uid: uid }),
+            contentType: "application/json",
+            success: function () {
+                showFeedbackMessage("操作成功！", "success");
+            },
+            error: function () {
+                showFeedbackMessage("操作失败" , "error");
+            }
+        });
+    }
+
+    // 显示模态框
+    // 显示添加管理员模态框
+    function showAddAdminModal() {
+        $("#addAdminModal").show();
+        // 清空输入框
+        $("#addAdminForm")[0].reset();
+    }
+    // 关闭模态框
+    function closeAddAdminModal() {
+        document.getElementById("addAdminModal").style.display = "none";
+    }
+
+    // 提交添加管理员表单
+    function submitRegisterForm() {
+        // 获取表单数据
+        const formData = {
+            name: $("#name").val(),
+            password: $("#password").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val(),
+            identify: 1 // 假设1为管理员标识
+        };
+
+        // 校验输入项（包括正则校验）
+        if (!formData.name || !formData.password || !formData.email || !formData.phone) {
+            alert("请填写所有必填项！");
+            return;
+        }
+
+        // 校验邮箱格式
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert("请输入有效的邮箱地址！");
+            return;
+        }
+
+        // 校验电话格式
+        const phoneRegex = /^(\+?\d{1,4}[\s-]?)?(\(?\d{1,4}\)?[\s-]?)?[\d\s-]{7,10}$/;
+        if (!phoneRegex.test(formData.phone)) {
+            alert("请输入有效的电话！");
+            return;
+        }
+
+        // 执行AJAX提交数据
+        $.ajax({
+            type: "POST",
+            url: "/user/addAdmin", // 后端接口
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            success: function () {
+                showFeedbackMessage("操作成功！", "success");
+                closeAddAdminModal(); // 关闭模态框
+                location.reload(); // 刷新页面
+                // 如果需要，可以在这里做刷新操作，或者更新页面中的管理员列表
+            },
+            error: function () {
+                showFeedbackMessage("操作失败：" , "error");
+            }
+        });
+    }
+
+
+
+</script>
+</body>
+</html>

@@ -36,4 +36,6 @@ public interface UserMapper {
     int enableUser(Long uid);
 
     List<User> getUsersByUids(@Param("uids") List<Long> uids);
+
+    List<User> findAll();
 }

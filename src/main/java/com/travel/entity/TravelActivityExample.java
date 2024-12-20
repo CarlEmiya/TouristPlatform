@@ -1110,7 +1110,12 @@ public class TravelActivityExample {
         }
 
         public Criteria andTitleLike(String s) {
-            addCriterion("location like", s, "title");
+            addCriterion("title like", s, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andLabelLike(String s) {
+            addCriterion("label like", s, "label");
             return (Criteria) this;
         }
     }

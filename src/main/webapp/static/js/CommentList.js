@@ -8,6 +8,7 @@ const pageSize = $("#pageSize").val();
 const ConnectType = $("#ConnectType").val();
 const connectType = $("#ConnectType").val();
 const CommentMaxLength = 200; // 评论最大长度
+console.log("来自CommentList.ConnectType：", ConnectType)
 
 function formatDate(dateString) {
     const date = new Date(dateString); // 将时间字符串转换为 Date 对象
@@ -435,17 +436,21 @@ const replyComment = function (cid, uid, name) {
 
 /*<![CDATA[*/
 function loadComments(uid = connectId, pageNo = 1, connectType) {
-    // console.log("来自loadComments：", uid, pageNo, connectType);
-
     const apiUrl = connectType === "User" ? "/comment/listByUid" : "/comment/list";
-    const requestData = connectType === "User"
-        ? {uid: currentUserId, pageNo, pageSize}
-        : {connectId: uid, pageNo, pageSize, connectType};
-
-    // console.log(`来自loadComments：走的是${connectType === "User" ? "User" : "else"}：`, uid, pageNo, connectType);
-
+    const requestData = {
+        pageNo:pageNo,
+        pageSize:pageSize,
+        ...(connectType === "User" ? { uid: currentUserId } : { connectid: uid, type:connectType })
+    };
+    console.log("-----------------------------------：", );
+    console.log("来自loadComments的请求数据：", requestData);
+    console.log("来自loadComments的请求数据：", apiUrl);
+    console.log("来自loadComments的请求数据：", connectType);
+    console.log("来自loadComments的请求数据：", currentUserId);
+    console.log("来自loadComments的请求数据：", requestData);
+    console.log("-----------------------------------：", );
     $.ajax({
-        url: "/comment/listByUid",
+        url: apiUrl,
         type: "GET",
         data: requestData,
         success: function (response) {
@@ -454,7 +459,7 @@ function loadComments(uid = connectId, pageNo = 1, connectType) {
             renderComments(pageInfo, cids); // 传递分页信息和 cids
         },
         error: function (xhr, status, error) {
-            // console.error("加载评论失败：", xhr.responseText || error);
+            console.error("加载评论失败：", xhr.responseText || error);
             alert("加载评论失败，请重试！");
         }
     });
@@ -474,7 +479,7 @@ function renderCommentFiles(cids) {
         url: "/files/getFiles",
         type: "GET",
         data: { connectIds: cids.join(",") ,
-                type: "Comment"},
+                type:ConnectType},
         success: function (fileMap) {
             console.log("来自renderCommentFiles的fileMap：", fileMap);
             console.log("来自renderCommentFiles的cids：", cids);
@@ -545,14 +550,19 @@ function renderCommentFiles(cids) {
 function renderComments(response,cids) {
     // console.log("来自renderComments：", response);
     const commentList = $("#commentList");
-    const noComment = $("#noComment");
-    console.log("来自renderComments：", response);
-    commentList.empty();
+    const noComment = $("#commentList #noComment");
+    // console.log("来自renderComments：", response);
     const comments = response.list;
     if (comments.length === 0) {
-        noComment.show();
+        console.log("-------------------------------")
+        console.log("无评论");
+        noComment.css("display","block");
+        console.log(noComment); // 查看是否选中了正确的元素
+
     } else {
+        commentList.empty();
         noComment.hide();
+        console.log("有评论");
         const userIds = comments.map(comment => comment.uid);
         // 获取用户信息并渲染评论
         $.ajax({
@@ -666,7 +676,7 @@ $(document).ready(function () {
             formData.append("connectId", connectId);  // 评论的目标ID
             formData.append("uid", currentUserId);  // 评论的用户ID
             formData.append("content", content);  // 评论内容
-            formData.append("type", "Comment");  // 类型
+            formData.append("type", connectType);  // 类型
             formData.append("rate", rate);  //   // 评分取整
             // 只有在有文件时才添加文件到 FormData
             if (files.length > 0) {
@@ -709,17 +719,17 @@ $(document).ready(function () {
         const reportedIdElement = document.getElementById('reportedId');
 
         // 检查每个元素是否存在
-        if (!categoryElement || !descriptionElement || !filesElement || !reportedTypeElement || !reportedIdElement) {
+        if (!categoryElement || !descriptionElement  || !reportedTypeElement || !reportedIdElement) {
             console.error("一些必要的元素没有找到。请检查页面上的HTML元素ID是否正确。");
             return; // 如果任何元素未找到，终止操作
         }
 
-        const category = categoryElement.value; // 获取举报类别
-        const description = descriptionElement.value; // 获取举报理由
-        const files = filesElement.files; // 获取上传的文件
-        const reportedType = reportedTypeElement.value; // 获取被举报者举报类型
-        const reporter = currentUserId; // 获取举报者ID
-        const reportedId = reportedIdElement.value; // 获取被举报者ID
+        const category = categoryElement.value;
+        const description = descriptionElement.value;
+        const files = filesElement.files;
+        const reportedType = reportedTypeElement.value;
+        const reporter = currentUserId;
+        const reportedId = reportedIdElement.value;
 
         // 检查是否至少选择了一个文件
         if (files.length === 0) {
@@ -728,9 +738,6 @@ $(document).ready(function () {
         }
 
         const formData = new FormData();
-        // console.log("举报类别：", category, "举报理由：", description, "被举报者类型：", reportedType, "被举报者ID：", reportedId, "举报者ID：", currentUserId);
-
-        // 添加举报类别和理由
         formData.append("category", category);
         formData.append("description", description);
         formData.append("reportedType", reportedType);
@@ -767,31 +774,7 @@ $(document).ready(function () {
     };
 
 
-
-    // //处理id为uploadBtn的点击事件
-    // $("#uploadBtn").click(function(){
-    //
-    //     //如果是ajax提交包含上传文件的请求
-    //     //需要用一个FormData对象封装表单数据
-    //     var formData=new FormData($("#form1")[0]);
-    //
-    //     $.ajax({
-    //         url:'files/upload2',
-    //         type:'POST',
-    //         data: formData, //提交的就是封装成FormData对象的表单数据
-    //         processData: false, //不使用默认方式处理上传的数据，默认会转成字符串
-    //         contentType: false, //不使用默认的内容类型作为发送的数据的类型
-    //         success: function(img){ //如果处理请求成功，返回上传的图片的名称
-    //             $("#img1").attr("src","uploaded/"+img);
-    //         },
-    //         error: function(req,status,error){
-    //             alert("请求处理出错!!!"+error);
-    //         }
-    //     });
-    // });
-
-
-    loadComments(connectId, 1, "User");
+    loadComments(connectId, 1, ConnectType);
     // 初次加载评论列表
 });
 /*]]>*/

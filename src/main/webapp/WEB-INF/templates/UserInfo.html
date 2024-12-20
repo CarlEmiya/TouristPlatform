@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户信息</title>
-    <link rel="stylesheet" href="static/css/jquery-ui.min.css">
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
     <style>
         /* 输入框样式 */
         .user-info-input {
@@ -82,12 +84,6 @@
         <p>密码：<span th:text="*{password}"></span></p>
 
         <p>等级：<span th:text="*{level}"></span></p>
-        ------------------------------------------
-        <p>生日：<span th:text="*{#dates.format(birth, 'yyyy-MM-dd')}"></span>></p>
-        <p>密保答案：<span th:value="*{answer}"></span></p>
-        <p>描述：<span th:text="*{description}"></span></p>
-        <p>状态:<span th:text="*{status}"></span></p>
-        -------------------------------------------
         <p>创建时间：<span th:text="*{#dates.format(created, 'yyyy-MM-dd')}"></span></p>
 
         <div th:switch="*{status}">
@@ -116,8 +112,15 @@
 
 
 
-        <!-- 头像,是个超链接，点击触发文件上传 -->
-        <p>头像：<img th:src="*{picture}" alt="用户头像" class="user-avatar" /></p>
+        <p>头像：
+            <a href="#" id="avatarLink" data-connected-id="${session.currentUser.uid}">
+                <img th:src="*{picture}" alt="用户头像" class="user-avatar" />
+            </a>
+        </p>
+        <input type="file" id="avatarInput" style="display: none;" accept="image/*" />
+
+
+
 
         <!-- 性别 -->
         <p>性别：
@@ -157,7 +160,29 @@
 <!--        跳转到testComment.html-->
         <a href="/testComment">评论管理</a>
         <a href="/travelActivity/list">活动列表</a>
+        <a href="/user/search">用户列表</a>
+        <a href="/report/list">举报列表</a>
     </div>
+
+
+    <div id="feedbackModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">反馈消息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="feedbackMessage">这里是反馈信息</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -174,26 +199,28 @@
             answer: $("#answer").val(),
         };
         console.log("表单数据：", formData);
+
         $.ajax({
             url: "/user/updateInfo",
             type: "POST",
             data: JSON.stringify(formData),
             contentType: "application/json",
-            success: function (response,result) {
-                console.log("修改成功：", result);
-                if(result === "success")
-                {
-                    alert("修改成功！");
-                    location.reload();
-                }else{
-                    alert("修改失败：" + result);
+            success: function (response, result) {
+                console.log("操作成功：", result);
+                // 判断是否成功并使用 showFeedbackMessage 显示消息
+                if (result === "success") {
+                    showFeedbackMessage("操作成功！", "success");
+                } else {
+                    showFeedbackMessage("操作失败：" + result, "error");
                 }
             },
             error: function (xhr) {
-                alert("修改失败：" + xhr.responseText);
+                // 处理请求错误并显示消息
+                showFeedbackMessage("操作失败：" + xhr.responseText, "error");
             },
         });
     }
+
 
     // 获取当前用户的UID，假设用户ID已经在页面上设置（例如：作为一个data属性或存在于session中）
     let currentUserId = $("#LoginUid").val(); // 示例从 sessionStorage 中获取用户ID
@@ -208,16 +235,15 @@
             data: JSON.stringify({ uid: uid }), // 将数据作为JSON发送
             success: function(response) {
                 if (response === 1) {
-                    alert("账号已成功禁用！");
-                    location.reload();
+                    showFeedbackMessage("操作成功！", "success");
                     // 更新用户信息或界面
                     // 例如，刷新页面或更新界面中的用户状态
                 } else {
-                    alert("禁用账号失败，请稍后重试！");
+                    showFeedbackMessage("操作失败：" + "error");
                 }
             },
             error: function() {
-                alert("禁用账号时发生错误！");
+                showFeedbackMessage("操作失败" , "error");
             }
         });
     }
@@ -238,10 +264,9 @@
                 }),
                 success: function(response) {
                     if (response === 1) {
-                        alert("用户等级已成功更新！");
-                        location.reload();
+                        showFeedbackMessage("操作成功！", "success");
                     } else {
-                        alert("更新等级失败，请稍后重试！");
+                        showFeedbackMessage("操作失败：" + "error");
                     }
                 },
                 error: function() {
@@ -291,12 +316,10 @@
             data: JSON.stringify({ uid, newPassword }),
             contentType: "application/json",
             success: function () {
-                alert("密码修改成功！");
-                closeDialog();
-                location.reload();
+                showFeedbackMessage("操作成功！", "success");
             },
             error: function (xhr) {
-                alert("密码修改失败：" + xhr.responseText);
+                showFeedbackMessage("操作失败：" + xhr, "error");
             },
         });
     }
@@ -315,6 +338,23 @@
         }
     });
 
+    function showFeedbackMessage(message, status) {
+        // 设置模态框的消息内容
+        var feedbackElement = document.getElementById("feedbackMessage");
+        feedbackElement.innerText = message;
+
+        // 根据状态设置消息的样式
+        if (status == "success") {
+            feedbackElement.style.color = "green";
+        } else {
+            feedbackElement.style.color = "red";
+        }
+
+        // 显示模态框
+        document.getElementById('feedbackModal').style.display = 'block';
+        setTimeout("location.reload()", 30000);
+    }
+
     // 显示禁用/恢复对话框
     function showDisableConfirmDialog() {
         const uid = $("#LoginUid").val();
@@ -328,11 +368,10 @@
                     data: JSON.stringify(formData),
                     contentType: "application/json",
                     success: function () {
-                        alert("账号已禁用！");
-                        location.reload();
+                        showFeedbackMessage("操作成功！", "success");
                     },
                     error: function (xhr) {
-                        alert("禁用失败：" + xhr.responseText);
+                        showFeedbackMessage("操作失败：" + xhr.responseText, "error");
                     },
                 });
             }
@@ -351,14 +390,13 @@
                     contentType: "application/json",
                     success: function (result) {
                         if (result === 1) {
-                            alert("账号已恢复！");
-                            location.reload();
+                            showFeedbackMessage("操作成功！", "success");
                         } else {
                             alert("恢复失败：" + result);
                         }
                     },
                     error: function (xhr) {
-                        alert("恢复失败：" + xhr.responseText);
+                        showFeedbackMessage("操作失败：" + xhr.responseText, "error");
                     },
                 });
 
@@ -393,14 +431,13 @@
 
                 success: function (result) {
                     if (result === 1) {
-                        alert("账号已预删除！");
-                        location.reload();
+                        showFeedbackMessage("操作成功！", "success");
                     } else {
-                        alert("预删除失败：" + result);
+                        showFeedbackMessage("操作失败：" + result, "error");
                     }
                 },
                 error: function (xhr) {
-                    alert("删除失败：" + xhr.responseText);
+                    showFeedbackMessage("操作失败：" + xhr, "error");
                 },
             });
         }else if (confirm3 && period <= 0){
@@ -412,10 +449,10 @@
 
                 success: function (result) {
                     if (result === 1) {
-                        alert("账号已彻底删除！");
+                        showFeedbackMessage("操作成功！", "success");
                         window.location.href = "/";
                     } else {
-                        alert("删除失败：" + result);
+                        showFeedbackMessage("操作失败：" + result, "error");
                     }
                 },
                 error: function (xhr) {
@@ -437,11 +474,10 @@
             data: JSON.stringify(formData),
             contentType: "application/json",
             success: function () {
-                alert("账号已隐藏！");
-                location.reload();
+                showFeedbackMessage("操作成功！", "success");
             },
             error: function (xhr) {
-                alert("隐藏失败：" + xhr.responseText);
+                showFeedbackMessage("操作失败：" + xhr, "error");
             },
         });
     }
@@ -450,6 +486,53 @@
     function closeDialog() {
         $(".dialog").remove();
     }
+
+    // 监听头像点击事件，触发文件选择框
+    $('#avatarLink').on('click', function(e) {
+        e.preventDefault();  // 阻止默认的超链接行为
+        $('#avatarInput').click();  // 模拟点击文件选择框
+    });
+
+    // 监听文件选择事件
+    $('#avatarInput').on('change', function() {
+        var file = this.files[0];  // 获取上传的第一个文件
+        var connectedId = $('#avatarLink').data('connected-id');  // 从 data-connected-id 属性获取当前用户ID
+        if (file) {
+            var formData = new FormData();  // 创建表单数据对象
+            console.log('上传的文件：', file);
+            // 确保正确调用 append 方法
+            formData.append('file', file);  // 确保字段名与后端接收的字段名一致
+            formData.append('connectedId', connectedId);  // 填入当前用户ID
+            formData.append('type', 'User');  // 假设上传的是头像
+
+            // 使用 Ajax 上传文件
+            $.ajax({
+                url: '/user/uploadAvatar',  // 后台上传头像的接口
+                type: 'POST',
+                data: formData,
+                processData: false,  // 不处理数据
+                contentType: false,  // 不设置内容类型
+                success: function(response) {
+                    // 展示反馈消息
+                    showFeedbackMessage(response.message, response.status);
+
+                    if (response.status === 'success') {
+                        // 更新头像显示
+                        $('img.user-avatar').attr('src', response.newPictureUrl);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('上传失败:', error);
+                    showFeedbackMessage('上传头像失败，请稍后重试。', 'error');
+                }
+            });
+        }
+    });
+
+
+
+
+
 </script>
 
 </body>

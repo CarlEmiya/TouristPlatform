@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户登录与注册</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="static/css/jquery-ui.min.css">
     <link rel="stylesheet" th:href="@{static/css/loginStyle.css}">
 </head>
 <body>
@@ -40,6 +40,7 @@
                 <form id="loginForm" autocomplete="off">
                     <input type="text" name="Loginuid" id="LoginUid" placeholder="用户ID" maxlength="50" required>
                     <input type="password" name="LoginPassword" id="LoginPassword" placeholder="密码" maxlength="50" required>
+
                     <div class="checkbox">
                         <input type="checkbox" id="remember" name="remember">
                         <label for="remember">记住我</label>

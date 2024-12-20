@@ -1,0 +1,10 @@
+<!-- src/main/resources/templates/fragments/participants.html -->
+<div id="participantsList" th:fragment="participantsList">
+    <ul>
+        <!-- 通过 Thymeleaf 渲染参与者列表 -->
+        <li th:each="user : ${users}">
+            <span th:text="${user.name}"></span>
+            <button class="btn btn-danger" th:data-id="${user.id}" onclick="kickOutUser(this)">踢出</button>
+        </li>
+    </ul>
+</div>

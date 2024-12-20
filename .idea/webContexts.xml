@@ -4,8 +4,14 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/UserInfo.html" value="file://$PROJECT_DIR$/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity/detail.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity/listParticipants.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity/publish.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/activity" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/commentList.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/userList.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/report/list.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/report" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/testComment.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/userList.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates" />
       </map>
     </option>
   </component>

@@ -30,8 +30,10 @@ public class FileController {
 
 	@Autowired
 	private FileServiceImpl fileService;
+
 	@Autowired
 	private CommentService commentService;
+
     @Autowired
     private ReportService reportService;
 
@@ -84,20 +86,17 @@ public class FileController {
 
 	// 获取对应评论的文件列表
 	@GetMapping("/getFiles")
-	public ResponseEntity<Map<Long, com.travel.entity.File>> getFilesByConnectIds(@RequestParam List<Long> connectIds,@RequestParam String type) {
+		public ResponseEntity<Map<Long, com.travel.entity.File>> getFilesByConnectIds(@RequestParam List<Long> connectIds,@RequestParam String type) {
 		List<com.travel.entity.File> files = fileService.getFilesByConnectIds(connectIds,type);
 		Map<Long, com.travel.entity.File> FileMap = files.stream().collect(Collectors.toMap(com.travel.entity.File::getFid, file -> file));
 		return new ResponseEntity<>(FileMap, HttpStatus.OK);
 	}
-
-
 
 	@PostMapping("/deleteFile")
 	public ResponseEntity<Integer> deleteFile(@RequestParam("filePath") String filePath, @RequestParam("fid") Long fid) {
 		// 逻辑处理，检查文件是否存在，删除文件并更新数据库记录
 		String prePath = "D:\\A课本\\学习\\大三下Java项目\\TouristPlatform\\src\\main\\webapp\\static\\uploaded\\";
 		File file = new File(prePath, filePath);  // 拼接文件路径
-
 		if (file.exists()) {
 			boolean deleted = file.delete();
 			if (deleted) {

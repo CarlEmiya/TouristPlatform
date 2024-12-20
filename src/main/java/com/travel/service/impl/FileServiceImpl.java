@@ -22,11 +22,17 @@ public class FileServiceImpl implements FileService {
     private Random random = new Random();
 
     @Autowired
-    private ReportService reportService;
+    private ReportServiceImpl reportService;
 
     public List<File> getFilesByConnectIds(List<Long> connectIds, String type) {
         FileExample example = new FileExample();
-        example.createCriteria().andConnectidIn(connectIds).andTypeEqualTo(type);
+        example.createCriteria().andConnectidIn(connectIds);
+        return fileMapper.selectByExample(example);
+    }
+
+    public List<File> getFilesByConnectId(Long connectId, String type) {
+        FileExample example = new FileExample();
+        example.createCriteria().andConnectidEqualTo(connectId).andTypeEqualTo(type);
         return fileMapper.selectByExample(example);
     }
 

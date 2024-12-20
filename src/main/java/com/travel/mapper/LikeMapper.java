@@ -28,4 +28,6 @@ public interface LikeMapper {
     int updateByPrimaryKeySelective(Like record);
 
     int updateByPrimaryKey(Like record);
+
+    int getCountLike(@Param("connectid") Long connectid, @Param("type") String type);
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--OFF 表示不打印log4j2自身的日志 -->
+<configuration status="OFF">
+    <Loggers>
+        <Logger name="com.travel.mapper" level="trace"/>
+        <Logger name="com.travel.service.impl" level="debug"/>
+    </Loggers>
+</configuration>

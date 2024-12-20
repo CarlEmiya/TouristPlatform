@@ -147,12 +147,20 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
+  <delete id="deleteByAidAndUid">
+    delete from activity_registration
+    WHERE aid = #{aid} AND uid = #{uid}
+  </delete>
+
   <insert id="insert" parameterType="com.travel.entity.ActivityRegistration">
     insert into activity_registration (arid, aid, uid, 
       time, status)
     values (#{arid,jdbcType=BIGINT}, #{aid,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, 
       #{time,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
+
+
   <insert id="insertSelective" parameterType="com.travel.entity.ActivityRegistration">
     insert into activity_registration
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -190,6 +198,13 @@
       </if>
     </trim>
   </insert>
+
+  <insert id="isAridExist">
+    SELECT COUNT(*) > 0
+    FROM activity_registration
+    WHERE arid = #{arid}
+  </insert>
+
   <select id="countByExample" parameterType="com.travel.entity.ActivityRegistrationExample" resultType="java.lang.Long">
     select count(*) from activity_registration
     <if test="_parameter != null">
@@ -212,7 +227,19 @@
     WHERE ar.uid = #{uid}
   </select>
 
-    <update id="updateByExampleSelective" parameterType="map">
+  <select id="isRegistedByAidAndUid" resultType="java.lang.Boolean">
+    SELECT COUNT(*) > 0
+    FROM activity_registration
+    WHERE aid = #{aid} AND uid = #{uid}
+  </select>
+  <select id="selectCountByAid" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM activity_registration
+    WHERE aid = #{aid}
+  </select>
+
+
+  <update id="updateByExampleSelective" parameterType="map">
     update activity_registration
     <set>
       <if test="record.arid != null">

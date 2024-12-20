@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class TravelActivity implements Serializable {
     private Long aid;
@@ -32,7 +33,7 @@ public class TravelActivity implements Serializable {
     private Integer status;
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date deadline;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date created;
 
     private Double rate;
@@ -43,15 +44,35 @@ public class TravelActivity implements Serializable {
 
     private String description;
 
-    private String label;
+    private List<String> label;
 
     private String reason;
 
-    private String firstFilePath;  // 存储第一个文件的ID
+    private String firstFilePath;  // 存储第一个文件的路径
 
 
 
     private static final long serialVersionUID = 1L;
+
+
+
+    public TravelActivity(Long uid, Integer min, Integer required, Date start, Date end, BigDecimal cost, String location, Date deadline, String title, String description, List<String> label) {
+        this.uid = uid;
+        this.min = min;
+        this.required = required;
+        this.start = start;
+        this.end = end;
+        this.cost = cost;
+        this.location = location;
+        this.deadline = deadline;
+        this.title = title;
+        this.description = description;
+        this.label = label;
+    }
+
+    public TravelActivity() {
+    }
+
     public String getFirstFilePath() {
         return firstFilePath;
     }
@@ -203,11 +224,11 @@ public class TravelActivity implements Serializable {
         this.description = description;
     }
 
-    public String getLabel() {
+    public List<String> getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(List<String> label) {
         this.label = label;
     }
 

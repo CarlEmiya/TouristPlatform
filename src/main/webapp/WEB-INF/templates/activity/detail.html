@@ -2,47 +2,973 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>活动详情</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <base th:href="@{/}">
 </head>
+<style>
+    .tag-button {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #f0f0f0;
+        color: #333;
+        text-decoration: none;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .tag-button:hover {
+        background-color: #dcdcdc;
+    }
+
+    .btn-attend {
+        margin-right: 10px;
+    }
+    .btn-like {
+             margin-left: 10px;
+    }
+    .btn-attend:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-like:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-attend.disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-like.disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-attend[data-action="registerForActivity"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-attend[data-action="cancelRegistration"] {
+        background-color: #f44336;
+        color: white;
+    }
+    .btn-like[data-action="like"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-like[data-action="cancelLike"] {
+        background-color: #f44336;
+        color: white;
+    }
+    .btn-attend[data-action=""] {
+        display: none;
+    }
+    .btn-like[data-action=""] {
+        display: none;
+    }
+    .btn-attend[data-action="registerForActivity"]:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-attend[data-action="cancelRegistration"]:hover {
+        background-color: #f44336;
+        color: white;
+    }
+    .btn-like[data-action="like"]:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-like[data-action="cancelLike"]:hover {
+        background-color: #f44336;
+        color: white;
+    }
+    .btn-attend[data-action="registerForActivity"].disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-attend[data-action="cancelRegistration"].disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-like[data-action="like"].disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-like[data-action="cancelLike"].disabled {
+        background-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .btn-attend[data-action="registerForActivity"][data-activity-id="${activity.aid}"] {
+        display: inline-block;
+    }
+    .btn-attend[data-action="cancelRegistration"][data-activity-id="${activity.aid}"] {
+        display: inline-block;
+    }
+    .btn-like[data-action="like"][data-activity-id="${activity.aid}"][data-uid="${session.currentUser.uid}"] {
+        display: inline-block;
+    }
+    .btn-like[data-action="cancelLike"][data-activity-id="${activity.aid}"][data-uid="${session.currentUser.uid}"] {
+        display: inline-block;
+    }
+    .btn-attend[data-action="registerForActivity"][data-activity-id="${activity.aid}"].disabled {
+        display: none;
+    }
+    .btn-attend[data-action="cancelRegistration"][data-activity-id="${activity.aid}"].disabled {
+        display: none;
+    }
+    .btn-like[data-action="like"][data-activity-id="${activity.aid}"][data-uid="${session.currentUser.uid}"].disabled {
+        display: none;
+    }
+    .btn-like[data-action="cancelLike"][data-activity-id="${activity.aid}"][data-uid="${session.currentUser.uid}"].disabled {
+        display: none;
+    }
+
+</style>
 <body>
 <div class="container">
     <h1>活动详情</h1>
 
+    <p>用户等级：<span th:text="${session.currentUser.level}">0</span></p>
+
     <!-- 显示活动信息 -->
     <div th:if="${activity}">
+        <p th:text="'活动ID：' + ${activity.aid}"></p>
         <h2 th:text="${activity.title}"></h2>
         <p><strong>描述：</strong><span th:text="${activity.description}"></span></p>
-        <p><strong>开始时间：</strong><span th:text="${activity.start}"></span></p>
-        <p><strong>结束时间：</strong><span th:text="${activity.end}"></span></p>
+        <p><strong>开始时间：</strong><span th:text="${#dates.format(activity.start, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <p><strong>结束时间：</strong><span th:text="${#dates.format(activity.end, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
         <p><strong>地点：</strong><span th:text="${activity.location}"></span></p>
-        <p><strong>活动周期：</strong><span th:text="${activity.period}"></span> 天</p>
+        <p><strong>最低等级：</strong><span th:text="${activity.min}">0</span></p>
+        <p><strong>活动成本：</strong><span th:text="${activity.cost}">元</span></p>
+        <p><strong>参与人数：</strong><span th:text="${activity.current}"></span> / <span th:text="${activity.required}"></span></p>
         <p><strong>活动状态：</strong>
-            <span th:switch="${activity.status}">
-                    <span th:case="0">进行中</span>
-                    <span th:case="1">已结束</span>
-                    <span th:case="2">已取消</span>
-                    <span th:case="3">已隐藏</span>
-                    <span th:default>未知状态</span>
-                </span>
+            <span th:text="${activity.status}" />
+        <span th:switch="${activity.status}">
+            <span th:case="1">未开始</span>
+            <span th:case="2">隐藏，隐私</span>
+            <span th:case="3">预删除</span>
+            <span th:case="4">组团中</span>
+            <span th:case="5">已成团</span>
+            <span th:case="6">活动进行中</span>
+            <span th:case="7">已取消</span>
+            <span th:case="16">已结束</span>
+        </span>
+        </p>
+<!--        活动id：-->
+
+        <p><strong>报名截止时间：</strong><span th:text="${#dates.format(activity.deadline, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <p><strong>创建日期：</strong><span th:text="${#dates.format(activity.created, 'yyyy-MM-dd')}"></span></p>
+        <p><strong>活动评分：</strong><span th:text="${activity.rate}"></span></p>
+        <p><strong>点赞数：</strong><span th:text="${activity.agree}"></span></p>
+        <p><strong>标签：</strong>
+            <span th:each="aLabel : ${activity.label}">
+            <!-- 使用 th:href 生成链接，确保 aLabel 参数正确传递并进行 URL 编码 -->
+                <a th:href="@{/travelActivity/list(aLabel=${aLabel})}"
+                   th:text="${aLabel}"
+                   class="tag-button">
+                </a>
+            </span>
         </p>
 
+        <div th:if="${activity.status == 3}">
+            <p><strong>删除时间：</strong><span th:text="${activity.deleted}"></span></p>
+            <p><strong>留存时间：</strong><span th:text="${activity.period}"></span> 天</p>
+        </div>
+<!--        从后端拿到的文件列表，显示在这里model.addAttribute("files", files);-->
+        <ul>
+            <li th:each="file : ${files}">
+                <img th:src="${file.path}" alt="图片" width="100%" height="100%"/>
+            </li>
+        </ul>
+
         <!-- 显示操作按钮 -->
-        <div th:if="${activity.status == 0}">
-            <a href="#" class="btn btn-primary">报名参加</a> <!-- 报名按钮 -->
+        <!-- 判断活动状态并生成不同的按钮 -->
+        <button type="button" class="btn btn-primary btn-attend" id="BtnAttend"
+                th:text="${((activity.status == 1 or activity.status == 4) and session.currentUser.level >= activity.min and #dates.format(activity.deadline, 'yyyy-MM-dd HH:mm:ss') > #dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')) ? (isRegister ? '退出报名' : '我要报名') : '不可参加'}"
+                th:classappend="${activity.status != 1 and activity.status != 4 or #dates.format(activity.deadline, 'yyyy-MM-dd HH:mm:ss') <= #dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss') ? ' disabled' : ''}"
+                th:data-action="${activity.status == 1 or activity.status == 4 ? (isRegister ? 'cancelRegistration' : 'registerForActivity') : ''}"
+                th:data-activity-id="${activity.aid}">
+        </button>
+
+
+        <button type="button" class="btn btn-primary" btn-like id="BtnLike"
+                th:text="${isLiked? '取消点赞':'赞'}"
+                th:data-action="${(isLiked) ? 'cancelLike' : 'like'}"
+                th:data-activity-id="${activity.aid}"
+                th:data-uid="${session.currentUser.uid}"
+        >
+
+        </button>
+
+        <!-- 编辑按钮 -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" th:if="${(session.currentUser.uid == activity.uid) || (session.currentUser.identify == 1)}"  >
+            编辑
+        </button>
+
+        <!-- 管理参与人员按钮 -->
+        <!-- 管理参与人员按钮 -->
+        <a th:href="@{/travelActivity/listParticipants(aid=${activity.aid})}" class="btn btn-primary btn-manage-participants" th:if="${(session.currentUser.uid == activity.uid) || (session.currentUser.identify == 1)}">
+            管理参与人员
+        </a>
+
+
+
+
+
+
+        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#ActivityReportModal" th:onclick="ReportActivity(${activity.aid})"> 举报 </button>
+
+
+        <button type="button" class="btn btn-danger"
+                th:data-aid="${activity.aid}"
+                onclick="openCancelActivityModal(this)"
+                data-bs-target="#ActivityReportModal"
+                th:if="${(session.currentUser.uid == activity.uid) || (session.currentUser.identify == 1)}"  >取消活动</button>
+
+
+        <!-- 用于加载评论的区域 -->
+        <div id="commentsContainer" >
+            <div th:replace="fragments/commentList :: CompleteComment(connectId=${activity.aid}, pageNo=${1}, pageSize=${5}, ConnectType='Activity')" ></div>
         </div>
-        <div th:if="${activity.status != 0}">
-            <button class="btn btn-secondary" disabled>活动已结束或不可参与</button> <!-- 如果活动结束或不可参与，禁用按钮 -->
+
+        <!-- 显示反馈信息 -->
+        <div id="feedbackMessage1" class="alert" style="display: none;"></div>
+
+
+        <!-- 模态框，用于编辑活动 -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"  style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">编辑活动</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="editActivityForm" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <!-- 活动信息编辑框 -->
+                            <input type="hidden" id="aid" name="aid" th:value="${activity.aid}">
+                            <div class="form-group">
+                                <label for="title">活动标题</label>
+                                <input type="text" id="title" name="title" class="form-control" th:value="${activity.title}">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">活动描述</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" th:text="${activity.description}"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">活动地点</label>
+                                <input type="text" id="location" name="location" class="form-control" th:value="${activity.location}">
+                            </div>
+                            <div class="form-group">
+                                <label for="cost">活动成本</label>
+                                <input type="number" id="cost" name="cost" class="form-control" th:value="${activity.cost}">
+                            </div>
+                            <div class="form-group">
+                                <label for="start">活动开始时间</label>
+                                <input type="datetime-local" id="start" name="start" class="form-control" th:value="${#dates.format(activity.start, 'yyyy-MM-dd HH:mm:ss')}">
+                            </div>
+                            <div class="form-group">
+                                <label for="end">活动结束时间</label>
+                                <input type="datetime-local" id="end" name="end" class="form-control" th:value="${#dates.format(activity.end, 'yyyy-MM-dd HH:mm:ss')}">
+                            </div>
+                            <div class="form-group">
+                                <label for="deadline">报名截止时间</label>
+                                <input type="datetime-local" id="deadline" name="deadline" class="form-control" th:value="${#dates.format(activity.deadline, 'yyyy-MM-dd HH:mm:ss')}">
+                            </div>
+<!--                            选择器为了status-->
+                            <div class="form-group">
+                                <label for="status">活动状态</label>
+                                <select id="status" name="status" class="form-control" th:value="${activity.status}">
+                                    <option value="1">未开始</option>
+                                    <option value="2">隐藏，隐私</option>
+                                    <option value="3">预删除</option>
+                                    <option value="4">组团中</option>
+                                    <option value="5">已成团</option>
+                                    <option value="6">活动进行中</option>
+                                    <option value="7">已取消</option>
+                                    <option value="16">已结束</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="required">要求参与人数</label>
+                                <input type="number" id="required" name="required" class="form-control" th:value="${activity.required}">
+                            </div>
+                            <div class="form-group">
+                                <label for="min">要求最小等级</label>
+                                <input type="number" id="min" name="min" class="form-control" th:value="${activity.min}">
+                            </div>
+                            <!-- 隐藏字段存储标签 -->
+                            <!-- 隐藏字段存储标签 -->
+                            <input type="hidden" id="tagsInput" name="tags" th:value="${tags}">
+
+
+                            <p><strong>标签：</strong>
+                                <!-- 显示已有标签 -->
+                                <span id="tagsContainer" th:each="aLabel : ${activity.label}" th:inline="text">
+                                    <!-- 显示标签内容，并且每个标签后面有删除按钮 -->
+                                </span>
+                                <!-- 标签输入框 -->
+                                <input type="text" id="newTagInput" class="form-control" placeholder="添加新标签" />
+                                <!-- 提交按钮 -->
+                                <button type="button" id="addTagBtn" class="btn btn-primary btn-add-tag">添加标签</button>
+                            </p>
+
+
+
+                            <!-- 文件展示区 -->
+                            <div class="form-group">
+                                <div id="file-preview-container">
+                                    <ul>
+                                        <li th:each="file : ${files}" style=" position: relative;">
+                                            <div class="file-preview">
+                                                <img th:src="@{${file.path}}" alt="活动图片" th:alt="${file.fid}" width="100" height="100">
+                                                <!-- 删除按钮 -->
+                                                <button type="button" class="btn btn-danger btn-sm delete-file-btn"
+                                                        th:data-file-id="${file.fid}" th:data-file-path="${file.path}">×</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="activityImageUpload">上传文件</label>
+                                    <input type="file" id="activityImageUpload" name="activityImage" class="form-control-file" accept="image/*" multiple>
+                                </div>
+                            </div>
+
+                            <!-- 隐藏字段存储删除的文件ID -->
+                            <input type="hidden" id="deletedFileIds" name="deletedFileIds">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" id="saveButton" class="btn btn-primary">保存修改</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+
+
+        <!-- 取消活动模态框 -->
+        <div id="cancelActivityModal" class="modal" tabindex="-1" role="dialog" style="display:none;" data-bs-backdrop="true" data-bs-keyboard="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">取消活动</h5>
+                        <!-- 关闭按钮 -->
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    </div>
+                    <form id="cancelActivityForm" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" id="cancelActivityAid" name="aid" />
+                            <div class="form-group">
+                                <label for="reason">取消原因</label>
+                                <textarea id="reason" name="reason" class="form-control" rows="4" placeholder="请输入取消活动的原因"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- 取消按钮 -->
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-danger">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- 反馈消息模态框 -->
+        <div id="feedbackModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">反馈消息</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="feedbackMessage">这里是反馈信息</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 举报模态框 -->
+        <!-- 举报模态框 -->
+        <!-- 举报模态框 -->
+        <div aria-labelledby="reportModalLabel" class="modal" id="ActivityReportModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white" style="display: flex; align-items: center; justify-content: space-between;">
+                        <h5 class="modal-title" id="reportModalLabel">举报</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button" style="margin-left: 500px;">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 举报类别选择 -->
+                        <select class="form-control" id="ActivityReportCategory">
+                            <option value="dislike">我不喜欢</option>
+                            <option value="FalseInformation">虚假信息</option>
+                            <option value="Infringement">侵犯权益</option>
+                            <option value="SexualLewd">色情低俗</option>
+                            <option value="CyberBullying">网络暴力</option>
+                            <option value="politicallySensitive">政治敏感</option>
+                            <option value="delinquency">违法犯罪</option>
+                            <option value="else">其他</option>
+                        </select>
+                        <!-- 举报理由文本框 -->
+                        <textarea class="form-control" id="ActivityReportReason" rows="4" placeholder="请输入举报理由"></textarea>
+                        <!-- 上传文件 -->
+                        <input type="file" class="form-control" id="ActivityReportFiles" multiple required>
+                        <input type="hidden" id="ActivityReportedType" value="Activity" />
+                        <input type="hidden" id="ActivityReportedId" th:value="${activity.aid}" value="1" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">关闭</button>
+                        <button class="btn btn-primary" id="ActivitySubmitReport" type="button">提交举报</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 
     </div>
 
     <!-- 如果活动不存在，显示错误信息 -->
     <div th:if="${message}">
         <div class="alert alert-danger" th:text="${message}"></div>
+        <image src="/static/img/activity/nullActivity.jpg" alt="error" width="100%" height="100%"/>
     </div>
 
     <!-- 返回活动列表按钮 -->
     <a href="/travelActivity/list" class="btn btn-secondary">返回活动列表</a>
 </div>
+<script>
+
+
+
+
+    // 举报按钮
+    document.querySelector('.btn-warning').onclick = function () {
+        ReportActivity();
+    };
+
+    function ReportActivity(connectId) {
+        reportedId = connectId;
+    }
+
+    // 提交举报
+    document.getElementById('ActivitySubmitReport').onclick = function () {
+        const categoryElement = document.getElementById('ActivityReportCategory');
+        const descriptionElement = document.getElementById('ActivityReportReason');
+        const filesElement = document.getElementById('ActivityReportFiles');
+        const reportedTypeElement = document.getElementById('ActivityReportedType');
+        const reportedIdElement = document.getElementById('ActivityReportedId');
+
+        // 检查每个元素是否存在
+        if (!categoryElement || !descriptionElement || !reportedTypeElement || !reportedIdElement) {
+            console.error("一些必要的元素没有找到。请检查页面上的HTML元素ID是否正确。");
+            return; // 如果任何元素未找到，终止操作
+        }
+
+        const category = categoryElement.value; // 获取举报类别
+        const description = descriptionElement.value; // 获取举报理由
+        const files = filesElement.files; // 获取上传的文件
+        const reportedType = "Activity"; // 获取被举报者举报类型
+        const reporter = currentUserId; // 获取举报者ID
+        const reportedId = reportedIdElement.value; // 获取被举报者ID
+
+        // 检查是否至少选择了一个文件
+        if (files.length === 0) {
+            alert('请至少选择一个文件/一项证据 进行上传');
+            return; // 如果没有文件，阻止后续代码执行
+        }
+
+        const formData = new FormData();
+        // console.log("举报类别：", category, "举报理由：", description, "被举报者类型：", reportedType, "被举报者ID：", reportedId, "举报者ID：", currentUserId);
+
+        // 添加举报类别和理由
+        formData.append("category", category);
+        formData.append("description", description);
+        formData.append("reportedType", reportedType);
+        formData.append("reporter", reporter);
+        formData.append("reportedId", reportedId);
+
+        // 添加文件
+        for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+
+        // 发送请求
+        fetch('/travelActivity/report', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                // console.log(result);
+                if (result == 1) {
+                    alert('举报成功');
+                    $('#ActivityReportModal').modal('hide'); // 关闭模态框
+                } else if (result == -2) {
+                    alert('举报失败,文件保存失败' + result.message);
+                } else if (result == -1) {
+                    alert('举报失败-1：' + result.message);
+                } else {
+                    alert('举报失败else：' + result.message);
+                }
+            })
+            .catch(error => {
+                alert('举报失败');
+            });
+    };
+
+
+
+    // 使用 Ajax 请求来取消活动
+    $("#cancelActivityForm").submit(function(e) {
+        e.preventDefault(); // 阻止表单默认提交
+        var aid = $("#cancelActivityAid").val();  // 获取活动ID
+        var reason = $("#reason").val(); // 获取取消原因
+
+        console.log("aid:",aid);
+        console.log("reason:",reason);
+
+        $.ajax({
+            url: '/travelActivity/cancelActivity',  // 后端处理请求的 URL
+            type: 'POST',  // 使用 POST 方法
+            data: { aid: aid, reason: reason },  // 传递 aid 和 reason 参数
+            success: function(response) {
+                // 根据服务器返回的响应显示反馈消息
+                console.log(response.message);
+                showFeedbackMessage(response.message, 'success');  // 显示成功消息
+                //将id是modal-content的模态框隐藏起来，并将id是reason的textarea内容清空
+                // 关闭模态框
+                $('#cancelActivityModal').hide();
+                $("#reason").val("");
+            },
+            error: function(xhr, status, error) {
+                showFeedbackMessage('活动取消失败，请重试。', 'error');  // 显示失败消息
+            }
+        });
+    });
+
+    function showFeedbackMessage(message, status) {
+        // 设置模态框的消息内容
+        var feedbackElement = document.getElementById("feedbackMessage");
+        feedbackElement.innerText = message;
+
+        // 根据状态设置消息的样式
+        if (status == "success") {
+            feedbackElement.style.color = "green";
+            feedbackElement.innerText = "操作成功！";
+        } else {
+            feedbackElement.style.color = "red";
+            feedbackElement.innerText = "操作失败！";
+        }
+
+        // 显示模态框
+        document.getElementById('feedbackModal').style.display = 'block';
+
+        // 2秒后自动关闭模态框
+        setTimeout(function() {
+            document.getElementById('feedbackModal').style.display = 'none';
+        }, 1800); // 2秒后关闭
+    }
+    // 监听模态框关闭事件，清空输入框
+    $('#cancelActivityModal').on('hidden.bs.modal', function () {
+        // 清空输入框内容
+        $("#reason").val("");
+    });
+
+    // 点击取消按钮或关闭按钮时，同样触发隐藏模态框并清空输入框
+    $(".btn-close, .btn-secondary").click(function() {
+        // 隐藏模态框
+        $('#cancelActivityModal').hide();
+        // 清空取消原因输入框
+        $("#reason").val("");
+    });
+
+    function openCancelActivityModal(button) {
+        var aid = $(button).data('aid');  // 获取活动ID
+        $("#cancelActivityAid").val(aid);  // 填充活动ID到表单隐藏字段
+        $("#cancelActivityModal").show();  // 显示取消活动的模态框
+    }
+
+    // 例如，通过点击一个按钮显示模态框
+    $('#openCancelModalButton').on('click', function() {
+        $('#cancelActivityModal').modal('show');
+    });
+
+
+    const likeButton = document.getElementById('BtnLike');
+    if (likeButton) {
+        likeButton.addEventListener('click', function () {
+            const activityId = this.getAttribute('data-activity-id');
+            const action = this.getAttribute('data-action');
+            const userId = this.getAttribute('data-uid');
+            if (action && activityId && userId) {
+                if (action === 'cancelLike') {
+                    cancelLike(activityId,userId);
+                } else if (action === 'like') {
+                    Like(activityId,userId);
+                }
+            }
+        });
+    }
+
+    function cancelLike(activityId,userId) {
+        // console.log(`活动ID：${activityId}`);  // 输出活动ID，查看是否正确传递
+        fetch(`/travelActivity/cancelLike?aid=${activityId}&uid=${userId}`, {
+            method: 'POST',
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // 刷新页面以更新按钮状态
+            } else {
+                alert("取消点赞失败！");
+            }
+        }).catch(error => {
+            alert("请求失败，请重试！");
+        });
+    }
+
+    function Like(activityId,userId) {
+        // console.log(`活动ID：${activityId}`);  // 输出活动ID，查看是否正确传递
+        fetch(`/travelActivity/Like?aid=${activityId}&uid=${userId}`, {
+            method: 'POST',
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // 刷新页面以更新按钮状态
+            } else {
+                alert("点赞失败！");
+            }
+        }).catch(error => {
+            alert("请求失败，请重试！");
+        });
+    }
+
+
+
+
+
+
+
+
+    /**
+     * 参加/退出  活动按钮的总开关
+     */
+        // 获取id为BtnAttend的按钮元素
+        const attendButton = document.getElementById('BtnAttend');
+        if (attendButton) {
+            console.log("attendButton:",attendButton);
+            // 为按钮添加点击事件监听器
+            // debugger;
+            attendButton.addEventListener('click', function () {
+                const activityId = this.getAttribute('data-activity-id');
+                const action = this.getAttribute('data-action');
+                if (action && activityId) {
+                    if (action === 'registerForActivity') {
+                        registerForActivity(activityId);
+                    } else if (action === 'cancelRegistration') {
+                        cancelRegistration(activityId);
+                    }
+                }
+            });
+        }
+    /**
+     * 参加活动
+     * @param activityId
+     */
+    function registerForActivity(activityId) {
+        // console.log(`活动ID：${activityId}`);  // 输出活动ID，查看是否正确传递
+        fetch(`/travelActivity/join/${activityId}?aid=${activityId}`, {
+            method: 'POST',
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // 刷新页面以更新按钮状态
+            } else {
+                alert("报名失败！");
+            }
+        }).catch(error => {
+            alert("请求失败，请重试！");
+        });
+    }
+
+    /**
+     * 退出活动
+     * @param activityId
+     */
+    function cancelRegistration(activityId) {
+        // console.log(`活动ID：${activityId}`);  // 输出活动ID，查看是否正确传递
+        fetch(`/travelActivity/cancel?aid=${activityId}`, {
+            method: 'POST',
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // 刷新页面以更新按钮状态
+            } else {
+                alert("取消报名失败！");
+            }
+        }).catch(error => {
+            alert("请求失败，请重试！");
+        });
+    }
+
+    // 保存删除的文件ID
+    let deletedFileIds = [];
+
+    // 点击删除按钮时，暂时删除文件
+    document.querySelectorAll('.delete-file-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const fileId = this.getAttribute('data-file-id');
+            const filePath = this.getAttribute('data-file-path');
+            console.log("删除的文件ID：" + fileId);
+            console.log("删除的文件路径：" + filePath);
+
+            // 从文件列表中移除该文件
+            this.closest('li').remove();
+
+            // 将该文件的ID添加到删除列表中
+            deletedFileIds.push({ fileId, filePath });
+            console.log("删除的文件ID列表：" + JSON.stringify(deletedFileIds));
+
+            // 更新隐藏的input字段的值
+            document.getElementById('deletedFileIds').value = JSON.stringify(deletedFileIds);
+            console.log("隐藏的input字段：" + document.getElementById('deletedFileIds').value);
+        });
+    });
+
+    // 点击取消时，清空删除的文件列表，恢复文件
+    document.querySelector('.btn-secondary').addEventListener('click', function() {
+        // 清空删除文件的记录
+        deletedFileIds = [];
+        conosole.log("取消删除的文件ID列表：" + deletedFileIds);
+        // 恢复文件列表中的所有文件（这是模拟的方式，实际可以根据需要调整）
+        const filePreviewContainer = document.getElementById('file-preview-container');
+        filePreviewContainer.querySelectorAll('li').forEach(function(item) {
+            item.style.display = 'block'; // 恢复显示
+        });
+    });
+
+    $(document).ready(function() {
+
+        // 获取所有日期字段
+        var startInput = $("#start");
+        var endInput = $("#end");
+        var deadlineInput = $("#deadline");
+
+        // 添加输入变化监听器
+        startInput.on("input", validateDates);
+        endInput.on("input", validateDates);
+        deadlineInput.on("input", validateDates);
+
+// 存储所有标签的数组
+        var tags = [];
+
+// 从隐藏字段读取初始标签
+        function loadTagsFromInput() {
+            var tagsInputValue = $('#tagsInput').val(); // 获取隐藏字段的值
+            if (tagsInputValue) {
+                tags = tagsInputValue.split(','); // 将逗号分隔的标签字符串转为数组
+            }
+            console.log("初始标签：" + tags);
+            renderTags(); // 渲染标签显示
+        }
+
+// 初始化已有标签
+        loadTagsFromInput(); // 加载隐藏字段中的标签
+
+// 监听回车键和点击“添加标签”按钮
+        $('#newTagInput').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                addTag();
+            }
+        });
+
+        $('#addTagBtn').on('click', function() {
+            addTag();
+        });
+
+// 添加标签到 tags 数组，并更新显示
+        function addTag() {
+            var newTag = $('#newTagInput').val().trim();
+            if (newTag && tags.indexOf(newTag) === -1) {  // 确保标签不为空且没有重复
+                tags.push(newTag);  // 添加标签到数组
+                renderTags();  // 更新标签显示
+                $('#newTagInput').val('');  // 清空输入框
+                updateTagsInput();  // 更新隐藏字段的值
+                console.log("添加的标签：" + newTag);
+                console.log("当前的标签：" + tags);
+                console.log("隐藏字段中的标签：" + $('#tagsInput').val());
+            }
+        }
+
+// 渲染标签显示
+        function renderTags() {
+            $('#tagsContainer').empty();  // 清空当前标签显示
+            tags.forEach(function(tag) {
+                // 为每个标签生成HTML
+                $('#tagsContainer').append(
+                    '<span class="tag-item">' + tag +
+                    ' <button type="button" class="btn btn-danger btn-sm delete-tag-btn" data-tag="' + tag + '">×</button></span>'
+                );
+            });
+        }
+
+// 删除标签
+        $('#tagsContainer').on('click', '.delete-tag-btn', function() {
+            var tagToDelete = $(this).data('tag');  // 获取要删除的标签
+            //如果是数字，则转为字符串
+            if (typeof tagToDelete === 'number') {
+                tagToDelete = tagToDelete.toString();
+            }
+            tags = tags.filter(function(tag) { return tag !== tagToDelete; });  // 从数组中删除标签
+
+            // 打印删除的标签和剩余的标签数组
+            console.log("删除的标签：" + tagToDelete);
+            console.log("剩余的标签：" + tags);
+
+            // 从标签显示中删除该标签
+            $(this).closest('.tag-item').remove();
+
+            // 更新隐藏字段的值
+            updateTagsInput();  // 更新隐藏字段中的标签值
+        });
+
+// 更新隐藏字段中的标签值
+        function updateTagsInput() {
+            $('#tagsInput').val(tags.join(','));  // 将标签数组转换成以逗号分隔的字符串
+        }
+
+// 表单提交时，标签作为字符串列表传递
+        $('#editActivityForm').on('submit', function(event) {
+            // 在表单提交前，确保标签数组已经更新
+            updateTagsInput();  // 更新隐藏字段的值
+            console.log("提交的tags：" + $('#tagsInput').val());  // 打印提交的标签值
+        });
+
+
+        // 监听保存按钮点击事件
+        $("#saveButton").on("click", function(event) {
+            event.preventDefault();  // 阻止表单的默认提交行为
+
+            // 校验所有日期字段
+            if (!validateDates()) {
+                alert("请确保日期输入正确！");  // 日期不合法时显示提示
+                return;
+            }
+
+// 获取删除文件ID并设置隐藏的input字段
+            var deletedFileIdsStr = JSON.stringify(deletedFileIds);  // 将数组转为JSON字符串
+            $("#deletedFileIds").val(deletedFileIdsStr);  // 设置隐藏字段的值
+
+            // 创建一个 FormData 对象来提交数据
+            var formData = new FormData();
+            console.log("status:" + $("#status").val());
+
+            // 从所有的输入字段获取数据并append到formData中
+            formData.append("aid", $("#aid").val());
+            formData.append("title", $("#title").val());
+            formData.append("description", $("#description").val());
+            formData.append("location", $("#location").val());
+            formData.append("cost", $("#cost").val());
+            formData.append("min", $("#min").val());
+            formData.append("required", $("#required").val());
+            formData.append("tags", $("#tagsInput").val());
+            formData.append("start", $("#start").val());
+            formData.append("end", $("#end").val());
+            formData.append("deadline", $("#deadline").val());
+            formData.append("status", $("#status").val());
+
+            // 获取并追加上传的文件
+            var files = $("#activityImageUpload")[0].files;
+            for (var i = 0; i < files.length; i++) {
+                formData.append("activityImage", files[i]);
+            }
+
+// 追加删除的文件ID到表单数据
+            if (deletedFileIdsStr) {
+                formData.append("deletedFileIds", deletedFileIdsStr);
+                console.log("删除的文件ID：" + deletedFileIdsStr);
+            }
+
+
+
+            // 发送Ajax请求更新活动
+            $.ajax({
+                url: "/travelActivity/update",  // 后端URL
+                type: "post",  // 使用POST方法
+                data: formData,
+                processData: false,  // 不处理数据
+                contentType: false,  // 不设置Content-Type，由浏览器自动设置
+                success: function(response) {
+                    console.log("活动更新成功！", response);
+                    // 关闭模态框并刷新页面以更新活动信息
+                    $('#editModal').css('display', 'none');
+                    showFeedbackMessage("操作成功！", "success");
+                },
+                error: function(xhr, status, error) {
+                    console.error("更新失败！", error);
+                    showFeedbackMessage("操作失败" , "error");
+                }
+            });
+        });
+
+
+        // 校验日期函数
+        function validateDates() {
+            var startTime = new Date(startInput.val());
+            var endTime = new Date(endInput.val());
+            var deadlineTime = new Date(deadlineInput.val());
+
+            // 检查end不能早于start
+            if (endTime < startTime) {
+                endInput[0].setCustomValidity("活动结束时间不能早于开始时间");
+                endInput[0].reportValidity();
+                return false;
+            } else {
+                endInput[0].setCustomValidity("");  // 清除错误
+            }
+
+            // 检查deadline应该晚于start但早于end
+            if (deadlineTime < startTime) {
+                deadlineInput[0].setCustomValidity("报名截止时间必须晚于活动开始时间");
+                deadlineInput[0].reportValidity();
+                return false;
+            } else if (deadlineTime > endTime) {
+                deadlineInput[0].setCustomValidity("报名截止时间不能晚于活动结束时间");
+                deadlineInput[0].reportValidity();
+                return false;
+            } else {
+                deadlineInput[0].setCustomValidity("");  // 清除错误
+            }
+
+            return true;  // 所有检查通过
+        }
+
+
+
+    });
+
+
+
+
+</script>
 </body>
 </html>

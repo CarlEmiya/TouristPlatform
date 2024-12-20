@@ -75,11 +75,23 @@ function submitLoginForm() {
         $.ajax({
             type: "POST",
             url: "/user/login",
-                data: JSON.stringify(formData),
-                contentType: "application/json", // 设置请求头x
-            success: function () {
-                // alert("登录成功！即将跳转到用户信息页面。");
-                window.location.href = "/userInfo";
+            data: JSON.stringify(formData),
+            contentType: "application/json", // 设置请求头
+            success: function (response) {
+                // 这里的 response 包含了 user 和 status
+                const user = response.user;  // 获取用户信息
+                const status = response.status;  // 获取用户状态
+
+                console.log("用户状态: ", status);  // 打印用户状态
+
+                // 根据用户状态做不同的处理
+                if (status === 0) {
+                    alert("您的账户不可用，请申诉解冻。");
+                    window.location.href = "/ban";  // 跳转到申诉页面
+                } else {
+                    // 登录成功，跳转到用户信息页面
+                    window.location.href = "/userInfo";
+                }
             },
             error: function () {
                 alert("登录失败，请重试！");
@@ -87,6 +99,7 @@ function submitLoginForm() {
         });
     });
 }
+
 
 function submitRegisterForm() {
     $("#registerForm").submit(function (e) {
@@ -98,6 +111,7 @@ function submitRegisterForm() {
             password: $("#password").val(),
             email: $("#email").val(),
             phone: $("#phone").val()
+            // identify: 1,
         };
         console.log("表单数据：", formData);
         $.ajax({

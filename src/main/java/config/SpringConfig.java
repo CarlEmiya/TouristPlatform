@@ -2,6 +2,7 @@ package config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInterceptor;
+import com.travel.handler.ListTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -52,6 +53,11 @@ public class SpringConfig {
         configuration.setMapUnderscoreToCamelCase(true); // 开启驼峰命名
         configuration.setCacheEnabled(false); // 启用缓存
         configuration.setDefaultStatementTimeout(250); // SQL 超时时间
+
+
+        // 注册自定义的 TypeHandler
+        configuration.getTypeHandlerRegistry().register(ListTypeHandler.class);
+
         factoryBean.setConfiguration(configuration);
 
         // 设置类型别名包
@@ -59,6 +65,8 @@ public class SpringConfig {
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:com/travel/mapper/*.xml"));
         // 设置插件（如分页插件）
         factoryBean.setPlugins(pageInterceptor);
+
+
 
         return factoryBean.getObject();
     }

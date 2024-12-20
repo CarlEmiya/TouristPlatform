@@ -1,9 +1,15 @@
 package com.travel.service.impl;
 
+import com.travel.entity.Like;
+import com.travel.entity.LikeExample;
 import com.travel.entity.TravelActivityExample;
+import com.travel.mapper.ActivityRegistrationMapper;
+import com.travel.mapper.LikeMapper;
 import com.travel.mapper.TravelActivityMapper;
 import com.travel.entity.TravelActivity;
 import com.travel.service.TravelActivityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +21,12 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 
 	@Autowired
 	private TravelActivityMapper activityMapper;
+
+	private static final Logger logger = LoggerFactory.getLogger(TravelActivityServiceImpl.class);
+    @Autowired
+    private ActivityRegistrationMapper activityRegistrationMapper;
+    @Autowired
+    private LikeMapper likeMapper;
 
 	@Override
 	public int addActivity(TravelActivity activity) {
@@ -32,7 +44,12 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	@Override
 	public List<TravelActivity> searchActivities(TravelActivityExample activity) {
 		try {
-				return activityMapper.selectByExample(activity);
+			// 不要status为2的
+			activity.createCriteria().andStatusNotEqualTo(2).andStatusNotEqualTo(3);
+			// 按发布时间倒序排序
+			activity.setOrderByClause("created desc");
+			List<TravelActivity> list = activityMapper.selectByExample(activity);
+			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -47,8 +64,12 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 			if (activity!= null) {
 				activity.setStatus(newStatus);
 				// 使用updateByPrimaryKey方法根据主键更新活动对象
-				activityMapper.updateByPrimaryKey(activity);
-				return 1;
+				int result = activityMapper.updateByPrimaryKey(activity);
+				if (result > 0) {
+					return 1;
+				} else {
+					return 0;
+				}
 			}
 			return 0;
 		} catch (Exception e) {
@@ -81,7 +102,7 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	@Override
 	public int updateActivity(TravelActivity activity) {
 		try {
-			activityMapper.updateByPrimaryKey(activity);
+			activityMapper.updateByPrimaryKeyWithBLOBs(activity);
 			return 1;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,4 +207,139 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 		}
 	}
 
+	public boolean isAidExist(Long aid) {
+		try {
+			TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
+			if (activity != null) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+    public void updateActivityCurrent(Long aid) {
+		try {
+			TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
+			if (activity!= null) {
+				activity.setCurrent(activityRegistrationMapper.selectCountByAid(aid));
+				activityMapper.updateByPrimaryKey(activity);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+
+	public int totalDeleteActivity(Long aid) {
+		TravelActivity activity = activityMapper.selectByPrimaryKey(aid);
+		try {
+			if (activity != null) {
+				activityMapper.deleteByPrimaryKey(aid);
+				return 1;
+			}else{
+				return 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public int banActivity(Long reported) {
+		try {
+			TravelActivityExample example = new TravelActivityExample();
+			example.createCriteria().andAidEqualTo(reported);
+			TravelActivity activity = activityMapper.selectByExample(example).get(0);
+			if(activity != null) {
+				TravelActivity newActivity = new TravelActivity();
+				newActivity.setAid(reported);
+				newActivity.setStatus(2);
+				activityMapper.updateByPrimaryKeyWithBLOBs(activity);
+				return 1;
+			}
+			return 0;
+
+		}catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public int getCountLike(Long aid,String type) {
+		try {
+			int likeCount = likeMapper.getCountLike(aid,"activity");
+			return likeCount;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public Boolean isLiked(Long aid, Long uid) {
+		try {
+			LikeExample example = new LikeExample();
+			example.createCriteria().andConnectidEqualTo(aid).andUidEqualTo(uid).andTypeEqualTo("activity");
+			List<Like> list = likeMapper.selectByExample(example);
+			if (list.size() > 0) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public int cancelLikeActivity(Long aid, Long uid) {
+		try {
+			LikeExample example = new LikeExample();
+			example.createCriteria().andConnectidEqualTo(aid).andUidEqualTo(uid).andTypeEqualTo("activity");
+			likeMapper.deleteByExample(example);
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public int LikeActivity(Long aid, Long uid) {
+		try {
+			Like like = new Like();
+			like.setConnectid(aid);
+			like.setUid(uid);
+			like.setLid(generateUniqueId());
+			like.setStatus(true);
+			like.setType("activity");
+			like.setCreated(new Date());
+			likeMapper.insert(like);
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+
+	private Long generateUniqueId() {
+		Long id;
+		do {
+			id = (long) (Math.random() * 1000000000);  // 随机生成一个rid
+		} while (isIdExist(id));  // 检查rid是否存在
+		return id;
+	}
+
+	private boolean isIdExist(Long id) {
+		// 检查rid是否存在的逻辑
+		// 这里可以根据实际情况进行实现，例如查询数据库等
+		// 返回true表示rid已存在，返回false表示rid不存在
+		TravelActivityExample example = new TravelActivityExample();
+		example.createCriteria().andAidEqualTo(id);
+		List<TravelActivity> list = activityMapper.selectByExample(example);
+		if (list.size() > 0) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -176,3 +176,6 @@ function showDeleteConfirmation() {
     }
     return Promise.all(confirmationPromises);
 }
+
+
+

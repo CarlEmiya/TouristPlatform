@@ -18,12 +18,6 @@ public class ActivityRegistrationController {
     @Autowired
     private ActivityRegistrationService activityRegistrationService;
 
-    // 报名活动
-    @PostMapping("/register")
-    public ResponseEntity<Integer> registerForActivity(@RequestBody ActivityRegistration registration) {
-        int result = activityRegistrationService.registerForActivity(registration);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
     // 根据活动id获取报名用户列表
     @GetMapping("/byActivityId")
@@ -39,12 +33,7 @@ public class ActivityRegistrationController {
         return new ResponseEntity<>(activities, HttpStatus.OK);
     }
 
-    // 根据报名id取消报名
-    @PutMapping("/cancel")
-    public ResponseEntity<Integer> cancelRegistration(@RequestParam("registrationId") String registrationId) {
-        int result = activityRegistrationService.cancelRegistration(registrationId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+
 
     // 修改报名状态
     @PutMapping("/updateStatus")

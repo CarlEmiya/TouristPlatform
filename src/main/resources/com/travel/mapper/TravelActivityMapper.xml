@@ -22,7 +22,7 @@
   <resultMap extends="TravelActivityResultMap" id="ResultMapWithBLOBs" type="com.travel.entity.TravelActivity">
     <result column="title" jdbcType="LONGVARCHAR" property="title" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
-    <result column="label" jdbcType="LONGVARCHAR" property="label" />
+    <result column="label" jdbcType="LONGVARCHAR" property="label" typeHandler="com.travel.handler.ListTypeHandler" />
     <result column="reason" jdbcType="LONGVARCHAR" property="reason" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -152,7 +152,7 @@
             #{deleted,jdbcType=DATE}, #{period,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
             #{deadline,jdbcType=TIMESTAMP}, #{created,jdbcType=DATE}, #{rate,jdbcType=DOUBLE},
             #{agree,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR},
-            #{label,jdbcType=LONGVARCHAR}, #{reason,jdbcType=LONGVARCHAR})
+            #{label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler,typeHandler=com.travel.handler.ListTypeHandler}, #{reason,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.travel.entity.TravelActivity">
     insert into travel_activity
@@ -274,7 +274,7 @@
         #{description,jdbcType=LONGVARCHAR},
       </if>
       <if test="label != null">
-        #{label,jdbcType=LONGVARCHAR},
+        #{label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler,typeHandler=com.travel.handler.ListTypeHandler},
       </if>
       <if test="reason != null">
         #{reason,jdbcType=LONGVARCHAR},
@@ -345,7 +345,7 @@
         description = #{record.description,jdbcType=LONGVARCHAR},
       </if>
       <if test="record.label != null">
-        label = #{record.label,jdbcType=LONGVARCHAR},
+        label = #{record.label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler},
       </if>
       <if test="record.reason != null">
         reason = #{record.reason,jdbcType=LONGVARCHAR},
@@ -375,7 +375,7 @@
     agree = #{record.agree,jdbcType=INTEGER},
     title = #{record.title,jdbcType=LONGVARCHAR},
     description = #{record.description,jdbcType=LONGVARCHAR},
-    label = #{record.label,jdbcType=LONGVARCHAR},
+    label = #{record.label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler},
     reason = #{record.reason,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -458,7 +458,7 @@
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
       <if test="label != null">
-        label = #{label,jdbcType=LONGVARCHAR},
+        label = #{label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler},
       </if>
       <if test="reason != null">
         reason = #{reason,jdbcType=LONGVARCHAR},
@@ -485,7 +485,7 @@
         agree = #{agree,jdbcType=INTEGER},
         title = #{title,jdbcType=LONGVARCHAR},
         description = #{description,jdbcType=LONGVARCHAR},
-        label = #{label,jdbcType=LONGVARCHAR},
+        label = #{label,jdbcType=LONGVARCHAR,typeHandler=com.travel.handler.ListTypeHandler},
         reason = #{reason,jdbcType=LONGVARCHAR}
     where aid = #{aid,jdbcType=BIGINT}
   </update>

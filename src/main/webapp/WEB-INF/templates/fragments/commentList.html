@@ -17,7 +17,7 @@
         <div th:object="${session.currentUser}">
             <input id="LoginUid" th:value="*{uid}" type="hidden"/>
             <input id="identity" th:value="*{identify}" type="hidden"/>
-            <input id="ConnectType" th:value="${ConnectType}" type="hidden"/>
+            <input id="ConnectType" th:value="${ConnectType}" type="hidden" />
             <input id="connectId" th:value="${connectId}" type="hidden"/>
             <input id="pageNo" th:value="${pageNo}" type="hidden"/>
             <input id="pageSize" th:value="${pageSize}" type="hidden"/>
@@ -91,13 +91,14 @@
                             <option value="politicallySensitive">政治敏感</option>
                             <option value="delinquency">违法犯罪</option>
                             <option value="else">其他</option>
+
                         </select>
                         <!-- 举报理由文本框 -->
                         <textarea class="form-control" id="reportReason" rows="4"
                                   placeholder="请输入举报理由"></textarea>
                         <!-- 上传文件 -->
                         <input type="file" class="form-control" id="reportFiles" multiple required>
-                        <input type="hidden" id="reportedType" th:value="${ConnectType}" value="User" />
+                        <input type="hidden" id="reportedType" value="Comment" />
                         <input type="hidden" id="reportedId" th:value="${connectId}" value="1" />
                     </div>
                     <div class="modal-footer">

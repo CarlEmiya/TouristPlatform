@@ -296,10 +296,12 @@
       #{uid}
     </foreach>
   </select>
+    <select id="findAll" resultType="com.travel.entity.User">
+      select * from user
+    </select>
 
 
-
-  <update id="updateByExampleSelective" parameterType="map">
+    <update id="updateByExampleSelective" parameterType="map">
     update user
     <set>
       <if test="record.uid != null">

@@ -4,6 +4,7 @@ import com.travel.entity.Report;
 import com.travel.entity.ReportExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ReportMapper {
@@ -36,4 +37,8 @@ public interface ReportMapper {
     int updateByPrimaryKey(Report record);
 
     int isRidExist(Long rid);
+
+    List<Report> selectAll();
+
+    int handle(Long rid, int status, String handler, Date date);
 }

@@ -203,4 +203,14 @@ public class CommentServiceImpl implements CommentService {
         criteria.andStatusEqualTo(1);
         return commentMapper.selectByExample(example);
     }
+
+    public List<Comment> getCommentsByConnectid(Long connectid, String type) {
+        CommentExample example = new CommentExample();
+        CommentExample.Criteria criteria = example.createCriteria();
+        criteria.andConnectidEqualTo(connectid);
+        criteria.andTypeEqualTo(type);
+        criteria.andStatusEqualTo(12);
+        return commentMapper.selectByExampleWithBLOBs(example);
+    }
+
 }

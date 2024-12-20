@@ -36,4 +36,12 @@ public interface ActivityRegistrationMapper {
     int updateStatus(String registrationId, int i);
 
     List<TravelActivity> getActivityByUid(Long uid);
+
+    Boolean isRegistedByAidAndUid(@Param("aid") Long aid, @Param("uid") Long uid);
+
+    int deleteByAidAndUid(@Param("aid") Long aid, @Param("uid") Long uid);
+
+    boolean isAridExist(Long id);
+
+    Integer selectCountByAid(Long aid);
 }

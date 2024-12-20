@@ -37,6 +37,10 @@ public class Like implements Serializable {
         this.status = status;
     }
 
+    public Like() {
+
+    }
+
     public Long getLid() {
         return lid;
     }
