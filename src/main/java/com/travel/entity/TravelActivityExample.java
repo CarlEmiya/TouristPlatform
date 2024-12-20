@@ -1108,6 +1108,11 @@ public class TravelActivityExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andTitleLike(String s) {
+            addCriterion("location like", s, "title");
+            return (Criteria) this;
+        }
     }
 
     public static class Criterion {

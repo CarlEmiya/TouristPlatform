@@ -471,9 +471,10 @@ function isImage(filePath) {
 // 渲染评论列表的文件列表
 function renderCommentFiles(cids) {
     $.ajax({
-        url: "/comment/getFiles",
+        url: "/files/getFiles",
         type: "GET",
-        data: { cids: cids.join(",") },
+        data: { connectIds: cids.join(",") ,
+                type: "Comment"},
         success: function (fileMap) {
             console.log("来自renderCommentFiles的fileMap：", fileMap);
             console.log("来自renderCommentFiles的cids：", cids);

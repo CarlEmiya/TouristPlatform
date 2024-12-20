@@ -3,6 +3,7 @@ package com.travel.controller;
 import com.travel.service.CommentService;
 import com.travel.service.FileService;
 import com.travel.service.ReportService;
+import com.travel.service.impl.FileServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,13 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/files")
 public class FileController {
 
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 	@Autowired
 	private CommentService commentService;
     @Autowired
@@ -78,6 +80,14 @@ public class FileController {
 		// 处理举报信息（存储reason等）
 		int result = reportService.insertReport(rid,reporter, reportedId, category, finalReason, reportedType);
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	// 获取对应评论的文件列表
+	@GetMapping("/getFiles")
+	public ResponseEntity<Map<Long, com.travel.entity.File>> getFilesByConnectIds(@RequestParam List<Long> connectIds,@RequestParam String type) {
+		List<com.travel.entity.File> files = fileService.getFilesByConnectIds(connectIds,type);
+		Map<Long, com.travel.entity.File> FileMap = files.stream().collect(Collectors.toMap(com.travel.entity.File::getFid, file -> file));
+		return new ResponseEntity<>(FileMap, HttpStatus.OK);
 	}
 
 

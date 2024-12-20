@@ -39,6 +39,10 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         registry.addViewController("/testComment").setViewName("testComment");
         registry.addViewController("/comment").setViewName("testComment");
         registry.addViewController("/userInfo").setViewName("UserInfo");
+
+        registry.addViewController("/travelActivity/list").setViewName("activity/list"); // 活动列表页面
+        registry.addViewController("/travelActivity/detail/{aid}").setViewName("activity/detail"); // 活动详情页面
+        registry.addViewController("/travelActivity/publish").setViewName("activity/publish"); // 发布活动页面
     }
 
     @Bean

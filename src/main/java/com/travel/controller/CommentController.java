@@ -1,12 +1,8 @@
 package com.travel.controller;
 
 import com.travel.entity.Comment;
-import com.travel.entity.Report;
 import com.travel.entity.User;
 import com.travel.mapper.UserMapper;
-import com.travel.service.CommentService;
-import com.travel.service.FileService;
-import com.travel.service.ReportService;
 import com.travel.service.impl.CommentServiceImpl;
 import com.travel.service.impl.FileServiceImpl;
 import com.travel.service.impl.ReportServiceImpl;
@@ -14,14 +10,11 @@ import com.travel.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.github.pagehelper.PageHelper;
@@ -182,15 +175,7 @@ public class CommentController {
         return new ResponseEntity<>(userMap, HttpStatus.OK);
     }
 
-    // 获取对应评论的文件列表
-    @GetMapping("/getFiles")
-    public ResponseEntity<Map<Long, com.travel.entity.File>> getFilesByCids(@RequestParam List<Long> cids) {
-        List<com.travel.entity.File> files = fileService.getFilesByCids(cids,"Comment");
-        Map<Long, com.travel.entity.File> FileMap = files.stream().collect(Collectors.toMap(com.travel.entity.File::getFid, file -> file));
-//        System.out.println(FileMap);
-        return new ResponseEntity<>(FileMap, HttpStatus.OK);
 
-    }
 
 
 

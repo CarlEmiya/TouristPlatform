@@ -12,4 +12,5 @@ public interface FileService {
     List<File> getFilesByConnectedId(Long connectedId);
 
     int deleteFileByFid(Long fid);
+
 }

@@ -47,8 +47,18 @@ public class TravelActivity implements Serializable {
 
     private String reason;
 
-    private static final long serialVersionUID = 1L;
+    private String firstFilePath;  // 存储第一个文件的ID
 
+
+
+    private static final long serialVersionUID = 1L;
+    public String getFirstFilePath() {
+        return firstFilePath;
+    }
+
+    public void setFirstFilePath(String firstFilePath1) {
+        this.firstFilePath = firstFilePath1;
+    }
     public Long getAid() {
         return aid;
     }

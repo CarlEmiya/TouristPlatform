@@ -4,6 +4,7 @@ import com.travel.entity.TravelActivityExample;
 import com.travel.mapper.TravelActivityMapper;
 import com.travel.entity.TravelActivity;
 import com.travel.service.TravelActivityService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 public class TravelActivityServiceImpl implements TravelActivityService {
 
-//	@Autowired
+	@Autowired
 	private TravelActivityMapper activityMapper;
 
 	@Override
@@ -31,7 +32,7 @@ public class TravelActivityServiceImpl implements TravelActivityService {
 	@Override
 	public List<TravelActivity> searchActivities(TravelActivityExample activity) {
 		try {
-			return activityMapper.selectByExample(activity);
+				return activityMapper.selectByExample(activity);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

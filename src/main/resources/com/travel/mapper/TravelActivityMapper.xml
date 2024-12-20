@@ -111,7 +111,7 @@
     <if test="distinct">
       distinct
     </if>
-    <include refid="Base_Column_List" />
+    *
     from travel_activity
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />

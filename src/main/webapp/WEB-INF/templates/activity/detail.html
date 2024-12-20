@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>活动详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container">
+    <h1>活动详情</h1>
+
+    <!-- 显示活动信息 -->
+    <div th:if="${activity}">
+        <h2 th:text="${activity.title}"></h2>
+        <p><strong>描述：</strong><span th:text="${activity.description}"></span></p>
+        <p><strong>开始时间：</strong><span th:text="${activity.start}"></span></p>
+        <p><strong>结束时间：</strong><span th:text="${activity.end}"></span></p>
+        <p><strong>地点：</strong><span th:text="${activity.location}"></span></p>
+        <p><strong>活动周期：</strong><span th:text="${activity.period}"></span> 天</p>
+        <p><strong>活动状态：</strong>
+            <span th:switch="${activity.status}">
+                    <span th:case="0">进行中</span>
+                    <span th:case="1">已结束</span>
+                    <span th:case="2">已取消</span>
+                    <span th:case="3">已隐藏</span>
+                    <span th:default>未知状态</span>
+                </span>
+        </p>
+
+        <!-- 显示操作按钮 -->
+        <div th:if="${activity.status == 0}">
+            <a href="#" class="btn btn-primary">报名参加</a> <!-- 报名按钮 -->
+        </div>
+        <div th:if="${activity.status != 0}">
+            <button class="btn btn-secondary" disabled>活动已结束或不可参与</button> <!-- 如果活动结束或不可参与，禁用按钮 -->
+        </div>
+
+    </div>
+
+    <!-- 如果活动不存在，显示错误信息 -->
+    <div th:if="${message}">
+        <div class="alert alert-danger" th:text="${message}"></div>
+    </div>
+
+    <!-- 返回活动列表按钮 -->
+    <a href="/travelActivity/list" class="btn btn-secondary">返回活动列表</a>
+</div>
+</body>
+</html>

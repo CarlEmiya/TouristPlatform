@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>我的活动</title>
+</head>
+<body>
+<h1>我发布的活动</h1>
+
+<div th:each="activity : ${myActivities}">
+    <div>
+        <h2 th:text="${activity.title}"></h2>
+        <p th:text="${activity.description}"></p>
+        <p>状态：<span th:text="${activity.status}"></span></p>
+        <p>开始时间：<span th:text="${activity.start}"></span></p>
+        <p>结束时间：<span th:text="${activity.end}"></span></p>
+
+        <!-- 修改活动状态 -->
+        <form action="#" method="post" th:action="@{/travelActivity/updateStatus}">
+            <input type="hidden" name="aid" th:value="${activity.aid}" />
+            <select name="newStatus">
+                <option value="1">组团中</option>
+                <option value="2">已成团</option>
+                <option value="3">活动开始</option>
+                <option value="4">活动结束</option>
+                <option value="5">取消</option>
+            </select>
+            <button type="submit">修改状态</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

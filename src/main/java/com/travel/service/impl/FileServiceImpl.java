@@ -24,9 +24,9 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private ReportService reportService;
 
-    public List<File> getFilesByCids(List<Long> cids, String type) {
+    public List<File> getFilesByConnectIds(List<Long> connectIds, String type) {
         FileExample example = new FileExample();
-        example.createCriteria().andConnectidIn(cids).andTypeEqualTo(type);
+        example.createCriteria().andConnectidIn(connectIds).andTypeEqualTo(type);
         return fileMapper.selectByExample(example);
     }
 

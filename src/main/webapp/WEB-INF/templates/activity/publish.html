@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发布活动</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container">
+    <h1>发布活动</h1>
+
+    <!-- 显示发布结果 -->
+    <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+
+    <!-- 发布活动表单 -->
+    <form th:action="@{/travelActivity/publish}" method="post" th:object="${activity}">
+        <div class="form-group">
+            <label for="title">活动标题</label>
+            <input type="text" id="title" name="title" class="form-control" th:field="*{title}" required />
+        </div>
+
+        <div class="form-group">
+            <label for="description">活动描述</label>
+            <textarea id="description" name="description" class="form-control" th:field="*{description}" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="start">开始时间</label>
+            <input type="datetime-local" id="start" name="start" class="form-control" th:field="*{start}" required />
+        </div>
+
+        <div class="form-group">
+            <label for="end">结束时间</label>
+            <input type="datetime-local" id="end" name="end" class="form-control" th:field="*{end}" required />
+        </div>
+
+        <div class="form-group">
+            <label for="location">活动地点</label>
+            <input type="text" id="location" name="location" class="form-control" th:field="*{location}" required />
+        </div>
+
+        <!-- 活动周期 (365天 默认) -->
+        <div class="form-group">
+            <label for="period">活动周期 (天)</label>
+            <input type="number" id="period" name="period" class="form-control" th:field="*{period}" value="365" readonly />
+        </div>
+
+        <button type="submit" class="btn btn-primary">发布活动</button>
+    </form>
+</div>
+</body>
+</html>
