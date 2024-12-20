@@ -34,4 +34,6 @@ public interface FileMapper {
     int updateByPrimaryKeyWithBLOBs(File record);
 
     int updateByPrimaryKey(File record);
+
+    Boolean isFidExist(Long fid);
 }

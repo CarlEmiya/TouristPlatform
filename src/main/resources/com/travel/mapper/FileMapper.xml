@@ -4,6 +4,8 @@
   <resultMap id="FileResultMap" type="com.travel.entity.File">
     <id column="fid" jdbcType="BIGINT" property="fid" />
     <result column="connectid" jdbcType="BIGINT" property="connectid" />
+    <result column="path" jdbcType="LONGVARCHAR" property="path" />
+    <result column="type" jdbcType="LONGVARCHAR" property="type" />
   </resultMap>
   <resultMap extends="FileResultMap" id="ResultMapWithBLOBs" type="com.travel.entity.File">
     <result column="path" jdbcType="LONGVARCHAR" property="path" />
@@ -90,11 +92,7 @@
     </if>
   </select>
   <select id="selectByExample" parameterType="com.travel.entity.FileExample" resultMap="FileResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
+    select fid, connectid, path, type
     from file
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -164,7 +162,14 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+
+    <select id="isFidExist" resultType="java.lang.Boolean">
+      select count(*) from file where fid = #{fid,jdbcType=BIGINT}
+    </select>
+
+
+    <update id="updateByExampleSelective" parameterType="map">
     update file
     <set>
       <if test="record.fid != null">

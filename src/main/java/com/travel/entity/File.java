@@ -13,6 +13,10 @@ public class File implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public File(String path) {
+        this.path = path;
+    }
+
     public Long getFid() {
         return fid;
     }
@@ -42,6 +46,16 @@ public class File implements Serializable {
     }
 
     public void setType(String type) {
+        this.type = type;
+    }
+
+    public File() {
+    }
+
+    public File(Long fid, Long connectid, String path, String type) {
+        this.fid = fid;
+        this.connectid = connectid;
+        this.path = path;
         this.type = type;
     }
 

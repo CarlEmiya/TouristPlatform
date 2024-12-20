@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -25,6 +26,10 @@ public class SpringMVCConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+        // 可以针对上传的文件指定一个虚拟路径，用于通过虚拟路径访问真实路径下的资源
+        // file: 开头表示要使用的位置来自文件系统，比如C盘或D盘中某个位置
+        // /uploaded/**设置的是访问上传的图片的模式，也就是虚拟路径，这个可以随便写
+        registry.addResourceHandler("/uploaded/**").addResourceLocations("file:D:\\A课本\\学习\\大三下Java项目\\TouristPlatform\\src\\main\\webapp\\static\\uploaded\\");
     }
 
     @Override
@@ -34,7 +39,6 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         registry.addViewController("/testComment").setViewName("testComment");
         registry.addViewController("/comment").setViewName("testComment");
         registry.addViewController("/userInfo").setViewName("UserInfo");
-//        registry.addViewController("/fragments/commentList").setViewName("fragments/commentList");
     }
 
     @Bean
@@ -84,5 +88,22 @@ public class SpringMVCConfig implements WebMvcConfigurer {
         pageInterceptor.setProperties(properties);
         return pageInterceptor;
     }
+
+    // 在spring mvc程序中实现文件上传，只需要配置一个MultipartResolver组件
+    // 这样spring mvc会帮我们做一些封装，在控制器中写代码获取上传文件信息就很简单
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        // 创建CommonsMultipartResolver对象，并且进行需要的配置
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        // 这里的编码配置主要是为了解决可能出现的请求参数乱码问题，比如，包含中文
+        resolver.setDefaultEncoding("UTF-8");
+        // 可以限定上传文件的总大小
+        resolver.setMaxUploadSize(50 * 1024 * 1024);
+        // 可以限定每个上传的文件的大小
+        // resolver.setMaxUploadSizePerFile();
+        return resolver;
+    }
+
+
 
 }

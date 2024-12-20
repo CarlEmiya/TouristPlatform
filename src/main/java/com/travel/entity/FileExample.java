@@ -229,6 +229,11 @@ public class FileExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andTypeEqualTo(String type) {
+            addCriterion("type =", type,"type");
+            return (Criteria) this;
+        }
     }
 
     public static class Criterion {

@@ -210,7 +210,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+    <select id="isRidExist" resultType="java.lang.Integer">
+      select count(*) from report where rid = #{rid,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map">
     update report
     <set>
       <if test="record.rid != null">

@@ -31,10 +31,6 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public int addComment(Comment comment) {
-        comment.setCreated(new Date());
-        comment.setStatus(1); // 设置为正常状态
-        comment.setAgree(0);
-
         commentMapper.insert(comment);
         try {
             return 1;
@@ -113,33 +109,7 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    /**
-     * 举报评论
-     * @param reporter
-     * @param reported
-     * @param type
-     * @param category
-     * @param description
-     * @return
-     */
-    @Override
-    public int reportComment(Long reporter, Long reported, String type, String category,  String description) {
-        //随机生成rid，如果已存在，重新生成
-        Long rid = (long) (Math.random() * 1000000000);
-        while (commentMapper.selectByPrimaryKey(rid) != null) {
-            rid = (long) (Math.random() * 1000000000);
-        }
 
-        Report report = new Report(rid, reporter, reported, type, category, new Date(), 12, null, null, description);
-        try {
-            reportMapper.insert(report);
-            return 1;
-        } catch (Exception e) {
-            // 处理异常
-            e.printStackTrace();
-            return -1;
-        }
-    }
 
     /**
      * 更新评论

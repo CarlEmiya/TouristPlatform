@@ -116,3 +116,56 @@
     z-index: 1040;
     background-color: transparent;
 }
+
+
+/* 容器样式，让所有图片保持在同一行 */
+.comment-files {
+    /*限制在同一行*/
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 图片样式 */
+.file-item img {
+    max-width: 150px; /* 限制图片最大宽度 */
+    max-height: 150px; /* 限制图片最大高度 */
+    object-fit: cover; /* 保持图片的比例 */
+    transition: transform 0.3s ease; /* 平滑过渡效果 */
+}
+
+/* 鼠标悬浮时的放大效果 */
+.file-item img:hover {
+    transform: scale(1.2); /* 放大图片 */
+}
+
+/*!* 处理文件项对齐 *!*/
+/*.file-item {*/
+/*    display: inline-block;*/
+/*    text-align: center;*/
+/*}*/
+
+
+.file-item {
+    position: relative; /* 使文件项容器成为定位上下文 */
+    padding-right: 30px;  /* 预留空间给删除按钮 */
+    margin-bottom: 10px;  /* 每个文件项之间的间隔 */
+}
+
+.delete-file-btn {
+    position: absolute;
+    top: 5px;
+    background: none;
+    border: none;
+    color: red;
+    font-size: 10px;
+    cursor: pointer;
+    z-index: 10;  /* 确保删除按钮在最上层 */
+}
+
+.delete-file-btn:hover {
+    color: darkred;
+}
+
+

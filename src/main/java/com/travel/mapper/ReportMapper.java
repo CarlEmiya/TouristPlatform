@@ -34,4 +34,6 @@ public interface ReportMapper {
     int updateByPrimaryKeyWithBLOBs(Report record);
 
     int updateByPrimaryKey(Report record);
+
+    int isRidExist(Long rid);
 }

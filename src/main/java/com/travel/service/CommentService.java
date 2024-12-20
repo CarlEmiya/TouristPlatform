@@ -21,5 +21,5 @@ public interface CommentService {
 	// 获取某条评论的点赞数
 	int getCommentAgreeCount(Long cid);
 
-	int reportComment(Long reporter, Long reported, String type, String category, String description);
+
 }
